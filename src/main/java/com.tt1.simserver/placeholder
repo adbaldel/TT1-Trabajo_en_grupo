@@ -1,0 +1,5 @@
+Aquí van los paquetes del programa (y probablemente la clase con el main, no
+estoy seguro).
+
+En el pom.xml está comentado un apartado que espera una clase main llamada App
+en este directorio.

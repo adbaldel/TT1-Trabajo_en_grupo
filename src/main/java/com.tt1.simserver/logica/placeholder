@@ -1,0 +1,5 @@
+Aquí van las clases de la lógica de negocio (atender peticiones y hacer
+simulaciones).
+
+(Services): The "brain" of the server. This is where the actual simulation
+algorithms, email dispatching logic, and business rules will sit.
