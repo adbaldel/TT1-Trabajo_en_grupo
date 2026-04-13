@@ -1,109 +1,156 @@
 package com.tt1.simserver.modelo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.swagger.annotations.ApiModelProperty;
+import jakarta.validation.Valid;
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
-/**
- * Representa una solicitud de procesamiento dentro del sistema.
- * Esta clase actúa como Raíz de Agregado (Aggregate Root) y gestiona
- * el ciclo de vida de una petición, desde su creación hasta su finalización.
- * * Asegura la integridad de los datos al validar que cada nombre de entidad
- * tenga su cantidad correspondiente antes de permitir la creación.
- */
-public class Solicitud {
-    /** Identificador único de negocio para la solicitud (token). */
-    private final int token;
 
-    /** Nombre del usuario que realiza la petición. */
-    private final String nombreUsuario;
-
-    /** Estado actual de la solicitud en el flujo de trabajo. */
-    private EstadoSolicitud estado;
-
-    /** Lista inmutable de ítems (entidad + cantidad) asociados a esta solicitud. */
-    private final List<ItemSolicitud> items;
-
-    /** Marca de tiempo de cuándo se creó la solicitud. */
-    private final Date fechaCreacion;
+@JsonTypeName("Solicitud")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2026-04-13T19:26:41.786837200+02:00[Europe/Madrid]", comments = "Generator version: 7.4.0")
+public class Solicitud
+{
+    private @Valid List<Integer> cantidadesIniciales;
+    private @Valid List<String> nombreEntidades;
 
     /**
-     * Constructor principal que inicializa una solicitud y valida sus parámetros.
-     * * @param nombreUsuario Nombre del usuario que lanza la petición.
-     * @param cantidades Lista de valores numéricos iniciales.
-     * @param nombres Lista de nombres de las entidades a procesar.
-     * @throws IllegalArgumentException Si las listas son nulas o no tienen el mismo tamaño.
-     */
-    public Solicitud(String nombreUsuario, List<Integer> cantidades, List<String> nombres) {
-        if (cantidades == null || nombres == null || cantidades.size() != nombres.size()) {
-            throw new IllegalArgumentException("Las cantidades y los nombres de entidades deben coincidir y no ser nulos.");
+     *
+     **/
+    public Solicitud cantidadesIniciales(List<Integer> cantidadesIniciales)
+    {
+        this.cantidadesIniciales = cantidadesIniciales;
+        return this;
+    }
+
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("cantidadesIniciales")
+    public List<Integer> getCantidadesIniciales()
+    {
+        return cantidadesIniciales;
+    }
+
+    @JsonProperty("cantidadesIniciales")
+    public void setCantidadesIniciales(List<Integer> cantidadesIniciales)
+    {
+        this.cantidadesIniciales = cantidadesIniciales;
+    }
+
+    public Solicitud addCantidadesInicialesItem(Integer cantidadesInicialesItem)
+    {
+        if (this.cantidadesIniciales == null)
+        {
+            this.cantidadesIniciales = new ArrayList<>();
         }
 
-        this.nombreUsuario = nombreUsuario;
-        this.token = generarIdUnico();
-        this.estado = EstadoSolicitud.PENDIENTE;
-        this.fechaCreacion = new Date();
-        this.items = new ArrayList<>();
+        this.cantidadesIniciales.add(cantidadesInicialesItem);
+        return this;
+    }
 
-        for (int i = 0; i < cantidades.size(); i++) {
-            this.items.add(new ItemSolicitud(nombres.get(i), cantidades.get(i)));
+    public Solicitud removeCantidadesInicialesItem(Integer cantidadesInicialesItem)
+    {
+        if (cantidadesInicialesItem != null && this.cantidadesIniciales != null)
+        {
+            this.cantidadesIniciales.remove(cantidadesInicialesItem);
         }
+
+        return this;
     }
 
     /**
-     * Cambia el estado de la solicitud a 'PROCESANDO'.
-     * Este método debe llamarse cuando el motor de cálculo inicia su tarea.
-     */
-    public void iniciarProcesamiento() {
-        if (this.estado == EstadoSolicitud.PENDIENTE) {
-            this.estado = EstadoSolicitud.PROCESANDO;
+     *
+     **/
+    public Solicitud nombreEntidades(List<String> nombreEntidades)
+    {
+        this.nombreEntidades = nombreEntidades;
+        return this;
+    }
+
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("nombreEntidades")
+    public List<String> getNombreEntidades()
+    {
+        return nombreEntidades;
+    }
+
+    @JsonProperty("nombreEntidades")
+    public void setNombreEntidades(List<String> nombreEntidades)
+    {
+        this.nombreEntidades = nombreEntidades;
+    }
+
+    public Solicitud addNombreEntidadesItem(String nombreEntidadesItem)
+    {
+        if (this.nombreEntidades == null)
+        {
+            this.nombreEntidades = new ArrayList<>();
         }
+
+        this.nombreEntidades.add(nombreEntidadesItem);
+        return this;
+    }
+
+    public Solicitud removeNombreEntidadesItem(String nombreEntidadesItem)
+    {
+        if (nombreEntidadesItem != null && this.nombreEntidades != null)
+        {
+            this.nombreEntidades.remove(nombreEntidadesItem);
+        }
+
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
+        Solicitud solicitud = (Solicitud) o;
+        return Objects.equals(this.cantidadesIniciales, solicitud.cantidadesIniciales) &&
+                Objects.equals(this.nombreEntidades, solicitud.nombreEntidades);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(cantidadesIniciales, nombreEntidades);
+    }
+
+    @Override
+    public String toString()
+    {
+
+        String sb = "class Solicitud {\n" +
+                "    cantidadesIniciales: " + toIndentedString(cantidadesIniciales) + "\n" +
+                "    nombreEntidades: " + toIndentedString(nombreEntidades) + "\n" +
+                "}";
+        return sb;
     }
 
     /**
-     * Marca la solicitud como finalizada correctamente.
-     * Indica que el proceso ha terminado y los resultados están listos.
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
      */
-    public void finalizarConExito() {
-        this.estado = EstadoSolicitud.COMPLETADA;
+    private String toIndentedString(Object o)
+    {
+        if (o == null)
+        {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
     }
 
-    /**
-     * Genera un identificador numérico aleatorio para la solicitud.
-     * * @return Un número entero entre 100000 y 999999.
-     */
-    private int generarIdUnico() {
-        return (int) (Math.random() * 900000) + 100000;
-    }
 
-    /**
-     * Obtiene el token de identificación.
-     * @return Identificador único de la solicitud.
-     */
-    public int getToken() { return token; }
-
-    /**
-     * Obtiene el nombre del usuario.
-     * @return Nombre del usuario solicitante.
-     */
-    public String getNombreUsuario() { return nombreUsuario; }
-
-    /**
-     * Obtiene el estado actual de la solicitud.
-     * @return El valor del enumerado {@link EstadoSolicitud}.
-     */
-    public EstadoSolicitud getEstado() { return estado; }
-
-    /**
-     * Devuelve los ítems de la solicitud de forma segura para evitar modificaciones externas.
-     * @return Una lista de {@link ItemSolicitud} no modificable.
-     */
-    public List<ItemSolicitud> getItems() { return Collections.unmodifiableList(items); }
-
-    /**
-     * Obtiene la fecha de registro.
-     * @return Fecha de creación de la instancia.
-     */
-    public Date getFechaCreacion() { return fechaCreacion; }
 }
+
