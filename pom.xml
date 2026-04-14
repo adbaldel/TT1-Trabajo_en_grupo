@@ -5,6 +5,12 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!--
+		=============================================================
+		PROJECT METADATA
+		=============================================================
+		Unique identifiers of the application.
+	-->
     <groupId>com.tt1</groupId>
     <artifactId>simserver</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -14,7 +20,9 @@
     </description>
 
     <!--
-        PROPERTIES:
+        =============================================================
+        PROPERTIES
+        =============================================================
         Centralized version numbers so they are easy to update later.
     -->
     <properties>
@@ -30,12 +38,13 @@
         <junit-version>4.13.2</junit-version>
     </properties>
 
+    <!--
+		=============================================================
+		DEPENDENCIES
+		=============================================================
+	-->
     <dependencies>
-        <!--
-            =============================================================
-            1. CORE REST API (JAX-RS & JERSEY)
-            =============================================================
-        -->
+        <!-- 1. CORE REST API (JAX-RS & JERSEY) -->
 
         <!-- Jakarta RESTful Web Services API:
              Provides the standard annotations (@Path, @GET, @POST, @Produces).
@@ -65,11 +74,7 @@
         </dependency>
 
 
-        <!--
-            =============================================================
-            2. STANDALONE SERVER (GRIZZLY)
-            =============================================================
-        -->
+        <!-- 2. STANDALONE SERVER (GRIZZLY) -->
 
         <!-- Grizzly HTTP Server integration for Jersey:
              Instead of deploying a .war file to Tomcat, this allows you to spin up
@@ -81,11 +86,7 @@
         </dependency>
 
 
-        <!--
-            =============================================================
-            3. JSON SERIALIZATION (JACKSON)
-            =============================================================
-        -->
+        <!-- 3. JSON SERIALIZATION (JACKSON) -->
 
         <!-- Jersey Media JSON Jackson:
              Tells our Jersey server to use Jackson to convert between Java Objects (like Solicitud)
@@ -115,11 +116,7 @@
         </dependency>
 
 
-        <!--
-            =============================================================
-            4. TESTING
-            =============================================================
-        -->
+        <!-- 4. TESTING -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -128,6 +125,11 @@
         </dependency>
     </dependencies>
 
+    <!--
+		=============================================================
+		BUILD & PLUGINS
+		=============================================================
+	-->
     <build>
         <plugins>
             <!-- Maven Shade Plugin:

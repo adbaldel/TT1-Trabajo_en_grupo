@@ -5,6 +5,7 @@
 ## **Descripción del Proyecto**
 
 Este proyecto consiste en la implementación de un servidor de simulaciones y un servicio de email. Actúa como el backend (API REST) que procesa las solicitudes de simulación enviadas por nuestra aplicación cliente (desarrollada previamente en Java Spring).  
+
 El servidor expone una API sobre HTTP documentada bajo el estándar OpenAPI (Swagger) y está diseñado para gestionar el ciclo de vida de las simulaciones, desde la request inicial hasta la consulta de resultados.
 
 ## **Referencia de la API**
