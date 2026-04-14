@@ -130,18 +130,47 @@
 
     <build>
         <plugins>
-            <!-- Maven Jar Plugin:
-                 Configures how the final executable .jar is built. -->
+            <!-- Maven Shade Plugin:
+                 Configures how the final executable .jar (uber-jar) is built by packaging
+                 the application code along with all its dependencies. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.tt1.simserver.RestApplication</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <!-- =========================================================
+                                     CRITICAL FIX FOR JERSEY/JACKSON: ServicesResourceTransformer
+                                     =========================================================
+                                     Libraries like Jersey and Jackson use Java's SPI (Service Provider Interface)
+                                     to dynamically load components (like JSON writers/readers). They do this
+                                     by placing configuration files inside the META-INF/services/ directory.
+
+                                     When the shade plugin packages multiple jars together, it finds multiple
+                                     files with the same name in META-INF/services/ and, by default, OVERWRITES them.
+                                     This causes Jersey to completely "forget" that Jackson exists, leading to
+                                     the "MessageBodyWriter not found for media type=text/json" error.
+
+                                     This transformer tells Maven to MERGE those files together instead of
+                                     overwriting them, preserving all dynamic registrations. -->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+
+                                <!-- ManifestResourceTransformer:
+                                     Specifies the entry point of the application so that you can simply run
+                                     `java -jar target/simserver-1.0-SNAPSHOT.jar` without specifying the class. -->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.tt1.simserver.RestApplication</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
