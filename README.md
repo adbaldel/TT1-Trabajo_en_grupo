@@ -1,50 +1,54 @@
-# **Servidor de Simulaciones \- Trabajo en Grupo TT1**
+# **Servidor de Simulaciones - Trabajo en Grupo TT1**
 
 **Autores:** Juan Luis Medrano Miguel y Adrián Baldellou Aguirre.
 
 ## **Descripción del Proyecto**
 
-Este proyecto consiste en la implementación de un servidor de simulaciones y un servicio de email. Actúa como el backend (API REST) que procesa las solicitudes de simulación enviadas por nuestra aplicación cliente (desarrollada previamente en Java Spring).  
+Este proyecto consiste en el servidor backend que proporciona el núcleo lógico para la ejecución de simulaciones y envío de correos electrónicos.
 
-El servidor expone una API sobre HTTP documentada bajo el estándar OpenAPI (Swagger) y está diseñado para gestionar el ciclo de vida de las simulaciones, desde la request inicial hasta la consulta de resultados.
+Actúa como una API REST independiente que procesa en segundo plano las solicitudes computacionales de simulación, gestiona su estado y almacena los resultados para su posterior consulta. La API se expone sobre el protocolo HTTP y está documentada rigurosamente bajo el estándar OpenAPI (Swagger), permitiendo una integración estandarizada con múltiples clientes.
+
+## **Arquitectura y Estructura Principal**
+
+La aplicación está diseñada bajo una arquitectura de capas orientada a servicios utilizando el estándar Jakarta RESTful Web Services (JAX-RS). Su estructura se divide en:
+
+* **Presentación / API (`com.tt1.simserver.presentacion`):** Define y expone los endpoints HTTP. Mapea las rutas web a los controladores correspondientes y estandariza las respuestas (ej. `EmailController`, `RequestController`, `ResultsController`).
+* **Modelo de Dominio (`com.tt1.simserver.modelo`):** Clases y registros que definen la estructura de los payloads JSON esperados y enviados en las peticiones HTTP (`Request`, `EmailResponse`, `ProblemDetails`, `ResultsResponse`).
+* **Lógica de Negocio / Servicios (`com.tt1.simserver.logica`):** El "cerebro" del servidor. Aquí residen los algoritmos principales de las simulaciones, la lógica para despachar correos y las reglas de negocio del sistema.
+* **Persistencia (`com.tt1.simserver.persistencia`):** Repositorios o DAOs encargados de guardar el historial de solicitudes, el estado y los resultados finales de cada simulación (ya sea en memoria o base de datos).
 
 ## **Referencia de la API**
 
-La capa de presentación responde a las siguientes peticiones HTTP, según la especificación OpenAPI adjunta al proyecto:
+El servidor expone y procesa peticiones y respuestas en formato JSON en las siguientes rutas:
 
 ### **Servicio de Email**
-
-* `POST /Email`: Envía un correo electrónico. Requiere los parámetros `emailAddress` y `message`.
+* `POST /Email`: Envía un correo electrónico. Requiere recibir los parámetros `emailAddress` y `message`.
 
 ### **Gestión de Simulaciones (Solicitudes)**
-
-* `POST /Solicitud/Solicitar`: Crea una nueva request de simulación para un usuario. Requiere un JSON con las `cantidadesIniciales` y `nombreEntidades`.
-* `GET /Solicitud/ComprobarSolicitud`: Comprueba el estado de una simulación específica mediante un token (`tok`).
-* `GET /Solicitud/GetSolicitudesUsuario`: Obtiene una lista con todas las solicitudes asociadas a un `nombreUsuario`.
+* `POST /Solicitud/Solicitar`: Crea una nueva request de simulación para un usuario. Requiere un payload JSON (`Request`) especificando las `cantidadesIniciales` y `nombreEntidades`. Retorna un `token` identificador.
+* `GET /Solicitud/ComprobarSolicitud`: Comprueba el estado de una simulación específica asociando al `nombreUsuario` y el `tok` generado previamente.
+* `GET /Solicitud/GetSolicitudesUsuario`: Obtiene una lista con todas las solicitudes / tokens asociados a un `nombreUsuario`.
 
 ### **Resultados**
+* `POST /Resultados`: Recupera los resultados finales de una simulación finalizada proporcionando el `nombreUsuario` y el `tok`.
 
-* `POST /Resultados`: Recupera los resultados finales de una simulación completada, requiriendo el `nombreUsuario` y el token de la request (`tok`).
-
-## **Tecnologías Utilizadas**
+## **Tecnologías Utilizadas y Dependencias**
 
 * **Lenguaje:** Java 21
-* **Gestor de dependencias:** Maven
-* **Arquitectura:** API REST (HTTP)
+* **Framework Principal:** JAX-RS (Jersey) + Grizzly
+* **Gestor de Dependencias:** Maven
 
-## **Dependencias**
-
-El proyecto utiliza Maven para la gestión de sus dependencias, entre las que destacan:
-
-* **Jakarta RESTful Web Services API (JAX-RS):** Para utilizar las anotaciones estándar de enrutamiento REST (`@Path`, `@GET`, `@POST`, etc.).
-* **Jersey Server & HK2:** Implementación del estándar JAX-RS y motor de inyección de dependencias.
-* **Grizzly HTTP Server:** Servidor HTTP ligero y autónomo para desplegar y ejecutar la API directamente desde la aplicación sin necesidad de contenedores pesados como Tomcat.
-* **Jackson:** Se utiliza para la conversión (serialización y deserialización) automática entre objetos Java y formato JSON, incluyendo soporte para las fechas modernas de Java (JSR310).
-* **JUnit 4:** Para la creación y ejecución de las pruebas unitarias del proyecto.
+Las dependencias principales configuradas en el `pom.xml` incluyen:
+* **Jakarta RESTful Web Services API (JAX-RS):** Anotaciones estándar (`@Path`, `@GET`, `@POST`) para el enrutamiento.
+* **Jersey Server & HK2:** Implementación oficial del estándar JAX-RS y framework de Inyección de Dependencias.
+* **Grizzly HTTP Server:** Servidor HTTP embebido y ligero que permite arrancar la API mediante un `main()` tradicional sin necesidad de contenedores de servlets como Tomcat.
+* **Jackson (jersey-media-json-jackson):** Proveedor para la serialización y deserialización automática entre objetos Java y JSON.
+* **JUnit 4:** Entorno de pruebas unitarias para la validación de la lógica.
 
 ## **Instrucciones de Ejecución**
 
-Para compilar y empaquetar el proyecto usando Maven:
-``` bash
+La aplicación utiliza el `maven-shade-plugin` para crear un ejecutable autocontenido (uber-jar). Para compilar y empaquetar el proyecto, sitúate en la raíz y ejecuta:
+
+```bash
 mvn clean package
 ```  
