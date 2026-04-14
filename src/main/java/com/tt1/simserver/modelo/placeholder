@@ -1,0 +1,4 @@
+Aquí van las clases del modelo de dominio.
+
+(Domain/DTOs): This is where the POJOs (Plain Old Java Objects) like Solicitud,
+ResultsResponse, and EmailResponse will go.

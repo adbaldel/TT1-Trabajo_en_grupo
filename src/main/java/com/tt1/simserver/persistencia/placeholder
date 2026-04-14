@@ -1,0 +1,4 @@
+Aquí van las clases de la capa de persistencia.
+
+(Repositories/DAOs): Saving requests, simulation states, or results to a
+database or memory store, that logic goes here.
