@@ -14,7 +14,7 @@ import static com.tt1.simserver.utils.StringManipulation.toIndentedString;
 @JsonTypeName("ResultsResponse")
 public class ResultsResponse {
     private Boolean done;
-    private Integer tokenSolicitud;
+    private Integer requestToken;
     private String errorMessage;
     private String data;
 
@@ -45,18 +45,18 @@ public class ResultsResponse {
      * @return el token identificador numérico.
      */
     @JsonProperty("tokenSolicitud")
-    public Integer getTokenSolicitud() {
-        return tokenSolicitud;
+    public Integer getRequestToken() {
+        return requestToken;
     }
 
     /**
      * Establece el token identificador de la solicitud de la simulación.
      *
-     * @param tokenSolicitud el token numérico.
+     * @param requestToken el token numérico.
      */
     @JsonProperty("tokenSolicitud")
-    public void setTokenSolicitud(Integer tokenSolicitud) {
-        this.tokenSolicitud = tokenSolicitud;
+    public void setRequestToken(Integer requestToken) {
+        this.requestToken = requestToken;
     }
 
     /**
@@ -115,7 +115,7 @@ public class ResultsResponse {
         }
         ResultsResponse resultsResponse = (ResultsResponse) o;
         return Objects.equals(this.done, resultsResponse.done) &&
-                Objects.equals(this.tokenSolicitud, resultsResponse.tokenSolicitud) &&
+                Objects.equals(this.requestToken, resultsResponse.requestToken) &&
                 Objects.equals(this.errorMessage, resultsResponse.errorMessage) &&
                 Objects.equals(this.data, resultsResponse.data);
     }
@@ -127,7 +127,7 @@ public class ResultsResponse {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(done, tokenSolicitud, errorMessage, data);
+        return Objects.hash(done, requestToken, errorMessage, data);
     }
 
     /**
@@ -139,7 +139,7 @@ public class ResultsResponse {
     public String toString() {
         return "class ResultsResponse {\n" +
                 "\tdone: " + toIndentedString(done) + "\n" +
-                "\ttokenSolicitud: " + toIndentedString(tokenSolicitud) + "\n" +
+                "\ttokenSolicitud: " + toIndentedString(requestToken) + "\n" +
                 "\terrorMessage: " + toIndentedString(errorMessage) + "\n" +
                 "\tdata: " + toIndentedString(data) + "\n" +
                 "}";

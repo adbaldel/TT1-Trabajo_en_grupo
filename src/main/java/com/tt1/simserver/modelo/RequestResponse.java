@@ -2,7 +2,6 @@ package com.tt1.simserver.modelo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.tt1.simserver.utils.StringManipulation;
 
 import java.util.Objects;
 
@@ -13,9 +12,9 @@ import static com.tt1.simserver.utils.StringManipulation.toIndentedString;
  * Representa la respuesta del servidor tras procesar la creación de una nueva solicitud de simulación.
  */
 @JsonTypeName("SolicitudResponse")
-public class SolicitudResponse {
+public class RequestResponse {
     private Boolean done;
-    private Integer tokenSolicitud;
+    private Integer requestToken;
     private String errorMessage;
     private Boolean data;
 
@@ -47,18 +46,18 @@ public class SolicitudResponse {
      * @return el token de la solicitud.
      */
     @JsonProperty("tokenSolicitud")
-    public Integer getTokenSolicitud() {
-        return tokenSolicitud;
+    public Integer getRequestToken() {
+        return requestToken;
     }
 
     /**
      * Asigna el identificador token de la solicitud generada.
      *
-     * @param tokenSolicitud el valor numérico del token.
+     * @param requestToken el valor numérico del token.
      */
-    @JsonProperty("tokenSolicitud")
-    public void setTokenSolicitud(Integer tokenSolicitud) {
-        this.tokenSolicitud = tokenSolicitud;
+    @JsonProperty("requestToken")
+    public void setRequestToken(Integer requestToken) {
+        this.requestToken = requestToken;
     }
 
     /**
@@ -115,11 +114,11 @@ public class SolicitudResponse {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        SolicitudResponse solicitudResponse = (SolicitudResponse) o;
-        return Objects.equals(this.done, solicitudResponse.done) &&
-                Objects.equals(this.tokenSolicitud, solicitudResponse.tokenSolicitud) &&
-                Objects.equals(this.errorMessage, solicitudResponse.errorMessage) &&
-                Objects.equals(this.data, solicitudResponse.data);
+        RequestResponse requestResponse = (RequestResponse) o;
+        return Objects.equals(this.done, requestResponse.done) &&
+                Objects.equals(this.requestToken, requestResponse.requestToken) &&
+                Objects.equals(this.errorMessage, requestResponse.errorMessage) &&
+                Objects.equals(this.data, requestResponse.data);
     }
 
     /**
@@ -129,7 +128,7 @@ public class SolicitudResponse {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(done, tokenSolicitud, errorMessage, data);
+        return Objects.hash(done, requestToken, errorMessage, data);
     }
 
     /**
@@ -141,7 +140,7 @@ public class SolicitudResponse {
     public String toString() {
         return "class SolicitudResponse {\n" +
                 "\tdone: " + toIndentedString(done) + "\n" +
-                "\ttokenSolicitud: " + toIndentedString(tokenSolicitud) + "\n" +
+                "\ttokenSolicitud: " + toIndentedString(requestToken) + "\n" +
                 "\terrorMessage: " + toIndentedString(errorMessage) + "\n" +
                 "\tdata: " + toIndentedString(data) + "\n" +
                 "}";

@@ -14,9 +14,9 @@ import static com.tt1.simserver.utils.StringManipulation.toIndentedString;
  * Representa los datos iniciales necesarios que envía el cliente para crear una nueva simulación.
  */
 @JsonTypeName("Solicitud")
-public class Solicitud {
-    private List<Integer> cantidadesIniciales;
-    private List<String> nombreEntidades;
+public class Request {
+    private List<Integer> initialQuantities;
+    private List<String> entityNames;
 
 
     /**
@@ -25,18 +25,18 @@ public class Solicitud {
      * @return lista de enteros con dichas cantidades.
      */
     @JsonProperty("cantidadesIniciales")
-    public List<Integer> getCantidadesIniciales() {
-        return cantidadesIniciales;
+    public List<Integer> getInitialQuantities() {
+        return initialQuantities;
     }
 
     /**
      * Asigna la lista de cantidades iniciales de las entidades.
      *
-     * @param cantidadesIniciales la lista de las cantidades.
+     * @param initialQuantities la lista de las cantidades.
      */
     @JsonProperty("cantidadesIniciales")
-    public void setCantidadesIniciales(List<Integer> cantidadesIniciales) {
-        this.cantidadesIniciales = cantidadesIniciales;
+    public void setInitialQuantities(List<Integer> initialQuantities) {
+        this.initialQuantities = initialQuantities;
     }
 
     /**
@@ -45,12 +45,12 @@ public class Solicitud {
      * @param cantidadesInicialesItem la cantidad de la nueva entidad a añadir.
      * @return la instancia actual de la solicitud.
      */
-    public Solicitud addCantidadesInicialesItem(Integer cantidadesInicialesItem) {
-        if (this.cantidadesIniciales == null) {
-            this.cantidadesIniciales = new ArrayList<>();
+    public Request addCantidadesInicialesItem(Integer cantidadesInicialesItem) {
+        if (this.initialQuantities == null) {
+            this.initialQuantities = new ArrayList<>();
         }
 
-        this.cantidadesIniciales.add(cantidadesInicialesItem);
+        this.initialQuantities.add(cantidadesInicialesItem);
         return this;
     }
 
@@ -60,9 +60,9 @@ public class Solicitud {
      * @param cantidadesInicialesItem la cantidad a remover.
      * @return la instancia actual de la solicitud.
      */
-    public Solicitud removeCantidadesInicialesItem(Integer cantidadesInicialesItem) {
-        if (cantidadesInicialesItem != null && this.cantidadesIniciales != null) {
-            this.cantidadesIniciales.remove(cantidadesInicialesItem);
+    public Request removeCantidadesInicialesItem(Integer cantidadesInicialesItem) {
+        if (cantidadesInicialesItem != null && this.initialQuantities != null) {
+            this.initialQuantities.remove(cantidadesInicialesItem);
         }
 
         return this;
@@ -74,18 +74,18 @@ public class Solicitud {
      * @return lista de nombres de las entidades.
      */
     @JsonProperty("nombreEntidades")
-    public List<String> getNombreEntidades() {
-        return nombreEntidades;
+    public List<String> getEntityNames() {
+        return entityNames;
     }
 
     /**
      * Asigna la lista de los nombres correspondientes a las entidades de la simulación.
      *
-     * @param nombreEntidades la lista de nombres.
+     * @param entityNames la lista de nombres.
      */
     @JsonProperty("nombreEntidades")
-    public void setNombreEntidades(List<String> nombreEntidades) {
-        this.nombreEntidades = nombreEntidades;
+    public void setEntityNames(List<String> entityNames) {
+        this.entityNames = entityNames;
     }
 
     /**
@@ -94,12 +94,12 @@ public class Solicitud {
      * @param nombreEntidadesItem el nombre de la entidad a añadir.
      * @return la instancia actual de la solicitud.
      */
-    public Solicitud addNombreEntidadesItem(String nombreEntidadesItem) {
-        if (this.nombreEntidades == null) {
-            this.nombreEntidades = new ArrayList<>();
+    public Request addNombreEntidadesItem(String nombreEntidadesItem) {
+        if (this.entityNames == null) {
+            this.entityNames = new ArrayList<>();
         }
 
-        this.nombreEntidades.add(nombreEntidadesItem);
+        this.entityNames.add(nombreEntidadesItem);
         return this;
     }
 
@@ -109,9 +109,9 @@ public class Solicitud {
      * @param nombreEntidadesItem el nombre a remover.
      * @return la instancia actual de la solicitud.
      */
-    public Solicitud removeNombreEntidadesItem(String nombreEntidadesItem) {
-        if (nombreEntidadesItem != null && this.nombreEntidades != null) {
-            this.nombreEntidades.remove(nombreEntidadesItem);
+    public Request removeNombreEntidadesItem(String nombreEntidadesItem) {
+        if (nombreEntidadesItem != null && this.entityNames != null) {
+            this.entityNames.remove(nombreEntidadesItem);
         }
 
         return this;
@@ -131,9 +131,9 @@ public class Solicitud {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Solicitud solicitud = (Solicitud) o;
-        return Objects.equals(this.cantidadesIniciales, solicitud.cantidadesIniciales) &&
-                Objects.equals(this.nombreEntidades, solicitud.nombreEntidades);
+        Request request = (Request) o;
+        return Objects.equals(this.initialQuantities, request.initialQuantities) &&
+                Objects.equals(this.entityNames, request.entityNames);
     }
 
     /**
@@ -143,7 +143,7 @@ public class Solicitud {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(cantidadesIniciales, nombreEntidades);
+        return Objects.hash(initialQuantities, entityNames);
     }
 
     /**
@@ -154,8 +154,8 @@ public class Solicitud {
     @Override
     public String toString() {
         return "class Solicitud {\n" +
-                "\tcantidadesIniciales: " + toIndentedString(cantidadesIniciales) + "\n" +
-                "\tnombreEntidades: " + toIndentedString(nombreEntidades) + "\n" +
+                "\tcantidadesIniciales: " + toIndentedString(initialQuantities) + "\n" +
+                "\tnombreEntidades: " + toIndentedString(entityNames) + "\n" +
                 "}";
     }
 }

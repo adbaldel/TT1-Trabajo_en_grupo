@@ -138,8 +138,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <!-- We updated this from RestApplication to Main -->
-                            <mainClass>com.tt1.simserver.Main</mainClass>
+                            <mainClass>com.tt1.simserver.RestApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

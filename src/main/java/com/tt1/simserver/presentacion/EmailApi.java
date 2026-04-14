@@ -9,7 +9,6 @@ import jakarta.ws.rs.core.Response;
 /**
  * Interfaz de la API encargada de definir los endpoints para el envío de correos electrónicos.
  */
-@Path("/Email")
 public interface EmailApi {
 
     /**

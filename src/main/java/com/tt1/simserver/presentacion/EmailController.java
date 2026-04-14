@@ -1,19 +1,17 @@
 package com.tt1.simserver.presentacion;
 
 import com.tt1.simserver.modelo.EmailResponse;
+import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 
 /**
  * Controlador que implementa las acciones y reglas de negocio conectadas al envío de correos electrónicos definidos por la interfaz EmailApi.
  */
+@Path("/Email")
 public class EmailController implements EmailApi {
 
     /**
-     * Recibe una solicitud HTTP para el envío de un correo y procesa la petición de forma interna devolviendo una respuesta.
-     *
-     * @param emailAddress la dirección de correo a la cual enviar la información.
-     * @param message      texto que se enviará en el cuerpo del correo.
-     * @return un objeto Response indicando la creación (201) de la orden y un EmailResponse adjunto.
+     * {@inheritDoc}
      */
     @Override
     public Response emailPost(String emailAddress, String message) {
