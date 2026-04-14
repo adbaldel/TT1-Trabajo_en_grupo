@@ -2,75 +2,86 @@ package com.tt1.simserver.modelo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import io.swagger.annotations.ApiModelProperty;
-import jakarta.validation.Valid;
 
 import java.util.Objects;
 
-
+/**
+ *
+ */
 @JsonTypeName("EmailResponse")
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2026-04-13T19:26:41.786837200+02:00[Europe/Madrid]", comments = "Generator version: 7.4.0")
-public class EmailResponse
-{
-    private @Valid Boolean done;
-    private @Valid String errorMessage;
+public class EmailResponse {
+    private Boolean done;
+    private String errorMessage;
+
 
     /**
      *
-     **/
-    public EmailResponse done(Boolean done)
-    {
+     * @param done
+     * @return
+     */
+    public EmailResponse done(Boolean done) {
         this.done = done;
         return this;
     }
 
 
-    @ApiModelProperty(value = "")
+    /**
+     *
+     * @return
+     */
     @JsonProperty("done")
-    public Boolean getDone()
-    {
+    public Boolean getDone() {
         return done;
     }
 
+    /**
+     *
+     * @param done
+     */
     @JsonProperty("done")
-    public void setDone(Boolean done)
-    {
+    public void setDone(Boolean done) {
         this.done = done;
     }
 
     /**
      *
-     **/
-    public EmailResponse errorMessage(String errorMessage)
-    {
+     * @param errorMessage
+     * @return
+     */
+    public EmailResponse errorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
         return this;
     }
 
-
-    @ApiModelProperty(value = "")
+    /**
+     *
+     * @return
+     */
     @JsonProperty("errorMessage")
-    public String getErrorMessage()
-    {
+    public String getErrorMessage() {
         return errorMessage;
     }
 
+    /**
+     *
+     * @param errorMessage
+     */
     @JsonProperty("errorMessage")
-    public void setErrorMessage(String errorMessage)
-    {
+    public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
 
-
+    /**
+     *
+     * @param o   the reference object with which to compare.
+     * @return
+     */
     @Override
-    public boolean equals(Object o)
-    {
-        if (this == o)
-        {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass())
-        {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         EmailResponse emailResponse = (EmailResponse) o;
@@ -78,15 +89,21 @@ public class EmailResponse
                 Objects.equals(this.errorMessage, emailResponse.errorMessage);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(done, errorMessage);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
-    public String toString()
-    {
+    public String toString() {
 
         String sb = "class EmailResponse {\n" +
                 "    done: " + toIndentedString(done) + "\n" +
@@ -99,15 +116,11 @@ public class EmailResponse
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(Object o)
-    {
-        if (o == null)
-        {
+    private String toIndentedString(Object o) {
+        if (o == null) {
             return "null";
         }
         return o.toString().replace("\n", "\n    ");
     }
-
-
 }
 

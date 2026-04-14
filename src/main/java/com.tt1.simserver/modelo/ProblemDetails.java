@@ -2,148 +2,174 @@ package com.tt1.simserver.modelo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import io.swagger.annotations.ApiModelProperty;
-import jakarta.validation.Valid;
 
 import java.util.HashMap;
 import java.util.Objects;
 
-
+/**
+ *
+ */
 @JsonTypeName("ProblemDetails")
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2026-04-13T19:26:41.786837200+02:00[Europe/Madrid]", comments = "Generator version: 7.4.0")
-public class ProblemDetails extends HashMap<String, Object>
-{
-    private @Valid String type;
-    private @Valid String title;
-    private @Valid Integer status;
-    private @Valid String detail;
-    private @Valid String instance;
+public class ProblemDetails extends HashMap<String, Object> {
+    private String type;
+    private String title;
+    private Integer status;
+    private String detail;
+    private String instance;
+
 
     /**
      *
-     **/
-    public ProblemDetails type(String type)
-    {
+     * @param type
+     * @return
+     */
+    public ProblemDetails type(String type) {
         this.type = type;
         return this;
     }
 
 
-    @ApiModelProperty(value = "")
+    /**
+     *
+     * @return
+     */
     @JsonProperty("type")
-    public String getType()
-    {
+    public String getType() {
         return type;
     }
 
+    /**
+     *
+     * @param type
+     */
     @JsonProperty("type")
-    public void setType(String type)
-    {
+    public void setType(String type) {
         this.type = type;
     }
 
     /**
      *
-     **/
-    public ProblemDetails title(String title)
-    {
+     * @param title
+     * @return
+     */
+    public ProblemDetails title(String title) {
         this.title = title;
         return this;
     }
 
-
-    @ApiModelProperty(value = "")
+    /**
+     *
+     * @return
+     */
     @JsonProperty("title")
-    public String getTitle()
-    {
+    public String getTitle() {
         return title;
     }
 
+    /**
+     *
+     * @param title
+     */
     @JsonProperty("title")
-    public void setTitle(String title)
-    {
+    public void setTitle(String title) {
         this.title = title;
     }
 
     /**
      *
-     **/
-    public ProblemDetails status(Integer status)
-    {
+     * @param status
+     * @return
+     */
+    public ProblemDetails status(Integer status) {
         this.status = status;
         return this;
     }
 
-
-    @ApiModelProperty(value = "")
+    /**
+     *
+     * @return
+     */
     @JsonProperty("status")
-    public Integer getStatus()
-    {
+    public Integer getStatus() {
         return status;
     }
 
+    /**
+     *
+     * @param status
+     */
     @JsonProperty("status")
-    public void setStatus(Integer status)
-    {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
     /**
      *
-     **/
-    public ProblemDetails detail(String detail)
-    {
+     * @param detail
+     * @return
+     */
+    public ProblemDetails detail(String detail) {
         this.detail = detail;
         return this;
     }
 
-
-    @ApiModelProperty(value = "")
+    /**
+     *
+     * @return
+     */
     @JsonProperty("detail")
-    public String getDetail()
-    {
+    public String getDetail() {
         return detail;
     }
 
+    /**
+     *
+     * @param detail
+     */
     @JsonProperty("detail")
-    public void setDetail(String detail)
-    {
+    public void setDetail(String detail) {
         this.detail = detail;
     }
 
     /**
      *
-     **/
-    public ProblemDetails instance(String instance)
-    {
+     * @param instance
+     * @return
+     */
+    public ProblemDetails instance(String instance) {
         this.instance = instance;
         return this;
     }
 
-
-    @ApiModelProperty(value = "")
+    /**
+     *
+     * @return
+     */
     @JsonProperty("instance")
-    public String getInstance()
-    {
+    public String getInstance() {
         return instance;
     }
 
+    /**
+     *
+     * @param instance
+     */
     @JsonProperty("instance")
-    public void setInstance(String instance)
-    {
+    public void setInstance(String instance) {
         this.instance = instance;
     }
 
-
+    /**
+     *
+     * @param o object to be compared for equality with this map
+     * @return
+     */
     @Override
-    public boolean equals(Object o)
-    {
-        if (this == o)
-        {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass())
-        {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         ProblemDetails problemDetails = (ProblemDetails) o;
@@ -155,15 +181,21 @@ public class ProblemDetails extends HashMap<String, Object>
                 super.equals(o);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(type, title, status, detail, instance, super.hashCode());
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
-    public String toString()
-    {
+    public String toString() {
         String sb = "class ProblemDetails {\n" +
                 "    " + toIndentedString(super.toString()) + "\n" +
                 "    type: " + toIndentedString(type) + "\n" +
@@ -179,15 +211,11 @@ public class ProblemDetails extends HashMap<String, Object>
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(Object o)
-    {
-        if (o == null)
-        {
+    private String toIndentedString(Object o) {
+        if (o == null) {
             return "null";
         }
         return o.toString().replace("\n", "\n    ");
     }
-
-
 }
 

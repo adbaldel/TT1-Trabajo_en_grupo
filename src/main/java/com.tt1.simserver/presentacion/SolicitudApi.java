@@ -1,13 +1,6 @@
 package com.tt1.simserver.presentacion;
 
-import com.tt1.simserver.modelo.ProblemDetails;
 import com.tt1.simserver.modelo.Solicitud;
-import com.tt1.simserver.modelo.SolicitudResponse;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 
@@ -15,10 +8,7 @@ import jakarta.ws.rs.core.Response;
  * Represents a collection of functions to interact with the API endpoints.
  */
 @Path("/Solicitud")
-@Api(description = "the Solicitud API")
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2026-04-13T19:26:41.786837200+02:00[Europe/Madrid]", comments = "Generator version: 7.4.0")
-public interface SolicitudApi
-{
+public interface SolicitudApi {
 
     /**
      *
@@ -31,12 +21,7 @@ public interface SolicitudApi
     @GET
     @Path("/ComprobarSolicitud")
     @Produces({"text/plain", "application/json", "text/json"})
-    @ApiOperation(value = "", notes = "", tags = {"Solicitud"})
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created", response = Integer.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request", response = ProblemDetails.class, responseContainer = "List")})
     Response solicitudComprobarSolicitudGet(@QueryParam("nombreUsuario") String nombreUsuario, @QueryParam("tok") Integer tok);
-
 
     /**
      *
@@ -47,13 +32,7 @@ public interface SolicitudApi
      */
     @GET
     @Path("/GetSolicitudesUsuario")
-    @Produces({"text/plain", "application/json", "text/json"})
-    @ApiOperation(value = "", notes = "", tags = {"Solicitud"})
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created", response = Integer.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request", response = ProblemDetails.class, responseContainer = "List")})
     Response solicitudGetSolicitudesUsuarioGet(@QueryParam("nombreUsuario") String nombreUsuario);
-
 
     /**
      *
@@ -67,10 +46,6 @@ public interface SolicitudApi
     @Path("/Solicitar")
     @Consumes({"application/json", "text/json", "application/*+json"})
     @Produces({"text/plain", "application/json", "text/json"})
-    @ApiOperation(value = "", notes = "", tags = {"Solicitud"})
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created", response = SolicitudResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = ProblemDetails.class)})
-    Response solicitudSolicitarPost(@QueryParam("nombreUsuario") String nombreUsuario, @Valid Solicitud solicitud);
+    Response solicitudSolicitarPost(@QueryParam("nombreUsuario") String nombreUsuario, Solicitud solicitud);
 
 }

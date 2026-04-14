@@ -2,48 +2,56 @@ package com.tt1.simserver.modelo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import io.swagger.annotations.ApiModelProperty;
-import jakarta.validation.Valid;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 
+/**
+ *
+ */
 @JsonTypeName("Solicitud")
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2026-04-13T19:26:41.786837200+02:00[Europe/Madrid]", comments = "Generator version: 7.4.0")
-public class Solicitud
-{
-    private @Valid List<Integer> cantidadesIniciales;
-    private @Valid List<String> nombreEntidades;
+public class Solicitud {
+    private List<Integer> cantidadesIniciales;
+    private List<String> nombreEntidades;
 
     /**
      *
-     **/
-    public Solicitud cantidadesIniciales(List<Integer> cantidadesIniciales)
-    {
+     * @param cantidadesIniciales
+     * @return
+     */
+    public Solicitud cantidadesIniciales(List<Integer> cantidadesIniciales) {
         this.cantidadesIniciales = cantidadesIniciales;
         return this;
     }
 
 
-    @ApiModelProperty(value = "")
+    /**
+     *
+     * @return
+     */
     @JsonProperty("cantidadesIniciales")
-    public List<Integer> getCantidadesIniciales()
-    {
+    public List<Integer> getCantidadesIniciales() {
         return cantidadesIniciales;
     }
 
+    /**
+     *
+     * @param cantidadesIniciales
+     */
     @JsonProperty("cantidadesIniciales")
-    public void setCantidadesIniciales(List<Integer> cantidadesIniciales)
-    {
+    public void setCantidadesIniciales(List<Integer> cantidadesIniciales) {
         this.cantidadesIniciales = cantidadesIniciales;
     }
 
-    public Solicitud addCantidadesInicialesItem(Integer cantidadesInicialesItem)
-    {
-        if (this.cantidadesIniciales == null)
-        {
+    /**
+     *
+     * @param cantidadesInicialesItem
+     * @return
+     */
+    public Solicitud addCantidadesInicialesItem(Integer cantidadesInicialesItem) {
+        if (this.cantidadesIniciales == null) {
             this.cantidadesIniciales = new ArrayList<>();
         }
 
@@ -51,10 +59,13 @@ public class Solicitud
         return this;
     }
 
-    public Solicitud removeCantidadesInicialesItem(Integer cantidadesInicialesItem)
-    {
-        if (cantidadesInicialesItem != null && this.cantidadesIniciales != null)
-        {
+    /**
+     *
+     * @param cantidadesInicialesItem
+     * @return
+     */
+    public Solicitud removeCantidadesInicialesItem(Integer cantidadesInicialesItem) {
+        if (cantidadesInicialesItem != null && this.cantidadesIniciales != null) {
             this.cantidadesIniciales.remove(cantidadesInicialesItem);
         }
 
@@ -63,31 +74,39 @@ public class Solicitud
 
     /**
      *
-     **/
-    public Solicitud nombreEntidades(List<String> nombreEntidades)
-    {
+     * @param nombreEntidades
+     * @return
+     */
+    public Solicitud nombreEntidades(List<String> nombreEntidades) {
         this.nombreEntidades = nombreEntidades;
         return this;
     }
 
-
-    @ApiModelProperty(value = "")
+    /**
+     *
+     * @return
+     */
     @JsonProperty("nombreEntidades")
-    public List<String> getNombreEntidades()
-    {
+    public List<String> getNombreEntidades() {
         return nombreEntidades;
     }
 
+    /**
+     *
+     * @param nombreEntidades
+     */
     @JsonProperty("nombreEntidades")
-    public void setNombreEntidades(List<String> nombreEntidades)
-    {
+    public void setNombreEntidades(List<String> nombreEntidades) {
         this.nombreEntidades = nombreEntidades;
     }
 
-    public Solicitud addNombreEntidadesItem(String nombreEntidadesItem)
-    {
-        if (this.nombreEntidades == null)
-        {
+    /**
+     *
+     * @param nombreEntidadesItem
+     * @return
+     */
+    public Solicitud addNombreEntidadesItem(String nombreEntidadesItem) {
+        if (this.nombreEntidades == null) {
             this.nombreEntidades = new ArrayList<>();
         }
 
@@ -95,25 +114,30 @@ public class Solicitud
         return this;
     }
 
-    public Solicitud removeNombreEntidadesItem(String nombreEntidadesItem)
-    {
-        if (nombreEntidadesItem != null && this.nombreEntidades != null)
-        {
+    /**
+     *
+     * @param nombreEntidadesItem
+     * @return
+     */
+    public Solicitud removeNombreEntidadesItem(String nombreEntidadesItem) {
+        if (nombreEntidadesItem != null && this.nombreEntidades != null) {
             this.nombreEntidades.remove(nombreEntidadesItem);
         }
 
         return this;
     }
 
+    /**
+     *
+     * @param o   the reference object with which to compare.
+     * @return
+     */
     @Override
-    public boolean equals(Object o)
-    {
-        if (this == o)
-        {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass())
-        {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         Solicitud solicitud = (Solicitud) o;
@@ -121,15 +145,21 @@ public class Solicitud
                 Objects.equals(this.nombreEntidades, solicitud.nombreEntidades);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(cantidadesIniciales, nombreEntidades);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
-    public String toString()
-    {
+    public String toString() {
 
         String sb = "class Solicitud {\n" +
                 "    cantidadesIniciales: " + toIndentedString(cantidadesIniciales) + "\n" +
@@ -142,15 +172,11 @@ public class Solicitud
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(Object o)
-    {
-        if (o == null)
-        {
+    private String toIndentedString(Object o) {
+        if (o == null) {
             return "null";
         }
         return o.toString().replace("\n", "\n    ");
     }
-
-
 }
 

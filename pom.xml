@@ -13,84 +13,133 @@
         Servidor de simulaciones para el trabajo en grupo de TT1.
     </description>
 
+    <!--
+        PROPERTIES:
+        Centralized version numbers so they are easy to update later.
+    -->
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Versions for our dependencies -->
+        <jersey.version>3.1.8</jersey.version>
         <jackson-version>2.15.2</jackson-version>
-        <junit-version>4.13.2</junit-version>
-        <joda-version>2.10.13</joda-version>
-        <javax.annotation-api-version>2.1.1</javax.annotation-api-version>
-        <beanvalidation-version>3.0.2</beanvalidation-version>
         <jakarta.ws.rs-version>3.1.0</jakarta.ws.rs-version>
+        <junit-version>4.13.2</junit-version>
     </properties>
 
     <dependencies>
+        <!--
+            =============================================================
+            1. CORE REST API (JAX-RS & JERSEY)
+            =============================================================
+        -->
+
+        <!-- Jakarta RESTful Web Services API:
+             Provides the standard annotations (@Path, @GET, @POST, @Produces).
+             Notice we removed <scope>provided</scope> because we are running standalone. -->
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
             <version>${jakarta.ws.rs-version}</version>
-            <scope>provided</scope>
         </dependency>
+
+        <!-- Jersey Server:
+             The actual implementation of the JAX-RS API. It does the heavy lifting of
+             routing HTTP requests to your @Path annotated Java methods. -->
         <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson-version}</version>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-server</artifactId>
+            <version>${jersey.version}</version>
         </dependency>
+
+        <!-- Jersey HK2 (Dependency Injection):
+             Jersey uses HK2 under the hood to instantiate your controllers and inject
+             dependencies into them. -->
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+
+
+        <!--
+            =============================================================
+            2. STANDALONE SERVER (GRIZZLY)
+            =============================================================
+        -->
+
+        <!-- Grizzly HTTP Server integration for Jersey:
+             Instead of deploying a .war file to Tomcat, this allows you to spin up
+             a lightweight HTTP server directly from your public static void main() method. -->
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-grizzly2-http</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+
+
+        <!--
+            =============================================================
+            3. JSON SERIALIZATION (JACKSON)
+            =============================================================
+        -->
+
+        <!-- Jersey Media JSON Jackson:
+             Tells our Jersey server to use Jackson to convert between Java Objects (like Solicitud)
+             and JSON. We use Jackson instead of Eclipse Yasson because the OpenAPI
+             generator placed Jackson annotations (@JsonProperty) in your models. -->
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+
+        <!-- Jackson JAX-RS JSON Provider:
+             Provides the actual integration layer between Jakarta REST (JAX-RS) and Jackson. -->
         <dependency>
             <groupId>com.fasterxml.jackson.jakarta.rs</groupId>
             <artifactId>jackson-jakarta-rs-json-provider</artifactId>
             <version>${jackson-version}</version>
         </dependency>
+
+        <!-- Jackson Datatype JSR310:
+             Allows Jackson to properly serialize/deserialize modern Java 8+ Date and Time
+             objects (like LocalDate, OffsetDateTime). -->
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>${joda-version}</version>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson-version}</version>
         </dependency>
-        <dependency>
-            <groupId>jakarta.annotation</groupId>
-            <artifactId>jakarta.annotation-api</artifactId>
-            <version>${javax.annotation-api-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <scope>provided</scope>
-            <version>1.5.3</version>
-        </dependency>
-        <!-- @Nullable annotation -->
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>3.0.2</version>
-        </dependency>
+
+
+        <!--
+            =============================================================
+            4. TESTING
+            =============================================================
+        -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit-version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- Bean Validation API support -->
-        <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-            <version>${beanvalidation-version}</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <!-- Maven Jar Plugin:
+                 Configures how the final executable .jar is built. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>
-                                com.tt1.simserver.RestApplication
-                            </mainClass>
+                            <!-- We updated this from RestApplication to Main -->
+                            <mainClass>com.tt1.simserver.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

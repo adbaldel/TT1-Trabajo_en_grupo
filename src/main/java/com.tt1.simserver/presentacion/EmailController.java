@@ -3,12 +3,19 @@ package com.tt1.simserver.presentacion;
 import com.tt1.simserver.modelo.EmailResponse;
 import jakarta.ws.rs.core.Response;
 
-public class EmailController implements EmailApi
-{
+/**
+ *
+ */
+public class EmailController implements EmailApi {
 
+    /**
+     *
+     * @param emailAddress
+     * @param message
+     * @return
+     */
     @Override
-    public Response emailPost(String emailAddress, String message)
-    {
+    public Response emailPost(String emailAddress, String message) {
 
         // 1. Aquí llamaremos a las clases del paquete 'logica'
         // para realizar la acción (ej. enviar el email real).
