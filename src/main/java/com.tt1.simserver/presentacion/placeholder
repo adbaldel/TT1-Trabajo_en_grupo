@@ -1,9 +1,0 @@
-Aquí van las clases de la capa de presentación. La implementación de la API.
-
-Este programa no va a tener una capa de presentación para seres humanos sino
-para otros ordenadores, esto es lo que se llama una API. En particular, en este
-caso va a ser una API basada en comunicaciones HTTP.
-
-(Controllers): This is where the HTTP endpoints (/Email, /Solicitud, etc.) will
-live. These classes should only handle HTTP requests, validate inputs, and
-return HTTP responses.
