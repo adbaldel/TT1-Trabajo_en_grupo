@@ -7,18 +7,17 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 
 /**
- * Represents a collection of functions to interact with the API endpoints.
+ * Interfaz de la API encargada de definir los endpoints para el envío de correos electrónicos.
  */
 @Path("/Email")
 public interface EmailApi {
 
     /**
+     * Endpoint POST para realizar el envío de un correo a una dirección de email indicada.
      *
-     *
-     * @param emailAddress
-     * @param message
-     * @return Created
-     * @return Bad Request
+     * @param emailAddress la dirección de correo del destinatario donde se debe enviar el mensaje.
+     * @param message      el cuerpo o contenido textual del correo.
+     * @return un objeto Response que contiene el estado HTTP (como 201 Created) y el cuerpo con la estructura EmailResponse, o en su defecto ProblemDetails si la operación falla (por ejemplo 400 Bad Request).
      */
     @POST
     @Produces({"text/plain", "application/json", "text/json"})

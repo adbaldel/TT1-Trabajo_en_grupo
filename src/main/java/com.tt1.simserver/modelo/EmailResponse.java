@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.Objects;
 
 /**
- *
+ * Representa la respuesta devuelta por el servidor tras intentar enviar un correo electrónico.
  */
 @JsonTypeName("EmailResponse")
 public class EmailResponse {
@@ -15,9 +15,10 @@ public class EmailResponse {
 
 
     /**
+     * Establece si la operación se realizó con éxito y devuelve la instancia actual.
      *
-     * @param done
-     * @return
+     * @param done cierto si la operación fue exitosa, falso en caso contrario.
+     * @return la instancia actual de EmailResponse para permitir el encadenamiento de métodos.
      */
     public EmailResponse done(Boolean done) {
         this.done = done;
@@ -26,8 +27,9 @@ public class EmailResponse {
 
 
     /**
+     * Devuelve si la operación de envío se completó correctamente.
      *
-     * @return
+     * @return cierto si se envió el correo, falso en caso de error.
      */
     @JsonProperty("done")
     public Boolean getDone() {
@@ -35,8 +37,9 @@ public class EmailResponse {
     }
 
     /**
+     * Establece el estado de éxito del envío del correo.
      *
-     * @param done
+     * @param done cierto si fue exitoso, falso en caso contrario.
      */
     @JsonProperty("done")
     public void setDone(Boolean done) {
@@ -44,9 +47,10 @@ public class EmailResponse {
     }
 
     /**
+     * Establece el mensaje de error y devuelve la instancia actual.
      *
-     * @param errorMessage
-     * @return
+     * @param errorMessage el mensaje que describe el error, si hubo alguno.
+     * @return la instancia actual de EmailResponse para encadenar métodos.
      */
     public EmailResponse errorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
@@ -54,8 +58,9 @@ public class EmailResponse {
     }
 
     /**
+     * Devuelve el mensaje de error de la operación, si la hubo.
      *
-     * @return
+     * @return el texto del mensaje de error, o nulo si no hubo error.
      */
     @JsonProperty("errorMessage")
     public String getErrorMessage() {
@@ -63,8 +68,9 @@ public class EmailResponse {
     }
 
     /**
+     * Establece el mensaje descriptivo del error en caso de que falle el envío.
      *
-     * @param errorMessage
+     * @param errorMessage el texto del mensaje de error.
      */
     @JsonProperty("errorMessage")
     public void setErrorMessage(String errorMessage) {
@@ -72,9 +78,10 @@ public class EmailResponse {
     }
 
     /**
+     * Compara este objeto con otro para comprobar si son iguales basándose en sus atributos.
      *
-     * @param o   the reference object with which to compare.
-     * @return
+     * @param o el objeto de referencia con el cual comparar.
+     * @return cierto si los objetos son iguales, falso en caso contrario.
      */
     @Override
     public boolean equals(Object o) {
@@ -90,8 +97,9 @@ public class EmailResponse {
     }
 
     /**
+     * Calcula y devuelve el código hash de este objeto.
      *
-     * @return
+     * @return el valor hash calculado.
      */
     @Override
     public int hashCode() {
@@ -99,8 +107,9 @@ public class EmailResponse {
     }
 
     /**
+     * Genera una representación en forma de cadena (string) de los datos de este objeto.
      *
-     * @return
+     * @return una cadena que representa este objeto.
      */
     @Override
     public String toString() {
@@ -113,8 +122,8 @@ public class EmailResponse {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
+     * Convierte el objeto dado a una cadena, indentando cada línea con 4 espacios
+     * (excepto la primera línea). Método auxiliar para toString.
      */
     private String toIndentedString(Object o) {
         if (o == null) {
@@ -123,4 +132,3 @@ public class EmailResponse {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

@@ -7,21 +7,19 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 
 /**
- * Represents a collection of functions to interact with the API endpoints.
+ * Interfaz de la API enfocada en la consulta y obtención de resultados generados por simulaciones ya finalizadas.
  */
 @Path("/Resultados")
 public interface ResultadosApi {
 
     /**
+     * Endpoint POST que recupera y envía los resultados de una simulación para el usuario indicado.
      *
-     *
-     * @param nombreUsuario
-     * @param tok
-     * @return Created
-     * @return Bad Request
+     * @param nombreUsuario el nombre del usuario al cual pertenecen los resultados.
+     * @param tok           el token identificador asociado unívocamente a esa simulación específica.
+     * @return la respuesta HTTP informando de la correcta obtención de los datos (ej. 201 Created y cuerpo ResultsResponse) o detallando un error si ha fallado.
      */
     @POST
     @Produces({"text/plain", "application/json", "text/json"})
     Response resultadosPost(@QueryParam("nombreUsuario") String nombreUsuario, @QueryParam("tok") Integer tok);
-
 }

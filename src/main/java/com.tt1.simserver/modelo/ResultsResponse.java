@@ -7,7 +7,7 @@ import java.util.Objects;
 
 
 /**
- *
+ * Representa la respuesta devuelta por el servidor al consultar los resultados de una simulación.
  */
 @JsonTypeName("ResultsResponse")
 public class ResultsResponse {
@@ -18,9 +18,10 @@ public class ResultsResponse {
 
 
     /**
+     * Establece si los resultados se han recuperado con éxito y devuelve la instancia actual.
      *
-     * @param done
-     * @return
+     * @param done cierto si la operación fue exitosa, falso en caso contrario.
+     * @return la instancia actual para encadenar métodos.
      */
     public ResultsResponse done(Boolean done) {
         this.done = done;
@@ -29,8 +30,9 @@ public class ResultsResponse {
 
 
     /**
+     * Devuelve si la operación de obtener resultados fue exitosa.
      *
-     * @return
+     * @return cierto si se obtuvieron los datos, falso si hubo error.
      */
     @JsonProperty("done")
     public Boolean getDone() {
@@ -38,8 +40,9 @@ public class ResultsResponse {
     }
 
     /**
+     * Establece el estado de éxito al solicitar los resultados.
      *
-     * @param done
+     * @param done cierto si la petición fue exitosa.
      */
     @JsonProperty("done")
     public void setDone(Boolean done) {
@@ -47,9 +50,10 @@ public class ResultsResponse {
     }
 
     /**
+     * Establece el token de la solicitud original asociada y devuelve la instancia actual.
      *
-     * @param tokenSolicitud
-     * @return
+     * @param tokenSolicitud el número de token que identifica a la simulación.
+     * @return la instancia actual para encadenar métodos.
      */
     public ResultsResponse tokenSolicitud(Integer tokenSolicitud) {
         this.tokenSolicitud = tokenSolicitud;
@@ -57,8 +61,9 @@ public class ResultsResponse {
     }
 
     /**
+     * Devuelve el token de la solicitud de simulación solicitada.
      *
-     * @return
+     * @return el token identificador numérico.
      */
     @JsonProperty("tokenSolicitud")
     public Integer getTokenSolicitud() {
@@ -66,8 +71,9 @@ public class ResultsResponse {
     }
 
     /**
+     * Establece el token identificador de la solicitud de la simulación.
      *
-     * @param tokenSolicitud
+     * @param tokenSolicitud el token numérico.
      */
     @JsonProperty("tokenSolicitud")
     public void setTokenSolicitud(Integer tokenSolicitud) {
@@ -75,9 +81,10 @@ public class ResultsResponse {
     }
 
     /**
+     * Establece el mensaje de error y devuelve la instancia actual.
      *
-     * @param errorMessage
-     * @return
+     * @param errorMessage mensaje descriptivo en caso de fallo.
+     * @return la instancia actual para encadenar métodos.
      */
     public ResultsResponse errorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
@@ -85,8 +92,9 @@ public class ResultsResponse {
     }
 
     /**
+     * Devuelve el mensaje de error de la solicitud, si lo hubiera.
      *
-     * @return
+     * @return el texto del error, o nulo si no ha habido errores.
      */
     @JsonProperty("errorMessage")
     public String getErrorMessage() {
@@ -94,8 +102,9 @@ public class ResultsResponse {
     }
 
     /**
+     * Establece el mensaje de error de la solicitud.
      *
-     * @param errorMessage
+     * @param errorMessage texto con el error ocurrido.
      */
     @JsonProperty("errorMessage")
     public void setErrorMessage(String errorMessage) {
@@ -103,9 +112,10 @@ public class ResultsResponse {
     }
 
     /**
+     * Establece los datos con los resultados de la simulación y devuelve la instancia actual.
      *
-     * @param data
-     * @return
+     * @param data una cadena de texto representando los resultados.
+     * @return la instancia actual para encadenar métodos.
      */
     public ResultsResponse data(String data) {
         this.data = data;
@@ -113,8 +123,9 @@ public class ResultsResponse {
     }
 
     /**
+     * Devuelve los datos de la simulación completada.
      *
-     * @return
+     * @return los datos generados por la simulación.
      */
     @JsonProperty("data")
     public String getData() {
@@ -122,8 +133,9 @@ public class ResultsResponse {
     }
 
     /**
+     * Establece los datos resultantes de la simulación.
      *
-     * @param data
+     * @param data la información de la simulación.
      */
     @JsonProperty("data")
     public void setData(String data) {
@@ -131,9 +143,10 @@ public class ResultsResponse {
     }
 
     /**
+     * Compara los atributos de esta instancia con otro objeto para verificar la igualdad.
      *
-     * @param o   the reference object with which to compare.
-     * @return
+     * @param o el objeto de referencia a comparar.
+     * @return cierto si son idénticos, falso si no.
      */
     @Override
     public boolean equals(Object o) {
@@ -151,8 +164,9 @@ public class ResultsResponse {
     }
 
     /**
+     * Genera el código hash para el objeto.
      *
-     * @return
+     * @return el valor numérico del hash.
      */
     @Override
     public int hashCode() {
@@ -160,8 +174,9 @@ public class ResultsResponse {
     }
 
     /**
+     * Convierte el objeto a una representación en forma de cadena de texto.
      *
-     * @return
+     * @return cadena descriptiva de los resultados.
      */
     @Override
     public String toString() {
@@ -176,8 +191,7 @@ public class ResultsResponse {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
+     * Método interno para la correcta visualización del toString.
      */
     private String toIndentedString(Object o) {
         if (o == null) {
@@ -186,4 +200,3 @@ public class ResultsResponse {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

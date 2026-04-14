@@ -9,7 +9,7 @@ import java.util.Objects;
 
 
 /**
- *
+ * Representa los datos iniciales necesarios que envía el cliente para crear una nueva simulación.
  */
 @JsonTypeName("Solicitud")
 public class Solicitud {
@@ -17,9 +17,10 @@ public class Solicitud {
     private List<String> nombreEntidades;
 
     /**
+     * Establece la lista con las cantidades iniciales de las entidades y devuelve la instancia actual.
      *
-     * @param cantidadesIniciales
-     * @return
+     * @param cantidadesIniciales lista de enteros con el número de elementos de cada entidad a simular.
+     * @return la instancia actual para encadenar llamadas.
      */
     public Solicitud cantidadesIniciales(List<Integer> cantidadesIniciales) {
         this.cantidadesIniciales = cantidadesIniciales;
@@ -28,8 +29,9 @@ public class Solicitud {
 
 
     /**
+     * Devuelve las cantidades iniciales de cada entidad que participará en la simulación.
      *
-     * @return
+     * @return lista de enteros con dichas cantidades.
      */
     @JsonProperty("cantidadesIniciales")
     public List<Integer> getCantidadesIniciales() {
@@ -37,8 +39,9 @@ public class Solicitud {
     }
 
     /**
+     * Asigna la lista de cantidades iniciales de las entidades.
      *
-     * @param cantidadesIniciales
+     * @param cantidadesIniciales la lista de las cantidades.
      */
     @JsonProperty("cantidadesIniciales")
     public void setCantidadesIniciales(List<Integer> cantidadesIniciales) {
@@ -46,9 +49,10 @@ public class Solicitud {
     }
 
     /**
+     * Añade una nueva cantidad inicial a la lista existente. Si la lista no existe, la crea.
      *
-     * @param cantidadesInicialesItem
-     * @return
+     * @param cantidadesInicialesItem la cantidad de la nueva entidad a añadir.
+     * @return la instancia actual de la solicitud.
      */
     public Solicitud addCantidadesInicialesItem(Integer cantidadesInicialesItem) {
         if (this.cantidadesIniciales == null) {
@@ -60,9 +64,10 @@ public class Solicitud {
     }
 
     /**
+     * Elimina una cantidad específica de la lista de cantidades iniciales.
      *
-     * @param cantidadesInicialesItem
-     * @return
+     * @param cantidadesInicialesItem la cantidad a remover.
+     * @return la instancia actual de la solicitud.
      */
     public Solicitud removeCantidadesInicialesItem(Integer cantidadesInicialesItem) {
         if (cantidadesInicialesItem != null && this.cantidadesIniciales != null) {
@@ -73,9 +78,10 @@ public class Solicitud {
     }
 
     /**
+     * Establece la lista de nombres de las entidades y devuelve la instancia actual.
      *
-     * @param nombreEntidades
-     * @return
+     * @param nombreEntidades lista con los nombres de las entidades que coinciden con las cantidades.
+     * @return la instancia actual de la solicitud.
      */
     public Solicitud nombreEntidades(List<String> nombreEntidades) {
         this.nombreEntidades = nombreEntidades;
@@ -83,8 +89,9 @@ public class Solicitud {
     }
 
     /**
+     * Devuelve la lista con los nombres de las entidades a simular.
      *
-     * @return
+     * @return lista de nombres de las entidades.
      */
     @JsonProperty("nombreEntidades")
     public List<String> getNombreEntidades() {
@@ -92,8 +99,9 @@ public class Solicitud {
     }
 
     /**
+     * Asigna la lista de los nombres correspondientes a las entidades de la simulación.
      *
-     * @param nombreEntidades
+     * @param nombreEntidades la lista de nombres.
      */
     @JsonProperty("nombreEntidades")
     public void setNombreEntidades(List<String> nombreEntidades) {
@@ -101,9 +109,10 @@ public class Solicitud {
     }
 
     /**
+     * Añade un nuevo nombre de entidad a la lista de nombres.
      *
-     * @param nombreEntidadesItem
-     * @return
+     * @param nombreEntidadesItem el nombre de la entidad a añadir.
+     * @return la instancia actual de la solicitud.
      */
     public Solicitud addNombreEntidadesItem(String nombreEntidadesItem) {
         if (this.nombreEntidades == null) {
@@ -115,9 +124,10 @@ public class Solicitud {
     }
 
     /**
+     * Elimina el nombre de una entidad de la lista existente.
      *
-     * @param nombreEntidadesItem
-     * @return
+     * @param nombreEntidadesItem el nombre a remover.
+     * @return la instancia actual de la solicitud.
      */
     public Solicitud removeNombreEntidadesItem(String nombreEntidadesItem) {
         if (nombreEntidadesItem != null && this.nombreEntidades != null) {
@@ -128,9 +138,10 @@ public class Solicitud {
     }
 
     /**
+     * Verifica la igualdad de los atributos de esta solicitud frente a otro objeto.
      *
-     * @param o   the reference object with which to compare.
-     * @return
+     * @param o el objeto con el que comparar.
+     * @return cierto si tienen las mismas listas de cantidades y entidades.
      */
     @Override
     public boolean equals(Object o) {
@@ -146,8 +157,9 @@ public class Solicitud {
     }
 
     /**
+     * Calcula y devuelve el código hash para el objeto Solicitud.
      *
-     * @return
+     * @return el valor hash calculado.
      */
     @Override
     public int hashCode() {
@@ -155,8 +167,9 @@ public class Solicitud {
     }
 
     /**
+     * Devuelve una cadena de texto descriptiva de las listas contenidas en la solicitud.
      *
-     * @return
+     * @return una representación en formato string del objeto.
      */
     @Override
     public String toString() {
@@ -169,8 +182,7 @@ public class Solicitud {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
+     * Método auxiliar de formato para indentar de forma amigable los datos en el toString.
      */
     private String toIndentedString(Object o) {
         if (o == null) {
@@ -179,4 +191,3 @@ public class Solicitud {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

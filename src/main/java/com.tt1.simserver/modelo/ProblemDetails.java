@@ -7,7 +7,8 @@ import java.util.HashMap;
 import java.util.Objects;
 
 /**
- *
+ * Representa los detalles de un problema o error en una respuesta HTTP,
+ * comúnmente usado para estandarizar errores (basado en RFC 7807).
  */
 @JsonTypeName("ProblemDetails")
 public class ProblemDetails extends HashMap<String, Object> {
@@ -19,9 +20,10 @@ public class ProblemDetails extends HashMap<String, Object> {
 
 
     /**
+     * Establece el tipo del problema y devuelve la instancia actual.
      *
-     * @param type
-     * @return
+     * @param type un URI o referencia que identifica el tipo del problema.
+     * @return la instancia actual para encadenar métodos.
      */
     public ProblemDetails type(String type) {
         this.type = type;
@@ -30,8 +32,9 @@ public class ProblemDetails extends HashMap<String, Object> {
 
 
     /**
+     * Devuelve el tipo del problema.
      *
-     * @return
+     * @return una cadena con la referencia al tipo del problema.
      */
     @JsonProperty("type")
     public String getType() {
@@ -39,8 +42,9 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
+     * Establece el tipo del problema.
      *
-     * @param type
+     * @param type una cadena con la referencia al tipo del problema.
      */
     @JsonProperty("type")
     public void setType(String type) {
@@ -48,9 +52,10 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
+     * Establece el título descriptivo corto del problema y devuelve la instancia actual.
      *
-     * @param title
-     * @return
+     * @param title un título amigable y corto que resume el problema.
+     * @return la instancia actual para encadenar métodos.
      */
     public ProblemDetails title(String title) {
         this.title = title;
@@ -58,8 +63,9 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
+     * Devuelve el título del problema.
      *
-     * @return
+     * @return el título descriptivo corto.
      */
     @JsonProperty("title")
     public String getTitle() {
@@ -67,8 +73,9 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
+     * Establece el título del problema.
      *
-     * @param title
+     * @param title el título descriptivo corto.
      */
     @JsonProperty("title")
     public void setTitle(String title) {
@@ -76,9 +83,10 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
+     * Establece el código de estado HTTP y devuelve la instancia actual.
      *
-     * @param status
-     * @return
+     * @param status el código de estado HTTP asociado al problema (ej. 400).
+     * @return la instancia actual para encadenar métodos.
      */
     public ProblemDetails status(Integer status) {
         this.status = status;
@@ -86,8 +94,9 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
+     * Devuelve el código de estado HTTP.
      *
-     * @return
+     * @return el número del código de estado.
      */
     @JsonProperty("status")
     public Integer getStatus() {
@@ -95,8 +104,9 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
+     * Establece el código de estado HTTP asociado.
      *
-     * @param status
+     * @param status el número del código de estado.
      */
     @JsonProperty("status")
     public void setStatus(Integer status) {
@@ -104,9 +114,10 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
+     * Establece los detalles específicos del problema y devuelve la instancia actual.
      *
-     * @param detail
-     * @return
+     * @param detail una explicación más extensa y comprensible para humanos sobre el error.
+     * @return la instancia actual para encadenar métodos.
      */
     public ProblemDetails detail(String detail) {
         this.detail = detail;
@@ -114,8 +125,9 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
+     * Devuelve los detalles del problema.
      *
-     * @return
+     * @return una cadena con la explicación detallada del error.
      */
     @JsonProperty("detail")
     public String getDetail() {
@@ -123,8 +135,9 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
+     * Establece los detalles del problema.
      *
-     * @param detail
+     * @param detail una cadena con la explicación detallada.
      */
     @JsonProperty("detail")
     public void setDetail(String detail) {
@@ -132,9 +145,10 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
+     * Establece la referencia a la instancia exacta donde ocurrió el problema y devuelve la instancia actual.
      *
-     * @param instance
-     * @return
+     * @param instance un URI que identifica la ocurrencia específica del problema.
+     * @return la instancia actual para encadenar métodos.
      */
     public ProblemDetails instance(String instance) {
         this.instance = instance;
@@ -142,8 +156,9 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
+     * Devuelve la instancia donde ocurrió el problema.
      *
-     * @return
+     * @return el URI de la instancia del problema.
      */
     @JsonProperty("instance")
     public String getInstance() {
@@ -151,8 +166,9 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
+     * Establece la instancia donde ocurrió el problema.
      *
-     * @param instance
+     * @param instance el URI identificador de la instancia.
      */
     @JsonProperty("instance")
     public void setInstance(String instance) {
@@ -160,9 +176,10 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
+     * Compara este objeto con otro para comprobar si son iguales basándose en sus atributos y en los de su superclase HashMap.
      *
-     * @param o object to be compared for equality with this map
-     * @return
+     * @param o el objeto a comparar.
+     * @return cierto si los objetos son idénticos, falso de lo contrario.
      */
     @Override
     public boolean equals(Object o) {
@@ -182,8 +199,9 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
+     * Calcula y devuelve el código hash de este objeto.
      *
-     * @return
+     * @return el valor hash.
      */
     @Override
     public int hashCode() {
@@ -191,8 +209,9 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
+     * Genera una representación en forma de cadena del detalle del problema.
      *
-     * @return
+     * @return una cadena que representa este objeto.
      */
     @Override
     public String toString() {
@@ -208,8 +227,7 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
+     * Método auxiliar para indentar correctamente el resultado del toString.
      */
     private String toIndentedString(Object o) {
         if (o == null) {
@@ -218,4 +236,3 @@ public class ProblemDetails extends HashMap<String, Object> {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

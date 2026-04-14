@@ -7,7 +7,7 @@ import java.util.Objects;
 
 
 /**
- *
+ * Representa la respuesta del servidor tras procesar la creación de una nueva solicitud de simulación.
  */
 @JsonTypeName("SolicitudResponse")
 public class SolicitudResponse {
@@ -18,9 +18,10 @@ public class SolicitudResponse {
 
 
     /**
+     * Establece si la solicitud fue registrada correctamente y devuelve la instancia actual.
      *
-     * @param done
-     * @return
+     * @param done cierto si la petición ha sido exitosa.
+     * @return la instancia actual para encadenar llamadas.
      */
     public SolicitudResponse done(Boolean done) {
         this.done = done;
@@ -29,8 +30,9 @@ public class SolicitudResponse {
 
 
     /**
+     * Indica si se pudo llevar a cabo la operación con éxito.
      *
-     * @return
+     * @return cierto si fue exitosa, de lo contrario falso.
      */
     @JsonProperty("done")
     public Boolean getDone() {
@@ -38,8 +40,9 @@ public class SolicitudResponse {
     }
 
     /**
+     * Asigna el estado de la operación (éxito o fracaso).
      *
-     * @param done
+     * @param done estado de la operación.
      */
     @JsonProperty("done")
     public void setDone(Boolean done) {
@@ -47,9 +50,10 @@ public class SolicitudResponse {
     }
 
     /**
+     * Establece el token asignado a esta nueva simulación y devuelve la instancia actual.
      *
-     * @param tokenSolicitud
-     * @return
+     * @param tokenSolicitud el token numérico identificador.
+     * @return la instancia actual de la respuesta.
      */
     public SolicitudResponse tokenSolicitud(Integer tokenSolicitud) {
         this.tokenSolicitud = tokenSolicitud;
@@ -57,8 +61,9 @@ public class SolicitudResponse {
     }
 
     /**
+     * Devuelve el token que identifica unívocamente a la solicitud recién creada.
      *
-     * @return
+     * @return el token de la solicitud.
      */
     @JsonProperty("tokenSolicitud")
     public Integer getTokenSolicitud() {
@@ -66,8 +71,9 @@ public class SolicitudResponse {
     }
 
     /**
+     * Asigna el identificador token de la solicitud generada.
      *
-     * @param tokenSolicitud
+     * @param tokenSolicitud el valor numérico del token.
      */
     @JsonProperty("tokenSolicitud")
     public void setTokenSolicitud(Integer tokenSolicitud) {
@@ -75,9 +81,10 @@ public class SolicitudResponse {
     }
 
     /**
+     * Establece el mensaje de error de la operación y devuelve la instancia actual.
      *
-     * @param errorMessage
-     * @return
+     * @param errorMessage el texto que explica por qué ha fallado la solicitud.
+     * @return la instancia actual para encadenar métodos.
      */
     public SolicitudResponse errorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
@@ -85,8 +92,9 @@ public class SolicitudResponse {
     }
 
     /**
+     * Devuelve el mensaje de error en caso de fallo, o nulo si no hubo ninguno.
      *
-     * @return
+     * @return texto del error.
      */
     @JsonProperty("errorMessage")
     public String getErrorMessage() {
@@ -94,8 +102,9 @@ public class SolicitudResponse {
     }
 
     /**
+     * Asigna un texto descriptivo del error al generar la solicitud.
      *
-     * @param errorMessage
+     * @param errorMessage mensaje de error a guardar.
      */
     @JsonProperty("errorMessage")
     public void setErrorMessage(String errorMessage) {
@@ -103,9 +112,10 @@ public class SolicitudResponse {
     }
 
     /**
+     * Establece un flag adicional de la respuesta y devuelve la instancia actual.
      *
-     * @param data
-     * @return
+     * @param data un valor booleano adicional propio de la operación.
+     * @return la instancia actual.
      */
     public SolicitudResponse data(Boolean data) {
         this.data = data;
@@ -113,8 +123,9 @@ public class SolicitudResponse {
     }
 
     /**
+     * Devuelve un flag adicional adjunto en la respuesta.
      *
-     * @return
+     * @return flag adicional.
      */
     @JsonProperty("data")
     public Boolean getData() {
@@ -122,8 +133,9 @@ public class SolicitudResponse {
     }
 
     /**
+     * Asigna un valor booleano a los datos extra devueltos por el servidor.
      *
-     * @param data
+     * @param data valor booleano adicional.
      */
     @JsonProperty("data")
     public void setData(Boolean data) {
@@ -131,9 +143,10 @@ public class SolicitudResponse {
     }
 
     /**
+     * Compara los campos de esta respuesta frente a otro objeto verificando su igualdad.
      *
-     * @param o   the reference object with which to compare.
-     * @return
+     * @param o el objeto a contrastar.
+     * @return cierto si tienen la misma información, falso de lo contrario.
      */
     @Override
     public boolean equals(Object o) {
@@ -151,8 +164,9 @@ public class SolicitudResponse {
     }
 
     /**
+     * Devuelve el código hash para el objeto actual.
      *
-     * @return
+     * @return valor hash numérico.
      */
     @Override
     public int hashCode() {
@@ -160,8 +174,9 @@ public class SolicitudResponse {
     }
 
     /**
+     * Obtiene una representación textual, multilínea y legible, de los datos en este objeto.
      *
-     * @return
+     * @return los datos en formato cadena de texto.
      */
     @Override
     public String toString() {
@@ -176,8 +191,7 @@ public class SolicitudResponse {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
+     * Formatea las propiedades de la respuesta usando espacios en blanco.
      */
     private String toIndentedString(Object o) {
         if (o == null) {
@@ -186,4 +200,3 @@ public class SolicitudResponse {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

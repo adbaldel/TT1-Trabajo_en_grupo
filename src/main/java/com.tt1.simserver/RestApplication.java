@@ -7,19 +7,20 @@ import org.glassfish.jersey.server.ResourceConfig;
 import java.net.URI;
 
 /**
- *
+ * Clase principal encargada de configurar e iniciar el servidor HTTP integrado.
  */
 public class RestApplication {
-    // Define la ruta base donde escuchará el servidor
     /**
-     *
+     * Define la ruta base y el puerto donde escuchará el servidor.
      */
     public static final String BASE_URI = "http://localhost:8080/";
 
 
     /**
+     * Punto de entrada de la aplicación.
+     * Inicia el servidor Grizzly y lo mantiene en ejecución hasta que el usuario decida detenerlo.
      *
-     * @param args
+     * @param args argumentos de la línea de comandos (no utilizados).
      */
     public static void main(String[] args) {
         try {
@@ -38,8 +39,10 @@ public class RestApplication {
 
 
     /**
+     * Configura el servidor HTTP indicando el paquete donde residen los controladores (capa de presentación)
+     * y crea una instancia de Grizzly escuchando en la URI base.
      *
-     * @return
+     * @return la instancia del servidor HTTP Grizzly recién creado.
      */
     private static HttpServer startServer() {
         // Le decimos a Jersey que busque las clases @Path (controladores) en este paquete
