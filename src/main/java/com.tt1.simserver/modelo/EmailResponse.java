@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.Objects;
 
+import static com.tt1.simserver.utils.StringManipulation.toIndentedString;
+
 /**
  * Representa la respuesta devuelta por el servidor tras intentar enviar un correo electrónico.
  */
@@ -12,18 +14,6 @@ import java.util.Objects;
 public class EmailResponse {
     private Boolean done;
     private String errorMessage;
-
-
-    /**
-     * Establece si la operación se realizó con éxito y devuelve la instancia actual.
-     *
-     * @param done cierto si la operación fue exitosa, falso en caso contrario.
-     * @return la instancia actual de EmailResponse para permitir el encadenamiento de métodos.
-     */
-    public EmailResponse done(Boolean done) {
-        this.done = done;
-        return this;
-    }
 
 
     /**
@@ -44,17 +34,6 @@ public class EmailResponse {
     @JsonProperty("done")
     public void setDone(Boolean done) {
         this.done = done;
-    }
-
-    /**
-     * Establece el mensaje de error y devuelve la instancia actual.
-     *
-     * @param errorMessage el mensaje que describe el error, si hubo alguno.
-     * @return la instancia actual de EmailResponse para encadenar métodos.
-     */
-    public EmailResponse errorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-        return this;
     }
 
     /**
@@ -113,22 +92,9 @@ public class EmailResponse {
      */
     @Override
     public String toString() {
-
-        String sb = "class EmailResponse {\n" +
-                "    done: " + toIndentedString(done) + "\n" +
-                "    errorMessage: " + toIndentedString(errorMessage) + "\n" +
+        return "class EmailResponse {\n" +
+                "\tdone: " + toIndentedString(done) + "\n" +
+                "\terrorMessage: " + toIndentedString(errorMessage) + "\n" +
                 "}";
-        return sb;
-    }
-
-    /**
-     * Convierte el objeto dado a una cadena, indentando cada línea con 4 espacios
-     * (excepto la primera línea). Método auxiliar para toString.
-     */
-    private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
     }
 }

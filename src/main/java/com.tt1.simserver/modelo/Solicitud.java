@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.tt1.simserver.utils.StringManipulation.toIndentedString;
+
 
 /**
  * Representa los datos iniciales necesarios que envía el cliente para crear una nueva simulación.
@@ -15,17 +17,6 @@ import java.util.Objects;
 public class Solicitud {
     private List<Integer> cantidadesIniciales;
     private List<String> nombreEntidades;
-
-    /**
-     * Establece la lista con las cantidades iniciales de las entidades y devuelve la instancia actual.
-     *
-     * @param cantidadesIniciales lista de enteros con el número de elementos de cada entidad a simular.
-     * @return la instancia actual para encadenar llamadas.
-     */
-    public Solicitud cantidadesIniciales(List<Integer> cantidadesIniciales) {
-        this.cantidadesIniciales = cantidadesIniciales;
-        return this;
-    }
 
 
     /**
@@ -74,17 +65,6 @@ public class Solicitud {
             this.cantidadesIniciales.remove(cantidadesInicialesItem);
         }
 
-        return this;
-    }
-
-    /**
-     * Establece la lista de nombres de las entidades y devuelve la instancia actual.
-     *
-     * @param nombreEntidades lista con los nombres de las entidades que coinciden con las cantidades.
-     * @return la instancia actual de la solicitud.
-     */
-    public Solicitud nombreEntidades(List<String> nombreEntidades) {
-        this.nombreEntidades = nombreEntidades;
         return this;
     }
 
@@ -173,21 +153,9 @@ public class Solicitud {
      */
     @Override
     public String toString() {
-
-        String sb = "class Solicitud {\n" +
-                "    cantidadesIniciales: " + toIndentedString(cantidadesIniciales) + "\n" +
-                "    nombreEntidades: " + toIndentedString(nombreEntidades) + "\n" +
+        return "class Solicitud {\n" +
+                "\tcantidadesIniciales: " + toIndentedString(cantidadesIniciales) + "\n" +
+                "\tnombreEntidades: " + toIndentedString(nombreEntidades) + "\n" +
                 "}";
-        return sb;
-    }
-
-    /**
-     * Método auxiliar de formato para indentar de forma amigable los datos en el toString.
-     */
-    private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
     }
 }

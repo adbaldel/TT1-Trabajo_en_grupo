@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.Objects;
 
+import static com.tt1.simserver.utils.StringManipulation.toIndentedString;
+
 
 /**
  * Representa la respuesta devuelta por el servidor al consultar los resultados de una simulación.
@@ -15,18 +17,6 @@ public class ResultsResponse {
     private Integer tokenSolicitud;
     private String errorMessage;
     private String data;
-
-
-    /**
-     * Establece si los resultados se han recuperado con éxito y devuelve la instancia actual.
-     *
-     * @param done cierto si la operación fue exitosa, falso en caso contrario.
-     * @return la instancia actual para encadenar métodos.
-     */
-    public ResultsResponse done(Boolean done) {
-        this.done = done;
-        return this;
-    }
 
 
     /**
@@ -50,17 +40,6 @@ public class ResultsResponse {
     }
 
     /**
-     * Establece el token de la solicitud original asociada y devuelve la instancia actual.
-     *
-     * @param tokenSolicitud el número de token que identifica a la simulación.
-     * @return la instancia actual para encadenar métodos.
-     */
-    public ResultsResponse tokenSolicitud(Integer tokenSolicitud) {
-        this.tokenSolicitud = tokenSolicitud;
-        return this;
-    }
-
-    /**
      * Devuelve el token de la solicitud de simulación solicitada.
      *
      * @return el token identificador numérico.
@@ -81,17 +60,6 @@ public class ResultsResponse {
     }
 
     /**
-     * Establece el mensaje de error y devuelve la instancia actual.
-     *
-     * @param errorMessage mensaje descriptivo en caso de fallo.
-     * @return la instancia actual para encadenar métodos.
-     */
-    public ResultsResponse errorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-        return this;
-    }
-
-    /**
      * Devuelve el mensaje de error de la solicitud, si lo hubiera.
      *
      * @return el texto del error, o nulo si no ha habido errores.
@@ -109,17 +77,6 @@ public class ResultsResponse {
     @JsonProperty("errorMessage")
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
-    }
-
-    /**
-     * Establece los datos con los resultados de la simulación y devuelve la instancia actual.
-     *
-     * @param data una cadena de texto representando los resultados.
-     * @return la instancia actual para encadenar métodos.
-     */
-    public ResultsResponse data(String data) {
-        this.data = data;
-        return this;
     }
 
     /**
@@ -180,23 +137,11 @@ public class ResultsResponse {
      */
     @Override
     public String toString() {
-
-        String sb = "class ResultsResponse {\n" +
-                "    done: " + toIndentedString(done) + "\n" +
-                "    tokenSolicitud: " + toIndentedString(tokenSolicitud) + "\n" +
-                "    errorMessage: " + toIndentedString(errorMessage) + "\n" +
-                "    data: " + toIndentedString(data) + "\n" +
+        return "class ResultsResponse {\n" +
+                "\tdone: " + toIndentedString(done) + "\n" +
+                "\ttokenSolicitud: " + toIndentedString(tokenSolicitud) + "\n" +
+                "\terrorMessage: " + toIndentedString(errorMessage) + "\n" +
+                "\tdata: " + toIndentedString(data) + "\n" +
                 "}";
-        return sb;
-    }
-
-    /**
-     * Método interno para la correcta visualización del toString.
-     */
-    private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
     }
 }

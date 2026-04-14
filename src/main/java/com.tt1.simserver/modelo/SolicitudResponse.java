@@ -2,8 +2,11 @@ package com.tt1.simserver.modelo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.tt1.simserver.utils.StringManipulation;
 
 import java.util.Objects;
+
+import static com.tt1.simserver.utils.StringManipulation.toIndentedString;
 
 
 /**
@@ -15,18 +18,6 @@ public class SolicitudResponse {
     private Integer tokenSolicitud;
     private String errorMessage;
     private Boolean data;
-
-
-    /**
-     * Establece si la solicitud fue registrada correctamente y devuelve la instancia actual.
-     *
-     * @param done cierto si la petición ha sido exitosa.
-     * @return la instancia actual para encadenar llamadas.
-     */
-    public SolicitudResponse done(Boolean done) {
-        this.done = done;
-        return this;
-    }
 
 
     /**
@@ -49,16 +40,6 @@ public class SolicitudResponse {
         this.done = done;
     }
 
-    /**
-     * Establece el token asignado a esta nueva simulación y devuelve la instancia actual.
-     *
-     * @param tokenSolicitud el token numérico identificador.
-     * @return la instancia actual de la respuesta.
-     */
-    public SolicitudResponse tokenSolicitud(Integer tokenSolicitud) {
-        this.tokenSolicitud = tokenSolicitud;
-        return this;
-    }
 
     /**
      * Devuelve el token que identifica unívocamente a la solicitud recién creada.
@@ -81,17 +62,6 @@ public class SolicitudResponse {
     }
 
     /**
-     * Establece el mensaje de error de la operación y devuelve la instancia actual.
-     *
-     * @param errorMessage el texto que explica por qué ha fallado la solicitud.
-     * @return la instancia actual para encadenar métodos.
-     */
-    public SolicitudResponse errorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-        return this;
-    }
-
-    /**
      * Devuelve el mensaje de error en caso de fallo, o nulo si no hubo ninguno.
      *
      * @return texto del error.
@@ -109,17 +79,6 @@ public class SolicitudResponse {
     @JsonProperty("errorMessage")
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
-    }
-
-    /**
-     * Establece un flag adicional de la respuesta y devuelve la instancia actual.
-     *
-     * @param data un valor booleano adicional propio de la operación.
-     * @return la instancia actual.
-     */
-    public SolicitudResponse data(Boolean data) {
-        this.data = data;
-        return this;
     }
 
     /**
@@ -180,23 +139,11 @@ public class SolicitudResponse {
      */
     @Override
     public String toString() {
-
-        String sb = "class SolicitudResponse {\n" +
-                "    done: " + toIndentedString(done) + "\n" +
-                "    tokenSolicitud: " + toIndentedString(tokenSolicitud) + "\n" +
-                "    errorMessage: " + toIndentedString(errorMessage) + "\n" +
-                "    data: " + toIndentedString(data) + "\n" +
+        return "class SolicitudResponse {\n" +
+                "\tdone: " + toIndentedString(done) + "\n" +
+                "\ttokenSolicitud: " + toIndentedString(tokenSolicitud) + "\n" +
+                "\terrorMessage: " + toIndentedString(errorMessage) + "\n" +
+                "\tdata: " + toIndentedString(data) + "\n" +
                 "}";
-        return sb;
-    }
-
-    /**
-     * Formatea las propiedades de la respuesta usando espacios en blanco.
-     */
-    private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
     }
 }

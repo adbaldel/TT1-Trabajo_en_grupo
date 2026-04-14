@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.HashMap;
 import java.util.Objects;
 
+import static com.tt1.simserver.utils.StringManipulation.toIndentedString;
+
 /**
  * Representa los detalles de un problema o error en una respuesta HTTP,
  * comúnmente usado para estandarizar errores (basado en RFC 7807).
@@ -17,18 +19,6 @@ public class ProblemDetails extends HashMap<String, Object> {
     private Integer status;
     private String detail;
     private String instance;
-
-
-    /**
-     * Establece el tipo del problema y devuelve la instancia actual.
-     *
-     * @param type un URI o referencia que identifica el tipo del problema.
-     * @return la instancia actual para encadenar métodos.
-     */
-    public ProblemDetails type(String type) {
-        this.type = type;
-        return this;
-    }
 
 
     /**
@@ -52,17 +42,6 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
-     * Establece el título descriptivo corto del problema y devuelve la instancia actual.
-     *
-     * @param title un título amigable y corto que resume el problema.
-     * @return la instancia actual para encadenar métodos.
-     */
-    public ProblemDetails title(String title) {
-        this.title = title;
-        return this;
-    }
-
-    /**
      * Devuelve el título del problema.
      *
      * @return el título descriptivo corto.
@@ -80,17 +59,6 @@ public class ProblemDetails extends HashMap<String, Object> {
     @JsonProperty("title")
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    /**
-     * Establece el código de estado HTTP y devuelve la instancia actual.
-     *
-     * @param status el código de estado HTTP asociado al problema (ej. 400).
-     * @return la instancia actual para encadenar métodos.
-     */
-    public ProblemDetails status(Integer status) {
-        this.status = status;
-        return this;
     }
 
     /**
@@ -114,17 +82,6 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
-     * Establece los detalles específicos del problema y devuelve la instancia actual.
-     *
-     * @param detail una explicación más extensa y comprensible para humanos sobre el error.
-     * @return la instancia actual para encadenar métodos.
-     */
-    public ProblemDetails detail(String detail) {
-        this.detail = detail;
-        return this;
-    }
-
-    /**
      * Devuelve los detalles del problema.
      *
      * @return una cadena con la explicación detallada del error.
@@ -142,17 +99,6 @@ public class ProblemDetails extends HashMap<String, Object> {
     @JsonProperty("detail")
     public void setDetail(String detail) {
         this.detail = detail;
-    }
-
-    /**
-     * Establece la referencia a la instancia exacta donde ocurrió el problema y devuelve la instancia actual.
-     *
-     * @param instance un URI que identifica la ocurrencia específica del problema.
-     * @return la instancia actual para encadenar métodos.
-     */
-    public ProblemDetails instance(String instance) {
-        this.instance = instance;
-        return this;
     }
 
     /**
@@ -215,7 +161,7 @@ public class ProblemDetails extends HashMap<String, Object> {
      */
     @Override
     public String toString() {
-        String sb = "class ProblemDetails {\n" +
+        return "class ProblemDetails {\n" +
                 "    " + toIndentedString(super.toString()) + "\n" +
                 "    type: " + toIndentedString(type) + "\n" +
                 "    title: " + toIndentedString(title) + "\n" +
@@ -223,16 +169,5 @@ public class ProblemDetails extends HashMap<String, Object> {
                 "    detail: " + toIndentedString(detail) + "\n" +
                 "    instance: " + toIndentedString(instance) + "\n" +
                 "}";
-        return sb;
-    }
-
-    /**
-     * Método auxiliar para indentar correctamente el resultado del toString.
-     */
-    private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
     }
 }
