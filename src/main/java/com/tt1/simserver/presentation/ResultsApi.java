@@ -1,4 +1,4 @@
-package com.tt1.simserver.presentacion;
+package com.tt1.simserver.presentation;
 
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Produces;
@@ -14,7 +14,7 @@ public interface ResultsApi {
      * Endpoint POST que recupera y envía los resultados de una simulación para el usuario indicado.
      *
      * @param username el nombre del usuario al cual pertenecen los resultados.
-     * @param tok           el token identificador asociado unívocamente a esa simulación específica.
+     * @param tok      el token identificador asociado unívocamente a esa simulación específica.
      * @return la respuesta HTTP informando de la correcta obtención de los datos (ej. 201 Created y cuerpo ResultsResponse) o detallando un error si ha fallado.
      */
     @POST

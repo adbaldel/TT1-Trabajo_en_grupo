@@ -12,10 +12,10 @@ Actúa como una API REST independiente que procesa en segundo plano las solicitu
 
 La aplicación está diseñada bajo una arquitectura de capas orientada a servicios utilizando el estándar Jakarta RESTful Web Services (JAX-RS). Su estructura se divide en:
 
-* **Presentación / API (`com.tt1.simserver.presentacion`):** Define y expone los endpoints HTTP. Mapea las rutas web a los controladores correspondientes y estandariza las respuestas (ej. `EmailController`, `RequestController`, `ResultsController`).
-* **Modelo de Dominio (`com.tt1.simserver.modelo`):** Clases y registros que definen la estructura de los payloads JSON esperados y enviados en las peticiones HTTP (`Request`, `EmailResponse`, `ProblemDetails`, `ResultsResponse`).
-* **Lógica de Negocio / Servicios (`com.tt1.simserver.logica`):** El "cerebro" del servidor. Aquí residen los algoritmos principales de las simulaciones, la lógica para despachar correos y las reglas de negocio del sistema.
-* **Persistencia (`com.tt1.simserver.persistencia`):** Repositorios o DAOs encargados de guardar el historial de solicitudes, el estado y los resultados finales de cada simulación (ya sea en memoria o base de datos).
+* **Presentación / API (`com.tt1.simserver.presentation`):** Define y expone los endpoints HTTP. Mapea las rutas web a los controladores correspondientes y estandariza las respuestas (ej. `EmailController`, `RequestController`, `ResultsController`).
+* **Modelo de Dominio (`com.tt1.simserver.model`):** Clases y registros que definen la estructura de los payloads JSON esperados y enviados en las peticiones HTTP (`Request`, `EmailResponse`, `ProblemDetails`, `ResultsResponse`).
+* **Lógica de Negocio / Servicios (`com.tt1.simserver.logic`):** El "cerebro" del servidor. Aquí residen los algoritmos principales de las simulaciones, la lógica para despachar correos y las reglas de negocio del sistema.
+* **Persistencia (`com.tt1.simserver.database`):** Repositorios o DAOs encargados de guardar el historial de solicitudes, el estado y los resultados finales de cada simulación (ya sea en memoria o base de datos).
 
 ## **Referencia de la API**
 

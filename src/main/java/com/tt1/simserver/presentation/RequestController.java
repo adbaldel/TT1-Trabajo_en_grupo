@@ -1,6 +1,11 @@
-package com.tt1.simserver.presentacion;
+package com.tt1.simserver.presentation;
 
-import com.tt1.simserver.modelo.Request;
+import com.tt1.simserver.logic.SimulationService;
+import com.tt1.simserver.model.SimulationStatus;
+import com.tt1.simserver.model.User;
+import com.tt1.simserver.model.jsonrepresentations.ProblemDetails;
+import com.tt1.simserver.model.jsonrepresentations.Request;
+import com.tt1.simserver.model.jsonrepresentations.RequestResponse;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 
@@ -14,7 +19,7 @@ public class RequestController implements RequestApi {
      * {@inheritDoc}
      */
     @Override
-    public Response solicitudComprobarSolicitudGet(String username, Integer tok) {
+    public Response solicitudComprobarSolicitudGet(String username, Integer token) {
         throw new UnsupportedOperationException("Clase aún no implementada.");
     }
 

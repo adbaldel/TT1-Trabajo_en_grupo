@@ -1,11 +1,11 @@
-package com.tt1.simserver.modelo;
+package com.tt1.simserver.model.jsonrepresentations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.Objects;
 
-import static com.tt1.simserver.utils.StringManipulation.toIndentedString;
+import static com.tt1.simserver.logic.utils.StringManipulation.toIndentedString;
 
 /**
  * Representa la respuesta devuelta por el servidor tras intentar enviar un correo electrónico.

@@ -1,4 +1,4 @@
-package com.tt1.simserver.modelo;
+package com.tt1.simserver.model.jsonrepresentations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.tt1.simserver.utils.StringManipulation.toIndentedString;
+import static com.tt1.simserver.logic.utils.StringManipulation.toIndentedString;
 
 
 /**
@@ -15,8 +15,8 @@ import static com.tt1.simserver.utils.StringManipulation.toIndentedString;
  */
 @JsonTypeName("Solicitud")
 public class Request {
-    private List<Integer> initialQuantities;
-    private List<String> entityNames;
+    private List<Integer> initialCreatureQuantities;
+    private List<String> creatureNames;
 
 
     /**
@@ -25,18 +25,18 @@ public class Request {
      * @return lista de enteros con dichas cantidades.
      */
     @JsonProperty("cantidadesIniciales")
-    public List<Integer> getInitialQuantities() {
-        return initialQuantities;
+    public List<Integer> getInitialCreatureQuantities() {
+        return initialCreatureQuantities;
     }
 
     /**
      * Asigna la lista de cantidades iniciales de las entidades.
      *
-     * @param initialQuantities la lista de las cantidades.
+     * @param initialCreatureQuantities la lista de las cantidades.
      */
     @JsonProperty("cantidadesIniciales")
-    public void setInitialQuantities(List<Integer> initialQuantities) {
-        this.initialQuantities = initialQuantities;
+    public void setInitialCreatureQuantities(List<Integer> initialCreatureQuantities) {
+        this.initialCreatureQuantities = initialCreatureQuantities;
     }
 
     /**
@@ -46,11 +46,11 @@ public class Request {
      * @return la instancia actual de la solicitud.
      */
     public Request addCantidadesInicialesItem(Integer cantidadesInicialesItem) {
-        if (this.initialQuantities == null) {
-            this.initialQuantities = new ArrayList<>();
+        if (this.initialCreatureQuantities == null) {
+            this.initialCreatureQuantities = new ArrayList<>();
         }
 
-        this.initialQuantities.add(cantidadesInicialesItem);
+        this.initialCreatureQuantities.add(cantidadesInicialesItem);
         return this;
     }
 
@@ -61,8 +61,8 @@ public class Request {
      * @return la instancia actual de la solicitud.
      */
     public Request removeCantidadesInicialesItem(Integer cantidadesInicialesItem) {
-        if (cantidadesInicialesItem != null && this.initialQuantities != null) {
-            this.initialQuantities.remove(cantidadesInicialesItem);
+        if (cantidadesInicialesItem != null && this.initialCreatureQuantities != null) {
+            this.initialCreatureQuantities.remove(cantidadesInicialesItem);
         }
 
         return this;
@@ -74,18 +74,18 @@ public class Request {
      * @return lista de nombres de las entidades.
      */
     @JsonProperty("nombreEntidades")
-    public List<String> getEntityNames() {
-        return entityNames;
+    public List<String> getCreatureNames() {
+        return creatureNames;
     }
 
     /**
      * Asigna la lista de los nombres correspondientes a las entidades de la simulación.
      *
-     * @param entityNames la lista de nombres.
+     * @param creatureNames la lista de nombres.
      */
     @JsonProperty("nombreEntidades")
-    public void setEntityNames(List<String> entityNames) {
-        this.entityNames = entityNames;
+    public void setCreatureNames(List<String> creatureNames) {
+        this.creatureNames = creatureNames;
     }
 
     /**
@@ -95,11 +95,11 @@ public class Request {
      * @return la instancia actual de la solicitud.
      */
     public Request addNombreEntidadesItem(String nombreEntidadesItem) {
-        if (this.entityNames == null) {
-            this.entityNames = new ArrayList<>();
+        if (this.creatureNames == null) {
+            this.creatureNames = new ArrayList<>();
         }
 
-        this.entityNames.add(nombreEntidadesItem);
+        this.creatureNames.add(nombreEntidadesItem);
         return this;
     }
 
@@ -110,8 +110,8 @@ public class Request {
      * @return la instancia actual de la solicitud.
      */
     public Request removeNombreEntidadesItem(String nombreEntidadesItem) {
-        if (nombreEntidadesItem != null && this.entityNames != null) {
-            this.entityNames.remove(nombreEntidadesItem);
+        if (nombreEntidadesItem != null && this.creatureNames != null) {
+            this.creatureNames.remove(nombreEntidadesItem);
         }
 
         return this;
@@ -132,8 +132,8 @@ public class Request {
             return false;
         }
         Request request = (Request) o;
-        return Objects.equals(this.initialQuantities, request.initialQuantities) &&
-                Objects.equals(this.entityNames, request.entityNames);
+        return Objects.equals(this.initialCreatureQuantities, request.initialCreatureQuantities) &&
+                Objects.equals(this.creatureNames, request.creatureNames);
     }
 
     /**
@@ -143,7 +143,7 @@ public class Request {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(initialQuantities, entityNames);
+        return Objects.hash(initialCreatureQuantities, creatureNames);
     }
 
     /**
@@ -154,8 +154,8 @@ public class Request {
     @Override
     public String toString() {
         return "class Solicitud {\n" +
-                "\tcantidadesIniciales: " + toIndentedString(initialQuantities) + "\n" +
-                "\tnombreEntidades: " + toIndentedString(entityNames) + "\n" +
+                "\tcantidadesIniciales: " + toIndentedString(initialCreatureQuantities) + "\n" +
+                "\tnombreEntidades: " + toIndentedString(creatureNames) + "\n" +
                 "}";
     }
 }

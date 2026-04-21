@@ -1,4 +1,4 @@
-package com.tt1.simserver.presentacion;
+package com.tt1.simserver.presentation;
 
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;

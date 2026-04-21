@@ -1,4 +1,4 @@
-package com.tt1.simserver.utils;
+package com.tt1.simserver.logic.utils;
 
 /**
  * Clase que agrupa las utilidades usadas en el proyecto relacionadas con los Strings
