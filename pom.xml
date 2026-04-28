@@ -35,8 +35,20 @@
         <jersey.version>3.1.8</jersey.version>
         <jackson-version>2.15.2</jackson-version>
         <jakarta.ws.rs-version>3.1.0</jakarta.ws.rs-version>
-        <junit-version>4.13.2</junit-version>
+        <junit-version>5.10.5</junit-version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit-version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <!--
 		=============================================================
@@ -118,9 +130,8 @@
 
         <!-- 4. TESTING -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit-version}</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
