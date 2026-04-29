@@ -16,7 +16,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      # 3. Traer el código al servidor (¡súper importante!)
+      # 3. Traer el código al servidor
       - name: Checkout del repositorio
         uses: actions/checkout@v4
 
@@ -26,10 +26,11 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+          cache: 'maven' # Opcional: Acelera las ejecuciones cacheando dependencias de Maven
 
-      # 5. Ejecutar el comando Javadoc que probaste en el paso 1
-      - name: Generar Javadoc
-        run: javadoc -d javadoc -sourcepath src/main/java -subpackages com
+      # 5. Generar Javadoc usando Maven en lugar del comando crudo
+      - name: Generar Javadoc con Maven
+        run: mvn clean javadoc:javadoc
 
       # 6. Preparar y subir los archivos generados a GitHub Pages
       - name: Configurar GitHub Pages
@@ -38,7 +39,8 @@ jobs:
       - name: Subir artefacto
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './javadoc' # La misma carpeta que en el comando javadoc (-d)
+          # Maven genera por defecto el Javadoc en esta ruta
+          path: 'target/site/apidocs' 
 
       # 7. Desplegar
       - name: Desplegar a GitHub Pages
