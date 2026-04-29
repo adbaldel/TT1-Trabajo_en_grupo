@@ -7,6 +7,7 @@ import com.tt1.simserver.model.User;
 import com.tt1.simserver.model.jsonrepresentations.Request;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -43,6 +44,7 @@ public class SimulationServiceTest {
     // --- Test getUser ------------------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Obtener usuario: Crea en memoria y devuelve el usuario si no existía antes")
     void given_newUser_when_getUser_then_userIsCreatedAndReturned() {
         // Arrange (Given)
         User newUser = new User("alice");
@@ -51,11 +53,12 @@ public class SimulationServiceTest {
         User storedUser = service.getUser(newUser);
 
         // Assert (Then)
-        assertNotNull(storedUser, "El usuario devuelto no debe ser nulo.");
-        assertEquals("alice", storedUser.getUsername(), "El nombre de usuario debe coincidir.");
+        assertNotNull(storedUser, "El servicio debe responsabilizarse de construir un usuario persistente válido");
+        assertEquals("alice", storedUser.getUsername(), "El nombre del usuario recién creado no debe modificarse");
     }
 
     @Test
+    @DisplayName("Obtener usuario: Funciona como caché y retorna la misma instancia en memoria para repetidas llamadas")
     void given_existingUser_when_getUser_then_returnsSameStoredInstance() {
         // Arrange (Given)
         User firstCallUser = service.getUser(new User("bob"));
@@ -65,12 +68,13 @@ public class SimulationServiceTest {
         User secondCallUser = service.getUser(new User("bob"));
 
         // Assert (Then)
-        assertSame(firstCallUser, secondCallUser, "Debe devolver exactamente la misma instancia en memoria para el mismo username.");
+        assertSame(firstCallUser, secondCallUser, "Para optimizar la persistencia, el servicio debe recuperar la misma referencia en memoria del usuario ya guardado");
     }
 
     // --- Test existsSimulation ----------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Comprobar simulación: Acredita como verdadera si el token pertenece a las peticiones del usuario")
     void given_userWithSimulation_when_existsSimulation_then_returnsTrue() {
         // Arrange (Given)
         User storedUser = service.getUser(defaultUser);
@@ -81,10 +85,11 @@ public class SimulationServiceTest {
         boolean exists = service.existsSimulation(defaultUser, 100);
 
         // Assert (Then)
-        assertTrue(exists, "Debe retornar true si el usuario tiene una simulación con ese token.");
+        assertTrue(exists, "El servicio tiene que certificar positivamente el acceso de un usuario a un token de su propiedad");
     }
 
     @Test
+    @DisplayName("Comprobar simulación: Rechaza el acceso devolviendo falso si el token no es suyo")
     void given_userWithoutSimulation_when_existsSimulation_then_returnsFalse() {
         // Arrange (Given)
         service.getUser(defaultUser); // Nos aseguramos de que el usuario existe en el sistema
@@ -93,12 +98,13 @@ public class SimulationServiceTest {
         boolean exists = service.existsSimulation(defaultUser, 999);
 
         // Assert (Then)
-        assertFalse(exists, "Debe retornar false si el token no pertenece al usuario.");
+        assertFalse(exists, "El servicio debe denegar como inexistente cualquier simulación cuyo token no obre en poder del usuario solicitante");
     }
 
     // --- Test getSimulationStatus ------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Estado de simulación: Delega la pregunta y retorna el estado extraído desde el gestor")
     void given_userWithRunningSimulation_when_getSimulationStatus_then_returnsRunning() {
         // Arrange (Given)
         User storedUser = service.getUser(defaultUser);
@@ -110,12 +116,13 @@ public class SimulationServiceTest {
         SimulationStatus status = service.getSimulationStatus(defaultUser, 10);
 
         // Assert (Then)
-        assertEquals(SimulationStatus.RUNNING, status, "Debe delegar y devolver el estado asignado en el manager.");
+        assertEquals(SimulationStatus.RUNNING, status, "El servicio actúa como intermediario y debe retransmitir fielmente el estado que marque el gestor subyacente");
     }
 
     // --- Test getSimulationResult ------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Resultado de simulación: Recupera el historial guardado por el gestor en nombre del usuario")
     void given_userWithCompletedSimulation_when_getSimulationResult_then_returnsResult() {
         // Arrange (Given)
         User storedUser = service.getUser(defaultUser);
@@ -128,12 +135,13 @@ public class SimulationServiceTest {
         SimulationResult actualResult = service.getSimulationResult(defaultUser, 20);
 
         // Assert (Then)
-        assertEquals(expectedResult, actualResult, "Debe devolver el resultado almacenado en el manager del usuario.");
+        assertEquals(expectedResult, actualResult, "El servicio debe extraer y devolver a la vista de red el resultado intacto proporcionado por el gestor de la simulación");
     }
 
     // --- Test getUserTokens ------------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Listar tokens: Recupera la colección completa de identificadores asociados a un usuario")
     void given_userWithMultipleSimulations_when_getUserTokens_then_returnsAllTokens() {
         // Arrange (Given)
         User storedUser = service.getUser(defaultUser);
@@ -149,10 +157,10 @@ public class SimulationServiceTest {
         Collection<Integer> tokens = service.getUserTokens(defaultUser);
 
         // Assert (Then)
-        assertNotNull(tokens);
-        assertEquals(2, tokens.size(), "Debe devolver exactamente los 2 tokens añadidos.");
-        assertTrue(tokens.contains(1));
-        assertTrue(tokens.contains(2));
+        assertNotNull(tokens, "La colección consultada nunca puede venir nula, incluso si estuviera vacía");
+        assertEquals(2, tokens.size(), "El listado debe agrupar todas las peticiones registradas, sin omitir ninguna");
+        assertTrue(tokens.contains(1), "El conjunto resultante debe arrastrar el primer token que solicitó el usuario");
+        assertTrue(tokens.contains(2), "El conjunto resultante debe arrastrar el segundo token que solicitó el usuario");
     }
 
 
@@ -163,6 +171,7 @@ public class SimulationServiceTest {
     // --- Test requestSimulation ---------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Integración Solicitar: Orquesta la creación de tablero, vincula al usuario y arranca cálculos")
     void integration_given_validRequest_when_requestSimulation_then_simulationStartsAndIsAddedToUser() {
         // Arrange (Given)
         Request request = new Request();
@@ -173,13 +182,13 @@ public class SimulationServiceTest {
         int assignedToken = service.requestSimulation(defaultUser, request);
 
         // Assert (Then)
-        assertTrue(assignedToken >= 0, "El token devuelto debe ser un identificador válido (>= 0).");
+        assertTrue(assignedToken >= 0, "Al cursar una solicitud, el servidor emite siempre un token válido por encima del cero");
 
         assertTrue(service.existsSimulation(defaultUser, assignedToken),
-                "La simulación debe haberse registrado en la cuenta del usuario.");
+                "El flujo de servicio amarra lógicamente la simulación recién creada al portafolio del usuario");
 
         SimulationStatus status = service.getSimulationStatus(defaultUser, assignedToken);
         assertTrue(status == SimulationStatus.RUNNING || status == SimulationStatus.COMPLETED,
-                "El estado de la simulación debe haber pasado a RUNNING (o COMPLETED si el hilo fue muy rápido).");
+                "El servicio arranca asíncronamente el proceso, por lo que este ya estará calculando turnos o ya habrá terminado de forma veloz");
     }
 }

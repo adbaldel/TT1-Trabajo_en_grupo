@@ -4,6 +4,7 @@ import com.tt1.simserver.mocks.GridFake;
 import com.tt1.simserver.model.Position;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -49,6 +50,7 @@ public class StaticCreatureTest {
     // --- Test move ---------------------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Movimiento: Falla en moverse al no contar con casillas contiguas vacías")
     public void given_staticCreatureAndNoEmptyAdjacentCells_when_move_then_returnsNull() {
         // Arrange (Given)
         StaticCreature staticCreature = new StaticCreature(name, color, position);
@@ -58,11 +60,12 @@ public class StaticCreatureTest {
         Position newPosition = staticCreature.move(gridFake);
 
         // Assert (Then)
-        assertNull(newPosition);
-        assertEquals(position, staticCreature.getPosition());
+        assertNull(newPosition, "Un sujeto estático no devuelve posición destino de movimiento nunca");
+        assertEquals(position, staticCreature.getPosition(), "Al carecer de casillas libres, el intento de movimiento no modifica las coordenadas de la criatura");
     }
 
     @Test
+    @DisplayName("Movimiento: Una criatura estática ignora las casillas contiguas libres quedándose en el sitio")
     public void given_staticCreatureAndEmptyAdjacentCells_when_move_then_returnsNull() {
         // Arrange (Given)
         StaticCreature staticCreature = new StaticCreature(name, color, position);
@@ -72,13 +75,14 @@ public class StaticCreatureTest {
         Position newPosition = staticCreature.move(gridFake);
 
         // Assert (Then)
-        assertNull(newPosition);
-        assertEquals(position, staticCreature.getPosition());
+        assertNull(newPosition, "Incluso existiendo casillas libres, la naturaleza de la criatura le impide desplazarse en su turno");
+        assertEquals(position, staticCreature.getPosition(), "Ante una orden de movimiento, un ente estático mantiene intactas sus coordenadas originales en el tablero");
     }
 
     // --- Test multiply -----------------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Reproducción: Carece de espacio en las casillas contiguas y cancela su reproducción")
     public void given_staticCreatureAndNoEmptyAdjacentCells_when_multiply_then_returnsNull() {
         // Arrange (Given)
         StaticCreature staticCreature = new StaticCreature(name, color, position);
@@ -88,10 +92,11 @@ public class StaticCreatureTest {
         Creature child = staticCreature.multiply(gridFake);
 
         // Assert (Then)
-        assertNull(child);
+        assertNull(child, "La carencia total de casillas limítrofes vacías veta la gestación biológica en el tablero");
     }
 
     @Test
+    @DisplayName("Reproducción: Las criaturas estáticas genéricas rehúsan generar copias pese a tener espacio")
     public void given_staticCreatureAndEmptyAdjacentCells_when_multiply_then_returnsNull() {
         // Arrange (Given)
         StaticCreature staticCreature = new StaticCreature(name, color, position);
@@ -101,6 +106,6 @@ public class StaticCreatureTest {
         Creature child = staticCreature.multiply(gridFake);
 
         // Assert (Then)
-        assertNull(child);
+        assertNull(child, "Por reglas del simulador, el espécimen estático base carece del gen reproductivo devolviendo nulo");
     }
 }

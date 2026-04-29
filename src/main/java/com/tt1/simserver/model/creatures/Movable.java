@@ -3,16 +3,20 @@ package com.tt1.simserver.model.creatures;
 import com.tt1.simserver.logic.GridInterface;
 import com.tt1.simserver.model.Position;
 
+/**
+ * Define la capacidad de una criatura para moverse entre las casillas del tablero.
+ */
 public interface Movable {
 
     /**
-     * Regla ejecutada durante cada "tick" de la simulación encargada del desplazamiento.
-     * Precondición: grid es no nulo y contiene a esta criatura en la posición correspondiente a la posición de la criatura.
-     * Postcondición: la posición devuelta es la posición de la criatura tras moverse y es una de las casillas adyacentes
-     * del tablero, o es null si la criatura no se ha movido.
+     * Calcula e intenta realizar un movimiento hacia una nueva casilla del tablero durante este turno.
      *
-     * @param grid el tablero y sus casillas vacías adyacentes para evaluar destinos.
-     * @return nueva posición de la entidad post-movimiento, o null si decide quedarse quieta o no puede moverse.
+     * <p>Precondición: {@code grid} no es nulo y contiene a esta criatura apuntando a la misma posición que tiene guardada.
+     *
+     * <p>Postcondición: Devuelve la nueva posición si la criatura logra moverse con éxito, o nulo si decide o se ve forzada a quedarse quieta.
+     *
+     * @param grid el tablero que expone las casillas adyacentes.
+     * @return la posición de destino, o nulo si no se mueve.
      */
     Position move(GridInterface grid);
 }

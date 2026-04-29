@@ -12,12 +12,14 @@ import java.util.Map;
  */
 public class GridManipulation {
     /**
-     * Extrae un volcado del tablero actual convirtiéndolo en un mapa asociativo de Coordenada -> Color.
-     * Permite tomar "fotografías" del estado de la cuadrícula en un determinado segundo (tick).
-     * Precondición: grid es no nulo.
+     * Extrae una captura del estado actual del tablero y lo convierte en un diccionario asociativo.
      *
-     * @param grid el tablero que se desea copiar.
-     * @return un diccionario mapeando posiciones a los respectivos colores de las criaturas que la ocupan.
+     * <p>Precondición: {@code grid} no es nulo y se encuentra correctamente inicializado.
+     *
+     * <p>Postcondición: Devuelve un mapa asociativo donde cada posición ocupada del tablero actúa como clave y el color de la criatura alojada actúa como valor. Las casillas vacías son ignoradas por completo en el mapa final.
+     *
+     * @param grid el tablero que se desea copiar o fotografiar.
+     * @return un diccionario mapeando posiciones a los colores de las criaturas.
      */
     public static Map<Position, String> copyGridToMap(GridInterface grid) {
         Map<Position, String> map = new HashMap<>();

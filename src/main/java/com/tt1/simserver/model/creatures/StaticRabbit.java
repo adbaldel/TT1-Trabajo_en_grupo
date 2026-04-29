@@ -15,19 +15,18 @@ public class StaticRabbit extends StaticCreature {
     private final Random random;
     private final double multiplyProbability;
 
-
     /**
-     * Constructor para instanciar a la criatura que se clona indicando un generador
-     * aleatorio específico, para fines de consistencia y testeo.
-     * Precondición: username no es nulo, user name no está vacío ni solo contiene carácteres invisibles (espacios,
-     * saltos de línea, tabuladores, ...), color es un color reconocido por CSS, multiplyProbability entre 0.0 y 1.0 (ambos
-     * incluidos), position es no nula, random es no nulo.
+     * Inicializa a la criatura indicando un motor aleatorio específico.
      *
-     * @param name                el nombre representativo.
-     * @param color               el color para el grid de la simulación.
-     * @param multiplyProbability el valor base de probabilidad para crear copias en sus adyacencias.
-     * @param position            sus coordenadas definitivas y origen reproductor.
-     * @param random              el analizador probabilístico de azar para sus comprobaciones biológicas.
+     * <p>Precondición: {@code name} no es nulo ni vacío. {@code color} es un color reconocido por CSS. {@code multiplyProbability} es un número entre 0.0 y 1.0 (ambos incluidos). {@code position} y {@code random} no son nulos.
+     *
+     * <p>Postcondición: Dota a la criatura del gen reproductor, configurando la probabilidad de generar una cría y el motor de azar inyectado.
+     *
+     * @param name                el nombre representativo de la especie.
+     * @param color               el color para mostrar en el tablero de la simulación.
+     * @param multiplyProbability el valor base de probabilidad para reproducirse en casillas contiguas.
+     * @param position            su posición definitiva que actuará como origen reproductor.
+     * @param random              el motor de azar para sus comprobaciones biológicas en cada turno.
      */
     public StaticRabbit(String name, String color, double multiplyProbability, Position position, Random random) {
         super(name, color, position);
@@ -37,38 +36,43 @@ public class StaticRabbit extends StaticCreature {
     }
 
     /**
-     * Constructor por defecto usando la librería aleatoria estándar para una criatura multiplicadora.
-     * Precondición: username no es nulo, user name no está vacío ni solo contiene carácteres invisibles (espacios,
-     * saltos de línea, tabuladores, ...), color es un color reconocido por CSS, multiplyProbability entre 0.0 y 1.0 (ambos
-     * incluidos), position es no nula.
+     * Inicializa a la criatura usando la librería de azar estándar.
      *
-     * @param id                  identificador/nombre local de la criatura.
-     * @param color               el color que la visibiliza.
-     * @param multiplyProbability la probabilidad estática en coma flotante de reproducción.
-     * @param position            sus coordenadas iniciales en el tablero.
+     * <p>Precondición: {@code id} no es nulo ni vacío. {@code color} es un color reconocido por CSS. {@code multiplyProbability} es un número entre 0.0 y 1.0 (ambos incluidos). {@code position} no es nulo.
+     *
+     * <p>Postcondición: Crea el espécimen generando de forma autónoma su propia semilla aleatoria para resolver la reproducción.
+     *
+     * @param id                  identificador y nombre de la criatura.
+     * @param color               el color de renderizado.
+     * @param multiplyProbability la probabilidad en coma flotante de reproducirse en este turno.
+     * @param position            su posición anclada en el tablero.
      */
     public StaticRabbit(String id, String color, double multiplyProbability, Position position) {
         this(id, color, multiplyProbability, position, new Random());
     }
 
-
     /**
-     * Obtiene el valor probabilístico con el que se rige su descendencia en cada tick temporal.
+     * Provee la métrica estadística que condiciona las posibilidades de gestar crías.
      *
-     * @return un decimal base para intentar generar clones.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve el ratio numérico que se usa como umbral en el cálculo probabilístico de cada turno.
+     *
+     * @return un valor base del 0.0 al 1.0 para intentar generar clones.
      */
     public double getMultiplyProbability() {
         return multiplyProbability;
     }
 
     /**
-     * Lógica de generación probabilística. Determina si este ente creará una instancia
-     * hermana/hija de sí mismo buscando casillas a los lados. Si supera la probabilidad,
-     * todos los lados posibles (arriba, abajo, izquierda, derecha) son equiprobables al escoger cuna.
-     * Precondición: grid es no nulo y contiene a esta criatura en la posición correspondiente a la posición de la criatura.
+     * Calcula probabilísticamente si debe crear una copia de sí mismo en las inmediaciones.
      *
-     * @param grid escenario para determinar adyacencias libres.
-     * @return la nueva entidad infantil de conseguir clonarse, null de lo contrario.
+     * <p>Precondición: {@code grid} no es nulo y contiene a esta criatura en su posición correspondiente.
+     *
+     * <p>Postcondición: Si no se supera la probabilidad o carece completamente de casillas libres adyacentes, aborta el proceso y devuelve nulo. Si lo consigue y tiene espacio, elige una casilla libre al azar y devuelve una nueva criatura (clon) con el mismo nombre, color, probabilidad de reproducción y vinculada a la nueva posición destino.
+     *
+     * @param grid escenario del tablero para determinar las casillas adyacentes libres.
+     * @return la nueva cría originada, o nulo si no logra reproducirse.
      */
     @Override
     public Creature multiply(GridInterface grid) {

@@ -2,14 +2,20 @@ package com.tt1.simserver.model.creatures;
 
 import com.tt1.simserver.logic.GridInterface;
 
+/**
+ * Define la capacidad de una criatura para reproducirse y generar nuevas crías en el tablero.
+ */
 public interface Multipliable {
 
     /**
-     * Regla ejecutada para evaluar una posible clonación o procreación en casillas aledañas.
-     * Precondición: grid es no nulo y contiene a esta criatura en la posición correspondiente a la posición de la criatura.
+     * Intenta ejecutar la reproducción de la especie creando una cría en una casilla contigua durante este turno.
      *
-     * @param grid el tablero para evaluar la disponibilidad de casillas cercanas de nacimiento.
-     * @return una nueva instancia derivada de esta criatura de tener éxito, o null en caso contrario.
+     * <p>Precondición: {@code grid} no es nulo y contiene a esta criatura apuntando a la misma posición que tiene guardada.
+     *
+     * <p>Postcondición: Devuelve una nueva instancia de criatura (cría) posicionada en el tablero si la reproducción tiene éxito, o nulo si fracasa.
+     *
+     * @param grid el tablero para evaluar el espacio y depositar la cría.
+     * @return la nueva cría generada, o nulo si no se reproduce.
      */
     CreatureInterface multiply(GridInterface grid);
 }

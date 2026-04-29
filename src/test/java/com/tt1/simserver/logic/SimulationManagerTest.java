@@ -5,6 +5,7 @@ import com.tt1.simserver.model.SimulationResult;
 import com.tt1.simserver.model.SimulationStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
@@ -34,6 +35,7 @@ public class SimulationManagerTest {
     // --- Test getToken -----------------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Token: Un gestor recién instanciado devuelve -1 por defecto")
     void given_newSimulationManager_when_getToken_then_returnsMinusOne() {
         // Arrange (Given)
         SimulationManager manager = new SimulationManager(engineFake);
@@ -42,12 +44,13 @@ public class SimulationManagerTest {
         int token = manager.getToken();
 
         // Assert (Then)
-        assertEquals(-1, token, "Un manager recién creado y no iniciado debe tener token -1.");
+        assertEquals(-1, token, "El token de control de una simulación no arrancada debe ser siempre -1");
     }
 
     // --- Test getSimulationStatus ------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Estado: Toda nueva simulación comienza en estado PENDING")
     void given_newSimulationManager_when_getSimulationStatus_then_returnsPending() {
         // Arrange (Given)
         SimulationManager manager = new SimulationManager(engineFake);
@@ -56,12 +59,13 @@ public class SimulationManagerTest {
         SimulationStatus status = manager.getSimulationStatus();
 
         // Assert (Then)
-        assertEquals(SimulationStatus.PENDING, status, "La simulación debe estar PENDING antes de arrancar.");
+        assertEquals(SimulationStatus.PENDING, status, "Una simulación en espera de ser arrancada debe reportarse como pendiente");
     }
 
     // --- Test getSimulationResult ------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Resultado: Traspasa el objeto de resultado directo desde el motor interno")
     void given_simulationManager_when_getSimulationResult_then_returnsResultFromEngine() {
         // Arrange (Given)
         SimulationManager manager = new SimulationManager(engineFake);
@@ -73,12 +77,13 @@ public class SimulationManagerTest {
         SimulationResult actualResult = manager.getSimulationResult();
 
         // Assert (Then)
-        assertEquals(expectedResult, actualResult, "Debe devolver exactamente el resultado provisto por el motor.");
+        assertEquals(expectedResult, actualResult, "El gestor debe exponer exactamente la misma instancia de resultado generada por su motor de ejecución");
     }
 
     // --- Test startSimulation ----------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Arrancar: Asigna y devuelve un token positivo al iniciar el hilo de simulación")
     void given_startedSimulation_when_startSimulation_then_returnsPositiveToken() {
         // Arrange (Given)
         SimulationManager manager = new SimulationManager(engineFake);
@@ -87,10 +92,11 @@ public class SimulationManagerTest {
         int token = manager.startSimulation();
 
         // Assert (Then)
-        assertTrue(token >= 0, "El token debe ser positivo.");
+        assertTrue(token >= 0, "Al arrancar la simulación, el gestor está obligado a emitir un token válido (mayor o igual a cero)");
     }
 
     @Test
+    @DisplayName("Arrancar: Mantiene el mismo token si se intenta arrancar repetidas veces")
     void given_startedSimulation_when_startSimulation_then_returnsSameTokenAndDoesNotRestart() {
         // Arrange (Given)
         SimulationManager manager = new SimulationManager(engineFake);
@@ -100,12 +106,13 @@ public class SimulationManagerTest {
         int secondToken = manager.startSimulation();
 
         // Assert (Then)
-        assertEquals(firstToken, secondToken, "No se debe reasignar un token nuevo a una simulación ya iniciada.");
+        assertEquals(firstToken, secondToken, "Las llamadas redundantes para iniciar una simulación ya arrancada no deben generar un token nuevo");
     }
 
     // --- Test updateSimulationStatus & getSimulationStatus -----------------------------------------------------------
 
     @Test
+    @DisplayName("Actualizar estado: Se mantiene PENDING si el motor interno sigue procesando turnos")
     void given_pendingSimulation_when_updateSimulationStatus_then_statusRemainsPending() {
         // Arrange (Given)
         SimulationManager manager = new SimulationManager(engineFake);
@@ -115,10 +122,11 @@ public class SimulationManagerTest {
         SimulationStatus status = manager.getSimulationStatus();
 
         // Assert (Then)
-        assertEquals(SimulationStatus.PENDING, status, "Debe estar en PENDING antes de arrancar y de que la simulación se complete.");
+        assertEquals(SimulationStatus.PENDING, status, "La simulación no debe cambiar de estado automáticamente a menos que el motor confirme su término");
     }
 
     @Test
+    @DisplayName("Actualizar estado: Transita a COMPLETED en el momento en que el motor da por finalizados sus turnos")
     void given_pendingSimulationAndEngineDone_when_updateSimulationStatus_then_statusRemainsPending() {
         // Arrange (Given)
         SimulationManager manager = new SimulationManager(engineFake);
@@ -129,12 +137,13 @@ public class SimulationManagerTest {
         SimulationStatus status = manager.getSimulationStatus();
 
         // Assert (Then)
-        assertEquals(SimulationStatus.COMPLETED, status, "Debe pasar a COMPLETED si la simulación ha acabado.");
+        assertEquals(SimulationStatus.COMPLETED, status, "El gestor debe actualizar el estado visible a COMPLETED cuando detecta que el motor ha concluido");
     }
 
     // --- Test getSimulationStatus & startSimulation -----------------------------------------
 
     @Test
+    @DisplayName("Estado en progreso: Devuelve RUNNING mientras el hilo de simulación está calculando")
     void given_runningSimulationAndEngineNotDone_when_getSimulationStatus_then_returnsRunning() {
         // Arrange (Given)
         SimulationManager manager = new SimulationManager(engineFake);
@@ -145,10 +154,11 @@ public class SimulationManagerTest {
         SimulationStatus status = manager.getSimulationStatus();
 
         // Assert (Then)
-        assertEquals(SimulationStatus.RUNNING, status, "Si el motor no ha acabado, pero la simualación ha empezado, el status debe devolver RUNNING.");
+        assertEquals(SimulationStatus.RUNNING, status, "Toda simulación iniciada que aún no haya procesado todos sus turnos debe catalogarse como ejecutándose");
     }
 
     @Test
+    @DisplayName("Estado en progreso: Transita velozmente a COMPLETED si el motor acaba instantáneamente")
     void given_runningSimulationAndEngineDone_when_getSimulationStatus_then_returnsCompleted() {
         // Arrange (Given)
         SimulationManager manager = new SimulationManager(engineFake);
@@ -159,12 +169,13 @@ public class SimulationManagerTest {
         SimulationStatus status = manager.getSimulationStatus();
 
         // Assert (Then)
-        assertEquals(SimulationStatus.COMPLETED, status, "Si el motor ha acabado, el status debe devolver COMPLETED.");
+        assertEquals(SimulationStatus.COMPLETED, status, "Si el hilo procesa el motor al instante, el estado debe actualizarse automáticamente a completado");
     }
 
     // --- Test getToken & getSimulationStatus & startSimulation -------------------------------------------------------
 
     @Test
+    @DisplayName("Flujo de arranque: Inicia asíncronamente, otorga el token y cambia el estado a RUNNING")
     void given_newSimulationManager_when_startSimulation_then_statusIsRunningAndTokenIsAssigned() throws InterruptedException {
         // Arrange (Given)
         SimulationManager manager = new SimulationManager(engineFake);
@@ -178,10 +189,10 @@ public class SimulationManagerTest {
         boolean executedAsynchronously = engineFake.awaitRun(2, TimeUnit.SECONDS);
 
         // Assert (Then)
-        assertTrue(token >= 0, "Debe haberse asignado un token global >= 0.");
-        assertEquals(token, storedToken, "El token devuelto debe coincidir con el almacenado internamente.");
-        assertEquals(SimulationStatus.RUNNING, status, "El estado de la simulación debe transitar a RUNNING.");
-        assertTrue(executedAsynchronously, "El motor debió enviarse al ExecutorService y ejecutar su método run().");
+        assertTrue(token >= 0, "Se debió asignar un token numérico válido para identificar esta ejecución");
+        assertEquals(token, storedToken, "El token público devuelto debe coincidir con el almacenado en el interior del gestor");
+        assertEquals(SimulationStatus.RUNNING, status, "El estado reportado debe transitar obligatoriamente a RUNNING tras ser encolada");
+        assertTrue(executedAsynchronously, "La lógica del motor debe ejecutarse de forma paralela en el hilo secundario del ExecutorService");
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -191,6 +202,7 @@ public class SimulationManagerTest {
     // --- Test getToken -----------------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Integración Token: El gestor con motor real inicializa con el token vacío (-1)")
     void integration_given_newSimulationManagerWithRealEngine_when_getToken_then_returnsMinusOne() {
         // Arrange (Given)
         Grid grid = new Grid(10, 0.35);
@@ -201,12 +213,13 @@ public class SimulationManagerTest {
         int token = manager.getToken();
 
         // Assert (Then)
-        assertEquals(-1, token, "Un manager recién creado y no iniciado debe tener token -1.");
+        assertEquals(-1, token, "Incluso utilizando un motor y tablero reales, el token no iniciado es -1");
     }
 
     // --- Test getSimulationStatus ------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Integración Estado: El gestor con motor real arranca marcado como pendiente")
     void integration_given_newSimulationManagerWithRealEngine_when_getSimulationStatus_then_returnsPending() {
         // Arrange (Given)
         Grid grid = new Grid(10, 0.35);
@@ -217,12 +230,13 @@ public class SimulationManagerTest {
         SimulationStatus status = manager.getSimulationStatus();
 
         // Assert (Then)
-        assertEquals(SimulationStatus.PENDING, status, "La simulación debe estar PENDING antes de arrancar.");
+        assertEquals(SimulationStatus.PENDING, status, "La simulación real aguarda en estado pendiente antes del arranque");
     }
 
     // --- Test getSimulationResult ------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Integración Resultado: Bloquea resultados nulos si el motor real no ha acabado sus turnos")
     void integration_given_simulationManagerWithRealEngineNotDone_when_getSimulationResult_then_returnsNull() {
         // Arrange (Given)
         Grid grid = new Grid(10, 0.35);
@@ -233,12 +247,13 @@ public class SimulationManagerTest {
         SimulationResult result = manager.getSimulationResult();
 
         // Assert (Then)
-        assertNull(result, "Debe devolver null porque el motor aún no ha generado el resultado.");
+        assertNull(result, "No existe historial de resultados disponible porque el motor real aún no ha completado el trabajo");
     }
 
     // --- Test startSimulation ----------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Integración Arrancar: Emitir token válido al lanzar un motor real")
     void integration_given_startedSimulationWithRealEngine_when_startSimulation_then_returnsPositiveToken() {
         // Arrange (Given)
         Grid grid = new Grid(10, 0.35);
@@ -249,10 +264,11 @@ public class SimulationManagerTest {
         int token = manager.startSimulation();
 
         // Assert (Then)
-        assertTrue(token >= 0, "El token debe ser positivo.");
+        assertTrue(token >= 0, "El inicio del hilo real requiere la emisión de un token numérico positivo");
     }
 
     @Test
+    @DisplayName("Integración Arrancar: Protege el token de reasignaciones erróneas en motores reales")
     void integration_given_startedSimulationWithRealEngine_when_startSimulation_then_returnsSameTokenAndDoesNotRestart() {
         // Arrange (Given)
         Grid grid = new Grid(10, 0.35);
@@ -264,12 +280,13 @@ public class SimulationManagerTest {
         int secondToken = manager.startSimulation();
 
         // Assert (Then)
-        assertEquals(firstToken, secondToken, "No se debe reasignar un token nuevo a una simulación ya iniciada.");
+        assertEquals(firstToken, secondToken, "Un motor real en marcha no debe recibir un identificador nuevo si se le vuelve a dar la orden de arranque");
     }
 
     // --- Test updateSimulationStatus & getSimulationStatus -----------------------------------------------------------
 
     @Test
+    @DisplayName("Integración Actualizar estado: No altera el estado prematuramente si el motor real sigue procesando")
     void integration_given_pendingSimulationAndRealEngineDone_when_updateSimulationStatus_then_statusRemainsPending() {
         // Arrange (Given)
         Grid grid = new Grid(10, 0.35);
@@ -281,12 +298,13 @@ public class SimulationManagerTest {
         SimulationStatus status = manager.getSimulationStatus();
 
         // Assert (Then)
-        assertEquals(SimulationStatus.PENDING, status, "Debe estar en PENDING antes de arrancar y de que la simulación se complete.");
+        assertEquals(SimulationStatus.PENDING, status, "El gestor no debe precipitarse marcando como terminado un motor que aún trabaja");
     }
 
     // --- Test getSimulationStatus & startSimulation -----------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Integración Estado en progreso: Mantener estado RUNNING durante cargas computacionales pesadas")
     void integration_given_runningSimulationAndRealEngineNotDone_when_getSimulationStatus_then_returnsRunning() {
         // Arrange (Given)
         Grid grid = new Grid(10, 0.35);
@@ -299,12 +317,13 @@ public class SimulationManagerTest {
         SimulationStatus status = manager.getSimulationStatus();
 
         // Assert (Then)
-        assertEquals(SimulationStatus.RUNNING, status, "El motor real necesita tiempo, por lo que debe continuar en RUNNING.");
+        assertEquals(SimulationStatus.RUNNING, status, "La simulación real está retenida procesando turnos masivos, debe exponerse como ejecutándose");
     }
 
     // --- Test getToken & getSimulationStatus & startSimulation -------------------------------------------------------
 
     @Test
+    @DisplayName("Integración Flujo de arranque: Inicia y registra los estados correctamente con clases reales")
     void integration_given_newSimulationManagerWithRealEngine_when_startSimulation_then_statusIsRunningAndTokenIsAssigned() {
         // Arrange (Given)
         Grid grid = new Grid(10, 0.35);
@@ -317,15 +336,16 @@ public class SimulationManagerTest {
         SimulationStatus status = manager.getSimulationStatus();
 
         // Assert (Then)
-        assertTrue(token >= 0, "Debe haberse asignado un token global >= 0.");
-        assertEquals(token, storedToken, "El token devuelto debe coincidir con el almacenado internamente.");
+        assertTrue(token >= 0, "El token expedido en el flujo real debe ser un entero válido");
+        assertEquals(token, storedToken, "El gestor real asegura el registro interno de su token asignado");
         // Puede que ya esté COMPLETED si el PC es muy rápido, pero la transición RUNNING ocurrió.
-        assertTrue(status == SimulationStatus.RUNNING || status == SimulationStatus.COMPLETED);
+        assertTrue(status == SimulationStatus.RUNNING || status == SimulationStatus.COMPLETED, "El flujo paralelo debe encontrarse ejecutándose en RUNNING o haber terminado rápidamente");
     }
 
     // --- Test getSimulationStatus & getSimulationResult & startSimulation ------------------------------------------------------------------------------------
 
     @Test
+    @DisplayName("Integración Resultado final: Rescata el historial real cuando el hilo acaba de procesar el tablero")
     void integration_given_completedSimulationAndRealEngine_when_getSimulationResult_then_returnsResult() throws InterruptedException {
         // Arrange (Given)
         Grid grid = new Grid(5, 0.35);
@@ -347,9 +367,9 @@ public class SimulationManagerTest {
         SimulationResult result = manager.getSimulationResult();
 
         // Assert (Then)
-        assertEquals(SimulationStatus.COMPLETED, status, "La simulación real debería haberse completado.");
-        assertNotNull(result, "El resultado real no debe ser nulo.");
+        assertEquals(SimulationStatus.COMPLETED, status, "El monitor del hilo secundario debió captar la finalización de los cálculos reales");
+        assertNotNull(result, "Al acabar los cálculos reales, el historial no puede ser nulo");
         // Un tick = estado inicial (sec 0) + paso tras 1 tick (sec 1) = 2 pasos totales
-        assertEquals(2, result.getSeconds(), "El histórico debe contener el instante inicial y 1 tick calculado.");
+        assertEquals(2, result.getSeconds(), "El historial del tablero debe abarcar la posición de inicio y el fin del único turno exigido");
     }
 }

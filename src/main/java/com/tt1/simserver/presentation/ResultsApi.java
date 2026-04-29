@@ -11,11 +11,16 @@ import jakarta.ws.rs.core.Response;
 public interface ResultsApi {
 
     /**
-     * Endpoint POST que recupera y envía los resultados de una simulación para el usuario indicado.
+     * Endpoint POST: Recupera y envía los resultados finales y pasos de una simulación completada.
+     *
+     * <p>Precondición: {@code username} no es nulo y {@code tok} contiene un identificador válido de una simulación registrada.
+     *
+     * <p>Postcondición: Lanza siempre una excepción de operación no soportada, ya que la funcionalidad no ha sido implementada todavía.
      *
      * @param username el nombre del usuario al cual pertenecen los resultados.
-     * @param tok      el token identificador asociado unívocamente a esa simulación específica.
-     * @return la respuesta HTTP informando de la correcta obtención de los datos (ej. 201 Created y cuerpo ResultsResponse) o detallando un error si ha fallado.
+     * @param tok el token identificador de la simulación.
+     * @return la respuesta HTTP con los datos históricos del tablero en cada turno.
+     * @throws UnsupportedOperationException siempre, porque el método aún no está programado.
      */
     @POST
     @Produces({"text/plain", "application/json", "text/json"})

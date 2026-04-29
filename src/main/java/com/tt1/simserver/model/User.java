@@ -7,94 +7,116 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Modela un cliente o usuario del sistema y sirve de nexo entre su perfil
- * y las distintas peticiones de simulación que ha efectuado.
+ * Identifica a un cliente dentro del servidor y agrupa todas las solicitudes de simulación que ha creado.
  */
 public class User {
     private final String username;
     private final Map<Integer, SimulationManagerInterface> requestedSimulations;
 
-
     /**
-     * Constructor base de usuario identificándolo mediante su nombre.
-     * Precondición: username no es nulo, user name no está vacío ni solo contiene carácteres invisibles (espacios,
-     * saltos de línea, tabuladores, ...).
+     * Registra un nuevo perfil de usuario en el sistema.
      *
-     * @param username cadena identificadora de la cuenta de usuario.
+     * <p>Precondición: {@code username} no es nulo, no está vacío y contiene caracteres válidos (no solo espacios o saltos de línea).
+     *
+     * <p>Postcondición: El usuario queda inicializado con el nombre indicado y con un historial de simulaciones vacío.
+     *
+     * @param username el nombre identificador para esta cuenta.
      */
     public User(String username) {
         this.username = username;
         requestedSimulations = new HashMap<>();
     }
 
-
     /**
-     * Obtiene el nombre con el cual se identifica este usuario.
+     * Obtiene el nombre del usuario.
      *
-     * @return el nombre de usuario.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve la cadena de texto exacta con el nombre de cuenta asignado en su registro.
+     *
+     * @return el nombre del usuario.
      */
     public String getUsername() {
         return username;
     }
 
     /**
-     * Comprueba si el usuario tiene asociada alguna simulación en memoria con el token dado.
-     * Precondición: token > 0.
+     * Comprueba si una simulación fue pedida por este usuario.
      *
-     * @param token el identificador numérico generado para la simulación consultada.
-     * @return cierto si le pertenece dicha petición, falso de lo contrario.
+     * <p>Precondición: {@code token} es un identificador numérico mayor o igual a cero.
+     *
+     * <p>Postcondición: Devuelve verdadero si el token se encuentra en el historial del usuario. Devuelve falso si el token no existe o pertenece a otro cliente.
+     *
+     * @param token el identificador de la simulación.
+     * @return verdadero si el usuario es dueño del token, falso en caso contrario.
      */
     public boolean existsSimulation(int token) {
         return requestedSimulations.containsKey(token);
     }
 
     /**
-     * Devuelve el estado de una simulación basándose en el token.
-     * Precondición: Existe una simulación con ese token {@link #existsSimulation(int)}.
+     * Recupera el estado actual de una simulación de este usuario.
      *
-     * @param token identificador de la petición de simulación.
-     * @return un enum con el estado de progreso (ej. RUNNING o COMPLETED).
+     * <p>Precondición: El usuario es el dueño de la simulación ({@code existsSimulation(token)} es verdadero).
+     *
+     * <p>Postcondición: Devuelve el estado de ejecución (pendiente, en ejecución o completado) extraído de su gestor interno.
+     *
+     * @param token el identificador de la simulación consultada.
+     * @return el estado de la simulación.
      */
     public SimulationStatus getSimulationStatus(int token) {
         return requestedSimulations.get(token).getSimulationStatus();
     }
 
     /**
-     * Devuelve el objeto que guarda el histórico de toda la simulación solicitada.
-     * Precondición: Existe una simulación con ese token {@link #existsSimulation(int)}.
+     * Recupera el historial de un tablero tras finalizar su simulación.
      *
-     * @param token identificador numérico de la petición de simulación.
-     * @return el resultado histórico asociado a ese token.
+     * <p>Precondición: El usuario es el dueño de la simulación ({@code existsSimulation(token)} es verdadero).
+     *
+     * <p>Postcondición: Devuelve el objeto con los pasos generados por la simulación. Puede ser nulo si la simulación todavía no ha terminado sus turnos.
+     *
+     * @param token el identificador de la simulación.
+     * @return los resultados del tablero asociado al token.
      */
     public SimulationResult getSimulationResult(int token) {
         return requestedSimulations.get(token).getSimulationResult();
     }
 
     /**
-     * Recupera la colección completa de todos los tokens de simulaciones pedidas por el usuario.
+     * Obtiene la lista con todos los identificadores de simulación de este usuario.
      *
-     * @return colección de valores numéricos de los tokens.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve una colección que contiene todos los tokens generados para este usuario. La colección está vacía si el usuario no ha creado ninguna petición.
+     *
+     * @return una colección con los números de los tokens.
      */
     public Collection<Integer> getTokens() {
         return requestedSimulations.keySet();
     }
 
     /**
-     * Añade un nuevo gestor de simulación recién creado al historial y mapa de simulaciones de la cuenta de este usuario.
-     * Precondición: simulationManager es no nulo y está iniciado.
+     * Vincula una nueva solicitud de simulación al historial del usuario.
      *
-     * @param simulationManager la instancia administradora de la tarea.
+     * <p>Precondición: {@code simulationManager} no es nulo y tiene un token válido asignado (mayor o igual a cero).
+     *
+     * <p>Postcondición: El gestor de la simulación se archiva en la cuenta de este usuario y estará accesible usando su token.
+     *
+     * @param simulationManager el gestor de la tarea iniciada.
      */
     public void addRequest(SimulationManagerInterface simulationManager) {
         requestedSimulations.put(simulationManager.getToken(), simulationManager);
     }
 
     /**
-     * Evalúa si un usuario es igual a otro analizando únicamente la cadena de texto de su nombre de usuario.
-     * Dos usuarios son iguales si su nombre es exactamente igual (importa la capitalización).
+     * Compara este usuario con otro perfil basándose en su nombre.
      *
-     * @param other objeto de contraste para verificar igualdad.
-     * @return cierto si los dos usuarios tienen idéntico username.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve verdadero solo si el objeto proporcionado es un usuario y posee exactamente la misma cadena de texto en su nombre (incluyendo mayúsculas). Devuelve falso en caso contrario.
+     *
+     * @param other el objeto a comparar con este usuario.
+     * @return verdadero si comparten el mismo nombre, falso si son distintos.
      */
     @Override
     public boolean equals(Object other) {

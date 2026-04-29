@@ -6,10 +6,6 @@ import com.tt1.simserver.model.SimulationResult;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Doble de pruebas (Fake) para simular el comportamiento del motor de simulación
- * de forma controlada y predecible en los tests unitarios.
- */
 public class SimulationEngineFake implements SimulationEngineInterface {
     private boolean done;
     private SimulationResult result;

@@ -2,19 +2,30 @@ package com.tt1.simserver.logic;
 
 import com.tt1.simserver.model.SimulationResult;
 
+/**
+ * Define el contrato del motor encargado de procesar los turnos de la simulación de forma asíncrona.
+ */
 public interface SimulationEngineInterface extends Runnable {
 
     /**
-     * Verifica de forma sincronizada (thread-safe) si la simulación ha terminado.
+     * Comprueba de forma segura y sincronizada si el motor de la simulación ha terminado.
      *
-     * @return cierto si la simulación completó todos sus pasos, falso en caso contrario.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve verdadero si la simulación completó la ejecución de todos los turnos preestablecidos. Devuelve falso mientras no ha arrancado o sigue procesando.
+     *
+     * @return el estado actual de finalización.
      */
     boolean isDone();
 
     /**
-     * Devuelve el resultado final almacenando todos los pasos calculados, o null si todavía sigue en curso.
+     * Extrae el objeto que empaqueta los historiales del proceso simulado.
      *
-     * @return el resultado si la simulación ha finalizado, o null si todavía sigue en curso.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve el contenedor histórico poblado con las disposiciones del tablero solo si la simulación ya ha terminado. Devuelve nulo para evitar accesos tempranos si no ha finalizado.
+     *
+     * @return los datos con el resultado de la simulación o nulo si sigue en ejecución.
      */
     SimulationResult getResult();
 }

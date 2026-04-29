@@ -4,10 +4,6 @@ import com.tt1.simserver.logic.GridInterface;
 import com.tt1.simserver.model.Position;
 import com.tt1.simserver.model.creatures.CreatureInterface;
 
-/**
- * Doble de pruebas (Fake/Stub/Spy) para simular de forma determinista
- * el comportamiento de una criatura en los tests unitarios del Grid.
- */
 public class CreatureFake implements CreatureInterface {
     private String name;
     private String color;

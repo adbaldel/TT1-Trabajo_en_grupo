@@ -2,26 +2,41 @@ package com.tt1.simserver.model.creatures;
 
 import com.tt1.simserver.model.Position;
 
+/**
+ * Define los atributos básicos y comportamientos que toda criatura debe implementar para existir en el tablero.
+ */
 public interface CreatureInterface extends Movable, Multipliable {
 
     /**
-     * Obtiene el nombre de la especie que ha sido asignado a la entidad.
+     * Obtiene el nombre de la especie a la que pertenece la criatura.
      *
-     * @return cadena con el nombre de la criatura.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve la cadena de texto exacta con el nombre asignado en su creación.
+     *
+     * @return el nombre de la criatura.
      */
     String getName();
 
     /**
-     * Obtiene el color de dibujo o representación lógica de esta entidad.
+     * Obtiene el color que representa a la criatura.
      *
-     * @return cadena descriptiva del color.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve la cadena de texto con el identificador CSS del color.
+     *
+     * @return el color de la criatura.
      */
     String getColor();
 
     /**
-     * Obtiene una copia local de la posición y coordenadas actuales en las que reside esta entidad.
+     * Recupera las coordenadas actuales de la criatura en el tablero.
      *
-     * @return un objeto clonado de la posición, protegiendo así las variables internas.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve una copia nueva del objeto posición actual para evitar manipulaciones externas del estado interno de la criatura.
+     *
+     * @return una nueva instancia con la posición actual.
      */
     Position getPosition();
 }

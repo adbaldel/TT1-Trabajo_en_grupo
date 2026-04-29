@@ -23,12 +23,14 @@ public class SimulationManager implements SimulationManagerInterface {
     private int token;
     private SimulationStatus status;
 
-
     /**
-     * Inicializa el gestor, preparando un motor de simulación para ser lanzado.
-     * Precondición: simulationEngine no es nulo.
+     * Inicializa el gestor y prepara el motor de simulación para ser lanzado.
      *
-     * @param simulationEngine el motor lógico con el tablero a simular.
+     * <p>Precondición: {@code simulationEngine} no es nulo.
+     *
+     * <p>Postcondición: Crea el gestor almacenando el motor de ejecución. El estado inicial se establece como pendiente y el token como -1.
+     *
+     * @param simulationEngine el motor lógico encargado de procesar los turnos del tablero.
      */
     public SimulationManager(SimulationEngineInterface simulationEngine) {
         this.token = -1;
@@ -36,9 +38,14 @@ public class SimulationManager implements SimulationManagerInterface {
         this.status = SimulationStatus.PENDING;
     }
 
-
     /**
-     * {@inheritDoc}
+     * Obtiene el identificador numérico único asignado a esta ejecución.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve el token asignado durante el arranque. Si la simulación aún no ha sido arrancada, devuelve -1 de forma predeterminada.
+     *
+     * @return el token de la simulación.
      */
     @Override
     public int getToken() {
@@ -46,7 +53,13 @@ public class SimulationManager implements SimulationManagerInterface {
     }
 
     /**
-     * {@inheritDoc}
+     * Consulta y devuelve el estado actual de la simulación.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Fuerza una actualización interna para revisar si el motor ha terminado y devuelve el estado resultante (pendiente, en progreso o completado).
+     *
+     * @return el estado de ejecución de la simulación.
      */
     @Override
     public SimulationStatus getSimulationStatus() {
@@ -56,7 +69,11 @@ public class SimulationManager implements SimulationManagerInterface {
     }
 
     /**
-     * {@inheritDoc}
+     * Refresca el estado interno verificando la finalización de los cálculos en el motor.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Si el motor de simulación confirma que ha procesado todos sus turnos, actualiza el estado de la simulación a completado. En caso contrario, se mantiene sin cambios.
      */
     @Override
     public void updateSimulationStatus() {
@@ -66,7 +83,13 @@ public class SimulationManager implements SimulationManagerInterface {
     }
 
     /**
-     * {@inheritDoc}
+     * Recupera el historial de resultados generado por el motor de simulación.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Traspasa directamente el objeto de resultado devuelto por el motor interno solo si el estado actual es completado. Bloquea la entrega y devuelve nulo si la simulación todavía está pendiente o procesando turnos.
+     *
+     * @return el historial de resultados, o nulo si no ha concluido.
      */
     @Override
     public SimulationResult getSimulationResult() {
@@ -74,7 +97,13 @@ public class SimulationManager implements SimulationManagerInterface {
     }
 
     /**
-     * {@inheritDoc}
+     * Inicia asíncronamente el procesamiento matemático de la simulación en un hilo.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Encola el motor de simulación en un hilo secundario para procesar los turnos de manera paralela. Cambia el estado a en progreso y emite un nuevo token mayor o igual a cero. Si el gestor ya fue arrancado, ignora la orden y devuelve el mismo token original para prevenir repeticiones.
+     *
+     * @return el token numérico identificador emitido.
      */
     @Override
     public int startSimulation() {

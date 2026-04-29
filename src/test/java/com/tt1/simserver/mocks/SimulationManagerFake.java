@@ -4,10 +4,6 @@ import com.tt1.simserver.logic.SimulationManagerInterface;
 import com.tt1.simserver.model.SimulationResult;
 import com.tt1.simserver.model.SimulationStatus;
 
-/**
- * Doble de pruebas (Fake) para simular el gestor de la simulación.
- * Nos permite inyectar estados y tokens predecibles para testear el SimulationService.
- */
 public class SimulationManagerFake implements SimulationManagerInterface {
     private int token;
     private SimulationStatus status;

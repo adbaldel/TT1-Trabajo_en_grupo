@@ -9,7 +9,6 @@ import java.util.Objects;
 
 import static com.tt1.simserver.logic.utils.StringManipulation.toIndentedString;
 
-
 /**
  * Representa los datos iniciales necesarios que envía el cliente para crear una nueva simulación.
  */
@@ -18,11 +17,14 @@ public class Request {
     private List<Integer> initialCreatureQuantities;
     private List<String> creatureNames;
 
-
     /**
-     * Devuelve las cantidades iniciales de cada entidad que participará en la simulación.
+     * Obtiene las cantidades iniciales de cada criatura para poblar el tablero.
      *
-     * @return lista de enteros con dichas cantidades.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve la lista de números enteros con la cantidad especificada de cada criatura.
+     *
+     * @return la lista de enteros con dichas cantidades.
      */
     @JsonProperty("cantidadesIniciales")
     public List<Integer> getInitialCreatureQuantities() {
@@ -30,9 +32,13 @@ public class Request {
     }
 
     /**
-     * Asigna la lista de cantidades iniciales de las entidades.
+     * Sustituye la lista de cantidades iniciales de criaturas.
      *
-     * @param initialCreatureQuantities la lista de las cantidades.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: La lista interna se sobreescribe con la nueva colección de cantidades proporcionada.
+     *
+     * @param initialCreatureQuantities la nueva lista de cantidades.
      */
     @JsonProperty("cantidadesIniciales")
     public void setInitialCreatureQuantities(List<Integer> initialCreatureQuantities) {
@@ -40,9 +46,13 @@ public class Request {
     }
 
     /**
-     * Añade una nueva cantidad inicial a la lista existente. Si la lista no existe, la crea.
+     * Añade una nueva cantidad a la lista de criaturas iniciales.
      *
-     * @param cantidadesInicialesItem la cantidad de la nueva entidad a añadir.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Si la lista interna no existía, se crea. La nueva cantidad se añade al final de la colección. Devuelve esta misma solicitud actualizada.
+     *
+     * @param cantidadesInicialesItem la cantidad de la criatura a añadir.
      * @return la instancia actual de la solicitud.
      */
     public Request addCantidadesInicialesItem(Integer cantidadesInicialesItem) {
@@ -55,9 +65,13 @@ public class Request {
     }
 
     /**
-     * Elimina una cantidad específica de la lista de cantidades iniciales.
+     * Elimina una cantidad específica de la lista de criaturas iniciales.
      *
-     * @param cantidadesInicialesItem la cantidad a remover.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Si la lista existe y contiene la cantidad exacta indicada, esta se elimina. Devuelve esta misma solicitud actualizada.
+     *
+     * @param cantidadesInicialesItem la cantidad a retirar de la lista.
      * @return la instancia actual de la solicitud.
      */
     public Request removeCantidadesInicialesItem(Integer cantidadesInicialesItem) {
@@ -69,9 +83,13 @@ public class Request {
     }
 
     /**
-     * Devuelve la lista con los nombres de las entidades a simular.
+     * Obtiene los nombres de las especies de criaturas que participarán en la simulación.
      *
-     * @return lista de nombres de las entidades.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve la lista con los nombres identificadores de las criaturas que se añadirán al tablero.
+     *
+     * @return la lista de nombres de las criaturas.
      */
     @JsonProperty("nombreEntidades")
     public List<String> getCreatureNames() {
@@ -79,9 +97,13 @@ public class Request {
     }
 
     /**
-     * Asigna la lista de los nombres correspondientes a las entidades de la simulación.
+     * Sustituye la lista de nombres de las criaturas de la simulación.
      *
-     * @param creatureNames la lista de nombres.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: La lista interna se sobreescribe con los nuevos nombres proporcionados.
+     *
+     * @param creatureNames la nueva lista de nombres.
      */
     @JsonProperty("nombreEntidades")
     public void setCreatureNames(List<String> creatureNames) {
@@ -89,9 +111,13 @@ public class Request {
     }
 
     /**
-     * Añade un nuevo nombre de entidad a la lista de nombres.
+     * Añade el nombre de una criatura a la lista de especies.
      *
-     * @param nombreEntidadesItem el nombre de la entidad a añadir.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Si la lista interna no existía, se crea. El nombre se añade al final de la colección. Devuelve esta misma solicitud actualizada.
+     *
+     * @param nombreEntidadesItem el nombre de la especie a añadir.
      * @return la instancia actual de la solicitud.
      */
     public Request addNombreEntidadesItem(String nombreEntidadesItem) {
@@ -104,9 +130,13 @@ public class Request {
     }
 
     /**
-     * Elimina el nombre de una entidad de la lista existente.
+     * Elimina el nombre de una criatura de la lista de especies.
      *
-     * @param nombreEntidadesItem el nombre a remover.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Si la lista existe y contiene el nombre exacto indicado, este se elimina. Devuelve esta misma solicitud actualizada.
+     *
+     * @param nombreEntidadesItem el nombre a retirar de la lista.
      * @return la instancia actual de la solicitud.
      */
     public Request removeNombreEntidadesItem(String nombreEntidadesItem) {
@@ -118,10 +148,14 @@ public class Request {
     }
 
     /**
-     * Verifica la igualdad de los atributos de esta solicitud frente a otro objeto.
+     * Compara esta solicitud con otro objeto para comprobar si solicitan los mismos datos iniciales.
      *
-     * @param o el objeto con el que comparar.
-     * @return cierto si tienen las mismas listas de cantidades y entidades.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve verdadero si ambas tienen exactamente las mismas listas de cantidades y especies. Devuelve falso en caso contrario.
+     *
+     * @param o el objeto a comparar.
+     * @return verdadero si son solicitudes idénticas, falso si no.
      */
     @Override
     public boolean equals(Object o) {
@@ -137,7 +171,11 @@ public class Request {
     }
 
     /**
-     * Calcula y devuelve el código hash para el objeto Solicitud.
+     * Calcula el código numérico para usar esta solicitud en colecciones basadas en hash.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve un número entero generado a partir de las listas de criaturas y cantidades.
      *
      * @return el valor hash calculado.
      */
@@ -147,9 +185,13 @@ public class Request {
     }
 
     /**
-     * Devuelve una cadena de texto descriptiva de las listas contenidas en la solicitud.
+     * Genera una representación en texto con los datos de esta solicitud.
      *
-     * @return una representación en formato string del objeto.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve una cadena de texto multilínea listando las cantidades y los nombres de las criaturas.
+     *
+     * @return una representación en formato de texto.
      */
     @Override
     public String toString() {
