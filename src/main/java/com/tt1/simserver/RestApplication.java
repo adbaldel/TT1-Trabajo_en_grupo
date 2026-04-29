@@ -7,20 +7,22 @@ import org.glassfish.jersey.server.ResourceConfig;
 import java.net.URI;
 
 /**
- * Clase principal encargada de configurar e iniciar el servidor HTTP integrado.
+ * Clase principal encargada de configurar e iniciar el servidor HTTP para procesar peticiones web.
  */
 public class RestApplication {
     /**
-     * Define la ruta base y el puerto donde escuchará el servidor.
+     * Define la ruta base y el puerto local donde el servidor aceptará conexiones.
      */
     public static final String BASE_URI = "http://localhost:8080/";
 
-
     /**
-     * Punto de entrada de la aplicación.
-     * Inicia el servidor Grizzly y lo mantiene en ejecución hasta que el usuario decida detenerlo.
+     * Punto de entrada principal de la aplicación.
      *
-     * @param args argumentos de la línea de comandos (no utilizados).
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Arranca el servidor HTTP, muestra mensajes de registro por consola y bloquea el hilo principal a la espera de un salto de línea (tecla ENTER) del usuario para detener y cerrar el proceso.
+     *
+     * @param args argumentos de la línea de comandos (ignorados en esta aplicación).
      */
     public static void main(String[] args) {
         try {
@@ -37,12 +39,14 @@ public class RestApplication {
         }
     }
 
-
     /**
-     * Configura el servidor HTTP indicando el paquete donde residen los controladores (capa de presentación)
-     * y crea una instancia de Grizzly escuchando en la URI base.
+     * Configura e instancia el servidor HTTP vinculando los controladores al enrutador.
      *
-     * @return la instancia del servidor HTTP Grizzly recién creado.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve una instancia activa del servidor Grizzly escuchando en la URI base, con todos los endpoints del paquete de presentación registrados correctamente.
+     *
+     * @return la instancia del servidor HTTP en ejecución.
      */
     private static HttpServer startServer() {
         // Le decimos a Jersey que busque las clases @Path (controladores) en este paquete

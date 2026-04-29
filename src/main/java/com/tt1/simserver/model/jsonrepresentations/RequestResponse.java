@@ -7,7 +7,6 @@ import java.util.Objects;
 
 import static com.tt1.simserver.logic.utils.StringManipulation.toIndentedString;
 
-
 /**
  * Representa la respuesta del servidor tras procesar la creación de una nueva solicitud de simulación.
  */
@@ -18,11 +17,14 @@ public class RequestResponse {
     private String errorMessage;
     private Boolean data;
 
-
     /**
-     * Indica si se pudo llevar a cabo la operación con éxito.
+     * Indica si la simulación se registró y arrancó correctamente.
      *
-     * @return cierto si fue exitosa, de lo contrario falso.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve verdadero si la solicitud fue exitosa, o falso si ocurrió algún error al crearla.
+     *
+     * @return el estado de éxito de la operación.
      */
     @JsonProperty("done")
     public Boolean getDone() {
@@ -30,20 +32,27 @@ public class RequestResponse {
     }
 
     /**
-     * Asigna el estado de la operación (éxito o fracaso).
+     * Actualiza el estado de éxito de la petición.
      *
-     * @param done estado de la operación.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: El estado de éxito interno se sobreescribe con el valor proporcionado.
+     *
+     * @param done verdadero si fue exitosa, falso en caso contrario.
      */
     @JsonProperty("done")
     public void setDone(Boolean done) {
         this.done = done;
     }
 
-
     /**
-     * Devuelve el token que identifica unívocamente a la solicitud recién creada.
+     * Obtiene el identificador numérico de la solicitud de simulación generada.
      *
-     * @return el token de la solicitud.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve el token único asignado a la nueva simulación en el servidor.
+     *
+     * @return el token numérico de la simulación.
      */
     @JsonProperty("tokenSolicitud")
     public Integer getRequestToken() {
@@ -51,7 +60,11 @@ public class RequestResponse {
     }
 
     /**
-     * Asigna el identificador token de la solicitud generada.
+     * Establece el identificador numérico de la solicitud de simulación generada.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: El token interno de la petición se sobreescribe con el valor proporcionado.
      *
      * @param requestToken el valor numérico del token.
      */
@@ -61,9 +74,13 @@ public class RequestResponse {
     }
 
     /**
-     * Devuelve el mensaje de error en caso de fallo, o nulo si no hubo ninguno.
+     * Obtiene el mensaje descriptivo en caso de error durante la creación.
      *
-     * @return texto del error.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve el texto del error, o nulo si la solicitud fue registrada con éxito.
+     *
+     * @return el texto del mensaje de error, o nulo si no hubo error.
      */
     @JsonProperty("errorMessage")
     public String getErrorMessage() {
@@ -71,9 +88,13 @@ public class RequestResponse {
     }
 
     /**
-     * Asigna un texto descriptivo del error al generar la solicitud.
+     * Establece el mensaje de error de la operación.
      *
-     * @param errorMessage mensaje de error a guardar.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: El mensaje de error interno se actualiza con el texto indicado.
+     *
+     * @param errorMessage el texto del mensaje de error.
      */
     @JsonProperty("errorMessage")
     public void setErrorMessage(String errorMessage) {
@@ -81,9 +102,13 @@ public class RequestResponse {
     }
 
     /**
-     * Devuelve un flag adicional adjunto en la respuesta.
+     * Obtiene los datos adicionales adjuntos en la respuesta.
      *
-     * @return flag adicional.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve un flag booleano con datos adicionales del servidor.
+     *
+     * @return un indicador booleano.
      */
     @JsonProperty("data")
     public Boolean getData() {
@@ -91,9 +116,13 @@ public class RequestResponse {
     }
 
     /**
-     * Asigna un valor booleano a los datos extra devueltos por el servidor.
+     * Establece los datos adicionales de la respuesta.
      *
-     * @param data valor booleano adicional.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: El flag de datos adicionales se actualiza con el valor indicado.
+     *
+     * @param data el valor booleano extra.
      */
     @JsonProperty("data")
     public void setData(Boolean data) {
@@ -101,10 +130,14 @@ public class RequestResponse {
     }
 
     /**
-     * Compara los campos de esta respuesta frente a otro objeto verificando su igualdad.
+     * Compara esta respuesta con otro objeto para verificar si contienen los mismos datos de registro.
      *
-     * @param o el objeto a contrastar.
-     * @return cierto si tienen la misma información, falso de lo contrario.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve verdadero si el otro objeto es una respuesta idéntica. Devuelve falso en caso contrario.
+     *
+     * @param o el objeto a comparar.
+     * @return verdadero si tienen la misma información, falso si difieren.
      */
     @Override
     public boolean equals(Object o) {
@@ -122,9 +155,13 @@ public class RequestResponse {
     }
 
     /**
-     * Devuelve el código hash para el objeto actual.
+     * Calcula el código numérico para usar esta respuesta en colecciones basadas en hash.
      *
-     * @return valor hash numérico.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve un número entero generado a partir del estado de la operación y el token asignado.
+     *
+     * @return el valor hash calculado.
      */
     @Override
     public int hashCode() {
@@ -132,9 +169,13 @@ public class RequestResponse {
     }
 
     /**
-     * Obtiene una representación textual, multilínea y legible, de los datos en este objeto.
+     * Genera una representación en texto con los datos de esta respuesta.
      *
-     * @return los datos en formato cadena de texto.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve una cadena de texto multilínea mostrando el resultado de la solicitud y el token emitido.
+     *
+     * @return una representación en formato de texto.
      */
     @Override
     public String toString() {

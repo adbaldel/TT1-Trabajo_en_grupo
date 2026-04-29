@@ -20,11 +20,14 @@ public class ProblemDetails extends HashMap<String, Object> {
     private String detail;
     private String instance;
 
-
     /**
-     * Devuelve el tipo del problema.
+     * Obtiene la referencia que identifica el tipo de problema.
      *
-     * @return una cadena con la referencia al tipo del problema.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve la cadena de texto con el identificador del tipo de error.
+     *
+     * @return el tipo del problema.
      */
     @JsonProperty("type")
     public String getType() {
@@ -32,7 +35,11 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
-     * Establece el tipo del problema.
+     * Establece la referencia que identifica el tipo de problema.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: El tipo interno se sobreescribe con el valor proporcionado.
      *
      * @param type una cadena con la referencia al tipo del problema.
      */
@@ -42,9 +49,13 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
-     * Devuelve el título del problema.
+     * Obtiene el título descriptivo corto del error.
      *
-     * @return el título descriptivo corto.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve la cadena de texto con el título del problema.
+     *
+     * @return el título del problema.
      */
     @JsonProperty("title")
     public String getTitle() {
@@ -52,7 +63,11 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
-     * Establece el título del problema.
+     * Establece el título descriptivo corto del error.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: El título interno se sobreescribe con el valor proporcionado.
      *
      * @param title el título descriptivo corto.
      */
@@ -62,7 +77,11 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
-     * Devuelve el código de estado HTTP.
+     * Obtiene el código de estado HTTP asociado al error.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve el número entero que representa el código HTTP.
      *
      * @return el número del código de estado.
      */
@@ -72,7 +91,11 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
-     * Establece el código de estado HTTP asociado.
+     * Establece el código de estado HTTP asociado al error.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: El código de estado interno se sobreescribe con el valor proporcionado.
      *
      * @param status el número del código de estado.
      */
@@ -82,9 +105,13 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
-     * Devuelve los detalles del problema.
+     * Obtiene la explicación detallada del problema.
      *
-     * @return una cadena con la explicación detallada del error.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve la cadena de texto con los detalles del error.
+     *
+     * @return los detalles del problema.
      */
     @JsonProperty("detail")
     public String getDetail() {
@@ -92,7 +119,11 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
-     * Establece los detalles del problema.
+     * Establece la explicación detallada del problema.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: El detalle interno se sobreescribe con el valor proporcionado.
      *
      * @param detail una cadena con la explicación detallada.
      */
@@ -102,7 +133,11 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
-     * Devuelve la instancia donde ocurrió el problema.
+     * Obtiene el identificador exacto de la petición donde ocurrió el problema.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve la cadena de texto con el origen de la instancia del problema.
      *
      * @return el URI de la instancia del problema.
      */
@@ -112,9 +147,13 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
-     * Establece la instancia donde ocurrió el problema.
+     * Establece el identificador exacto de la petición donde ocurrió el problema.
      *
-     * @param instance el URI identificador de la instancia.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: La instancia interna se sobreescribe con el valor proporcionado.
+     *
+     * @param instance el identificador de la instancia.
      */
     @JsonProperty("instance")
     public void setInstance(String instance) {
@@ -122,10 +161,14 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
-     * Compara este objeto con otro para comprobar si son iguales basándose en sus atributos y en los de su superclase HashMap.
+     * Compara este objeto con otro para verificar si representan el mismo error exacto.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve verdadero solo si ambos tienen los mismos atributos fijos y el mismo contenido en el mapa base. Falso en caso contrario.
      *
      * @param o el objeto a comparar.
-     * @return cierto si los objetos son idénticos, falso de lo contrario.
+     * @return verdadero si los objetos son idénticos, falso si no.
      */
     @Override
     public boolean equals(Object o) {
@@ -145,9 +188,13 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
-     * Calcula y devuelve el código hash de este objeto.
+     * Calcula el código numérico para usar esta respuesta en colecciones basadas en hash.
      *
-     * @return el valor hash.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve un número entero generado a partir de todos los detalles del problema.
+     *
+     * @return el valor hash calculado.
      */
     @Override
     public int hashCode() {
@@ -155,7 +202,11 @@ public class ProblemDetails extends HashMap<String, Object> {
     }
 
     /**
-     * Genera una representación en forma de cadena del detalle del problema.
+     * Genera una representación en texto con los datos completos del problema.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve una cadena de texto multilínea mostrando todas las propiedades asignadas al error.
      *
      * @return una cadena que representa este objeto.
      */

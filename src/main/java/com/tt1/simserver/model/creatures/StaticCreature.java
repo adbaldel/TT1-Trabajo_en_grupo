@@ -1,6 +1,6 @@
 package com.tt1.simserver.model.creatures;
 
-import com.tt1.simserver.logic.Grid;
+import com.tt1.simserver.logic.GridInterface;
 import com.tt1.simserver.model.Position;
 
 /**
@@ -10,40 +10,47 @@ import com.tt1.simserver.model.Position;
 public class StaticCreature extends Creature {
 
     /**
-     * Construye una entidad de naturaleza estática en un punto designado.
-     * Precondición: username no es nulo, user name no está vacío ni solo contiene carácteres invisibles (espacios,
-     * saltos de línea, tabuladores, ...), color es un color reconocido por CSS, position es no nula.
+     * Construye una criatura estática en un punto designado.
      *
-     * @param name nombre indicativo de la especie.
-     * @param color color representativo asignado en su renderizado.
-     * @param position las coordenadas definitivas donde habitará.
+     * <p>Precondición: {@code name} no es nulo, no está vacío ni solo contiene caracteres invisibles. {@code color} es un color reconocido por CSS. {@code position} no es nulo.
+     *
+     * <p>Postcondición: Inicializa la criatura asegurando sus propiedades visuales y espaciales definitivas en el tablero.
+     *
+     * @param name     nombre indicativo de la especie.
+     * @param color    color representativo asignado en su renderizado.
+     * @param position la posición definitiva donde habitará.
      */
     public StaticCreature(String name, String color, Position position) {
         super(name, color, position);
     }
 
-
     /**
-     * Regla que cancela el comportamiento dinámico. Nunca intenta mudarse a otras celdas.
-     * Precondición: grid es no nulo y contiene a esta criatura en la posición correspondiente a la posición de la criatura.
+     * Bloquea la acción de movimiento para esta especie concreta.
      *
-     * @param grid escenario de despliegue.
-     * @return siempre devuelve null indicando que no requiere reasignación en el tablero subyacente.
+     * <p>Precondición: {@code grid} no es nulo y contiene a esta criatura en su posición correspondiente.
+     *
+     * <p>Postcondición: Devuelve siempre nulo sin modificar nunca las coordenadas internas de la criatura. Ignora deliberadamente cualquier casilla libre adyacente en el tablero.
+     *
+     * @param grid el tablero sobre el que opera en este turno.
+     * @return siempre devuelve nulo.
      */
     @Override
-    public Position move(Grid grid) {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+    public Position move(GridInterface grid) {
+        return null;
     }
 
     /**
-     * Evita la multiplicación. Ningún hijo se genera durante este paso.
-     * Precondición: grid es no nulo y contiene a esta criatura en la posición correspondiente a la posición de la criatura.
+     * Cancela mecánicamente la reproducción para evitar la generación de crías.
      *
-     * @param grid escenario de despliegue.
-     * @return siempre null.
+     * <p>Precondición: {@code grid} no es nulo y contiene a esta criatura en su posición correspondiente.
+     *
+     * <p>Postcondición: Devuelve siempre nulo. La criatura estática base no implementa reproducción, por lo que aborta el intento independientemente de las casillas vacías a su alrededor.
+     *
+     * @param grid el tablero sobre el que opera en este turno.
+     * @return siempre devuelve nulo.
      */
     @Override
-    public Creature multiply(Grid grid) {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+    public Creature multiply(GridInterface grid) {
+        return null;
     }
 }

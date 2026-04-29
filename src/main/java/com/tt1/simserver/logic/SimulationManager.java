@@ -1,11 +1,8 @@
 package com.tt1.simserver.logic;
 
-import com.tt1.simserver.model.Position;
 import com.tt1.simserver.model.SimulationResult;
 import com.tt1.simserver.model.SimulationStatus;
 
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -14,62 +11,112 @@ import java.util.concurrent.Executors;
  * Proporciona hilos desde un pull para realizar el cálculo del motor sin bloquear el servidor web,
  * a la vez que gestiona el estado y el token identificador de esta ejecución.
  */
-public class SimulationManager {
+public class SimulationManager implements SimulationManagerInterface {
+    private static final ExecutorService pool = Executors.newCachedThreadPool();
+    /**
+     * Contador estático para asignar los identificadores de token globales.
+     * ¡CUIDADO! Varios métodos accediendo y modificando esta variable a la vez en varios hilos
+     * podría generar problemas de condición de carrera. Requiere AtomicInteger o bloqueo sincronizado.
+     */
+    private static int numberOfSimulations = 0;
+    private final SimulationEngineInterface simulationEngine;
+    private int token;
+    private SimulationStatus status;
 
     /**
-     * Inicializa el gestor, preparando un motor de simulación para ser lanzado.
-     * Precondición: simulationEngine no es nulo.
+     * Inicializa el gestor y prepara el motor de simulación para ser lanzado.
      *
-     * @param simulationEngine el motor lógico con el tablero a simular.
+     * <p>Precondición: {@code simulationEngine} no es nulo.
+     *
+     * <p>Postcondición: Crea el gestor almacenando el motor de ejecución. El estado inicial se establece como pendiente y el token como -1.
+     *
+     * @param simulationEngine el motor lógico encargado de procesar los turnos del tablero.
      */
-    public SimulationManager(SimulationEngine simulationEngine) {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+    public SimulationManager(SimulationEngineInterface simulationEngine) {
+        this.token = -1;
+        this.simulationEngine = simulationEngine;
+        this.status = SimulationStatus.PENDING;
     }
 
-
     /**
-     * Obtiene el token unívoco que identifica a esta simulación concreta.
+     * Obtiene el identificador numérico único asignado a esta ejecución.
      *
-     * @return el valor numérico del token, o -1 si aún no ha comenzado.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve el token asignado durante el arranque. Si la simulación aún no ha sido arrancada, devuelve -1 de forma predeterminada.
+     *
+     * @return el token de la simulación.
      */
+    @Override
     public int getToken() {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+        return token;
     }
 
     /**
-     * Obtiene el estado actual de esta simulación, actualizando posibles cambios subyacentes.
+     * Consulta y devuelve el estado actual de la simulación.
      *
-     * @return el estado de la simulación (ej. PENDING, RUNNING, COMPLETED).
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Fuerza una actualización interna para revisar si el motor ha terminado y devuelve el estado resultante (pendiente, en progreso o completado).
+     *
+     * @return el estado de ejecución de la simulación.
      */
+    @Override
     public SimulationStatus getSimulationStatus() {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+        updateSimulationStatus();
+
+        return status;
     }
 
     /**
-     * Interroga al motor de simulación para averiguar si ha terminado,
-     * cambiando el estado a COMPLETED en caso afirmativo.
+     * Refresca el estado interno verificando la finalización de los cálculos en el motor.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Si el motor de simulación confirma que ha procesado todos sus turnos, actualiza el estado de la simulación a completado. En caso contrario, se mantiene sin cambios.
      */
+    @Override
     public void updateSimulationStatus() {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+        if (simulationEngine.isDone()) {
+            status = SimulationStatus.COMPLETED;
+        }
     }
 
     /**
-     * Solicita y devuelve los resultados definitivos al motor.
+     * Recupera el historial de resultados generado por el motor de simulación.
      *
-     * @return los datos del resultado paso por paso, o null si no se han completado aún.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Traspasa directamente el objeto de resultado devuelto por el motor interno solo si el estado actual es completado. Bloquea la entrega y devuelve nulo si la simulación todavía está pendiente o procesando turnos.
+     *
+     * @return el historial de resultados, o nulo si no ha concluido.
      */
+    @Override
     public SimulationResult getSimulationResult() {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+        return getSimulationStatus() == SimulationStatus.COMPLETED ? simulationEngine.getResult() : null;
     }
 
     /**
-     * Asigna un token, encola el motor de simulación en el pool de hilos para su ejecución asíncrona
-     * y transita el estado a RUNNING.
-     * Postcondición: token > 0.
+     * Inicia asíncronamente el procesamiento matemático de la simulación en un hilo.
      *
-     * @return el token numérico asignado a la simulación recién iniciada.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Encola el motor de simulación en un hilo secundario para procesar los turnos de manera paralela. Cambia el estado a en progreso y emite un nuevo token mayor o igual a cero. Si el gestor ya fue arrancado, ignora la orden y devuelve el mismo token original para prevenir repeticiones.
+     *
+     * @return el token numérico identificador emitido.
      */
+    @Override
     public int startSimulation() {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+        if (getToken() >= 0) {
+            return getToken();
+        }
+
+        token = numberOfSimulations++;
+
+        pool.submit(simulationEngine);
+
+        status = SimulationStatus.RUNNING;
+
+        return token;
     }
 }

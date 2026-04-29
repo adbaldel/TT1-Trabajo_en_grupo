@@ -10,33 +10,48 @@ import jakarta.ws.rs.core.Response;
 public interface RequestApi {
 
     /**
-     * Endpoint GET para comprobar el estado de una simulación a través de su token.
+     * Endpoint GET: Comprueba el estado actual de una solicitud de simulación existente.
      *
-     * @param username el nombre de la cuenta del usuario que hizo la petición.
-     * @param tok      el token con el cual se puede buscar la simulación solicitada.
-     * @return un objeto Response que representa el resultado de la comprobación (ej. array con estado o similar).
+     * <p>Precondición: {@code username} no es nulo y {@code token} contiene un identificador válido.
+     *
+     * <p>Postcondición: Lanza siempre una excepción de operación no soportada, ya que la funcionalidad no ha sido implementada todavía.
+     *
+     * @param username el nombre de la cuenta del usuario.
+     * @param token el identificador numérico de la simulación.
+     * @return la respuesta HTTP con el estado de la simulación.
+     * @throws UnsupportedOperationException siempre, porque el método aún no está programado.
      */
     @GET
     @Path("/ComprobarSolicitud")
     @Produces({"text/plain", "application/json", "text/json"})
-    Response solicitudComprobarSolicitudGet(@QueryParam("nombreUsuario") String username, @QueryParam("tok") Integer tok);
+    Response solicitudComprobarSolicitudGet(@QueryParam("nombreUsuario") String username, @QueryParam("tok") Integer token);
 
     /**
-     * Endpoint GET para recuperar los tokens de las simulaciones vinculadas a un usuario concreto.
+     * Endpoint POST: Recupera todas las solicitudes de simulación asociadas a un usuario en el sistema.
      *
-     * @param username el nombre de cuenta del que se extraen todas sus solicitudes pasadas.
-     * @return la respuesta conteniendo la lista de identificadores numéricos de las simulaciones solicitadas por este cliente.
+     * <p>Precondición: {@code username} no es nulo.
+     *
+     * <p>Postcondición: Lanza siempre una excepción de operación no soportada, ya que la funcionalidad no ha sido implementada todavía.
+     *
+     * @param username el nombre de cuenta del usuario a consultar.
+     * @return la respuesta HTTP con la lista de identificadores.
+     * @throws UnsupportedOperationException siempre, porque el método aún no está programado.
      */
     @GET
     @Path("/GetSolicitudesUsuario")
     Response solicitudGetSolicitudesUsuarioGet(@QueryParam("nombreUsuario") String username);
 
     /**
-     * Endpoint POST encargado de crear y registrar una nueva simulación con sus condiciones iniciales provistas.
+     * Endpoint POST: Crea y registra una nueva solicitud de simulación para el usuario rellenando un nuevo tablero.
      *
-     * @param username el identificador del usuario que hace la solicitud de simulación.
-     * @param request  un JSON mapeado a objeto que contiene listas con cantidades y nombres de las entidades a participar.
-     * @return respuesta HTTP que, de ir bien, contendrá un SolicitudResponse detallando el token que le ha sido asignado a la nueva simulación (201 Created).
+     * <p>Precondición: {@code username} no es nulo y {@code request} contiene los datos iniciales válidos de las criaturas.
+     *
+     * <p>Postcondición: Lanza siempre una excepción de operación no soportada, ya que la funcionalidad no ha sido implementada todavía.
+     *
+     * @param username el identificador del usuario que hace la solicitud.
+     * @param request el objeto con la especificación y cantidades de criaturas a incluir en el tablero.
+     * @return la respuesta HTTP informando del token asignado a la simulación.
+     * @throws UnsupportedOperationException siempre, porque el método aún no está programado.
      */
     @POST
     @Path("/Solicitar")

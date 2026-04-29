@@ -7,9 +7,8 @@ import java.util.Objects;
 
 import static com.tt1.simserver.logic.utils.StringManipulation.toIndentedString;
 
-
 /**
- * Representa la respuesta devuelta por el servidor al consultar los resultados de una simulación.
+ * Representa la respuesta devuelta por el servidor al consultar el historial de resultados de un tablero.
  */
 @JsonTypeName("ResultsResponse")
 public class ResultsResponse {
@@ -18,11 +17,14 @@ public class ResultsResponse {
     private String errorMessage;
     private String data;
 
-
     /**
-     * Devuelve si la operación de obtener resultados fue exitosa.
+     * Indica si los datos de la simulación se obtuvieron correctamente.
      *
-     * @return cierto si se obtuvieron los datos, falso si hubo error.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve verdadero si los resultados están incluidos en esta respuesta, o falso si hubo un fallo al recuperarlos.
+     *
+     * @return el estado de éxito de la operación.
      */
     @JsonProperty("done")
     public Boolean getDone() {
@@ -30,9 +32,13 @@ public class ResultsResponse {
     }
 
     /**
-     * Establece el estado de éxito al solicitar los resultados.
+     * Actualiza el estado de éxito al recuperar los resultados.
      *
-     * @param done cierto si la petición fue exitosa.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: El estado de éxito interno se sobreescribe con el valor proporcionado.
+     *
+     * @param done verdadero si la petición fue exitosa, falso en caso contrario.
      */
     @JsonProperty("done")
     public void setDone(Boolean done) {
@@ -40,9 +46,13 @@ public class ResultsResponse {
     }
 
     /**
-     * Devuelve el token de la solicitud de simulación solicitada.
+     * Obtiene el identificador numérico de la simulación a la que pertenecen los resultados.
      *
-     * @return el token identificador numérico.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve el token exacto de la simulación consultada.
+     *
+     * @return el token numérico de la simulación.
      */
     @JsonProperty("tokenSolicitud")
     public Integer getRequestToken() {
@@ -50,7 +60,11 @@ public class ResultsResponse {
     }
 
     /**
-     * Establece el token identificador de la solicitud de la simulación.
+     * Establece el identificador numérico de la simulación a la que pertenecen los resultados.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: El token interno de la petición se sobreescribe con el valor proporcionado.
      *
      * @param requestToken el token numérico.
      */
@@ -60,9 +74,13 @@ public class ResultsResponse {
     }
 
     /**
-     * Devuelve el mensaje de error de la solicitud, si lo hubiera.
+     * Obtiene el mensaje descriptivo en caso de error durante la búsqueda de los resultados.
      *
-     * @return el texto del error, o nulo si no ha habido errores.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve el texto del error, o nulo si los resultados se recuperaron con éxito.
+     *
+     * @return el texto del mensaje de error, o nulo si no hubo error.
      */
     @JsonProperty("errorMessage")
     public String getErrorMessage() {
@@ -70,9 +88,13 @@ public class ResultsResponse {
     }
 
     /**
-     * Establece el mensaje de error de la solicitud.
+     * Establece el mensaje de error de la operación de consulta.
      *
-     * @param errorMessage texto con el error ocurrido.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: El mensaje de error interno se actualiza con el texto indicado.
+     *
+     * @param errorMessage el texto del mensaje de error.
      */
     @JsonProperty("errorMessage")
     public void setErrorMessage(String errorMessage) {
@@ -80,9 +102,13 @@ public class ResultsResponse {
     }
 
     /**
-     * Devuelve los datos de la simulación completada.
+     * Obtiene los datos resultantes con el historial del tablero simulado.
      *
-     * @return los datos generados por la simulación.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve una cadena de texto que contiene todos los pasos capturados de la simulación finalizada.
+     *
+     * @return el historial generado por la simulación.
      */
     @JsonProperty("data")
     public String getData() {
@@ -90,9 +116,13 @@ public class ResultsResponse {
     }
 
     /**
-     * Establece los datos resultantes de la simulación.
+     * Establece los datos resultantes con el historial del tablero simulado.
      *
-     * @param data la información de la simulación.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Los datos internos del historial se sobreescriben con el contenido proporcionado.
+     *
+     * @param data la información en texto de la simulación.
      */
     @JsonProperty("data")
     public void setData(String data) {
@@ -100,10 +130,14 @@ public class ResultsResponse {
     }
 
     /**
-     * Compara los atributos de esta instancia con otro objeto para verificar la igualdad.
+     * Compara esta respuesta con otro objeto para verificar si exponen los mismos resultados.
      *
-     * @param o el objeto de referencia a comparar.
-     * @return cierto si son idénticos, falso si no.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve verdadero si el otro objeto es una respuesta idéntica con el mismo token e historial de datos. Devuelve falso en caso contrario.
+     *
+     * @param o el objeto a comparar.
+     * @return verdadero si tienen la misma información, falso si difieren.
      */
     @Override
     public boolean equals(Object o) {
@@ -121,9 +155,13 @@ public class ResultsResponse {
     }
 
     /**
-     * Genera el código hash para el objeto.
+     * Calcula el código numérico para usar esta respuesta en colecciones basadas en hash.
      *
-     * @return el valor numérico del hash.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve un número entero generado a partir del estado, el token y los datos resultantes.
+     *
+     * @return el valor hash calculado.
      */
     @Override
     public int hashCode() {
@@ -131,9 +169,13 @@ public class ResultsResponse {
     }
 
     /**
-     * Convierte el objeto a una representación en forma de cadena de texto.
+     * Genera una representación en texto con los datos del historial devuelto.
      *
-     * @return cadena descriptiva de los resultados.
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve una cadena de texto multilínea mostrando si fue un éxito y la información contenida en el resultado.
+     *
+     * @return una representación en formato de texto.
      */
     @Override
     public String toString() {
