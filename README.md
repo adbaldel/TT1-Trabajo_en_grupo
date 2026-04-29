@@ -4,6 +4,8 @@
 
 [Informe del proyecto (Google Docs)](https://docs.google.com/document/d/12mSnx8gF6DMedae0g9ZdviFhDj2TXrpJABZuXUwqS_0/edit?usp=sharing)
 
+[Documentación del proyecto (Javadoc)](https://adbaldel.github.io/TT1-Trabajo_en_grupo/)
+
 ## **¿De qué va este proyecto?**
 
 Este proyecto es un servidor backend (una API REST) creado en Java para la asignatura Taller Transversal I. Su objetivo principal es procesar simulaciones de criaturas en un tablero en segundo plano, gestionar el estado de estas simulaciones y permitir la consulta de resultados mediante un sistema de tokens.
