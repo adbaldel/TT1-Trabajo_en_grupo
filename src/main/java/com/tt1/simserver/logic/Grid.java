@@ -56,13 +56,13 @@ public class Grid implements GridInterface {
         CreatureInterface creature;
         Position updatedCreaturePosition;
         CreatureInterface creatureChild;
-        List<Position> newCreaturePositions;
+        List<Position> skipPositions;
 
-        newCreaturePositions = new ArrayList<>();
+        skipPositions = new ArrayList<>();
 
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                if (newCreaturePositions.contains(new Position(x, y))) {
+                if (skipPositions.contains(new Position(x, y))) {
                     continue;
                 }
 
@@ -75,13 +75,14 @@ public class Grid implements GridInterface {
                     if (updatedCreaturePosition != null) {
                         grid[position.getY()][position.getX()] = null;
                         grid[updatedCreaturePosition.getY()][updatedCreaturePosition.getX()] = creature;
+                        skipPositions.add(updatedCreaturePosition);
                     }
 
                     creatureChild = creature.multiply(this);
 
                     if (creatureChild != null) {
                         addCreature(creatureChild);
-                        newCreaturePositions.add(creatureChild.getPosition());
+                        skipPositions.add(creatureChild.getPosition());
                     }
                 }
             }

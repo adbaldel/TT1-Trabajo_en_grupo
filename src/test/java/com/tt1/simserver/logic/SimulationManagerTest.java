@@ -290,8 +290,8 @@ public class SimulationManagerTest {
     void integration_given_runningSimulationAndRealEngineNotDone_when_getSimulationStatus_then_returnsRunning() {
         // Arrange (Given)
         Grid grid = new Grid(10, 0.35);
-        // Ponemos muchos ticks (10.000) para forzar que el hilo asíncrono no termine instantáneamente
-        SimulationEngine engine = new SimulationEngine(grid, 10000);
+        // Ponemos muchos ticks (100.000) para forzar que el hilo asíncrono no termine instantáneamente
+        SimulationEngine engine = new SimulationEngine(grid, 100000);
         SimulationManager manager = new SimulationManager(engine);
 
         // Act (When)
