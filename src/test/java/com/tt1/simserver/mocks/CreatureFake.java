@@ -14,8 +14,10 @@ public class CreatureFake implements CreatureInterface {
     private Position position;
     private Position positionToReturnOnMove;
     private CreatureInterface creatureToReturnOnMultiply;
-    private boolean moveCalled;
-    private boolean multiplyCalled;
+    private long moveCalledTime;
+    private long multiplyCalledTime;
+    private int timesMoveCalled;
+    private int timesMultiplyCalled;
 
 
     public CreatureFake() {
@@ -24,12 +26,26 @@ public class CreatureFake implements CreatureInterface {
         position = null;
         positionToReturnOnMove = null;
         creatureToReturnOnMultiply = null;
-        this.moveCalled = false;
-        this.multiplyCalled = false;
+        moveCalledTime = 0;
+        multiplyCalledTime = 0;
+        timesMoveCalled = 0;
+        timesMultiplyCalled = 0;
     }
 
 
     // --- Setters de control para los tests ---------------------------------------------------------------------------
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
 
     public void setPositionToReturnOnMove(Position position) {
         this.positionToReturnOnMove = position;
@@ -39,21 +55,37 @@ public class CreatureFake implements CreatureInterface {
         this.creatureToReturnOnMultiply = creature;
     }
 
+    // --- Getters de control para los tests ---------------------------------------------------------------------------
+
+    public long getMoveCalledTime() {
+        return moveCalledTime;
+    }
+
+    public long getMultiplyCalledTime() {
+        return multiplyCalledTime;
+    }
+
+    public int getTimesMoveCalled() {
+        return timesMoveCalled;
+    }
+
+    public int getTimesMultiplyCalled() {
+        return timesMultiplyCalled;
+    }
+
     public boolean isMoveCalled() {
-        return moveCalled;
+        return moveCalledTime > 0;
     }
 
     public boolean isMultiplyCalled() {
-        return multiplyCalled;
+        return multiplyCalledTime > 0;
     }
+
+    // --- Implementación de la interfaz -------------------------------------------------------------------------------
 
     @Override
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override
@@ -61,24 +93,15 @@ public class CreatureFake implements CreatureInterface {
         return color;
     }
 
-    // --- Implementación de la interfaz -------------------------------------------------------------------------------
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
     @Override
     public Position getPosition() {
         return new Position(position.getX(), position.getY());
     }
 
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
     @Override
     public Position move(GridInterface grid) {
-        moveCalled = true;
+        timesMoveCalled++;
+        moveCalledTime = System.currentTimeMillis();
         if (positionToReturnOnMove != null) {
             // Simulamos el comportamiento real de actualizar la posición interna
             position.setX(positionToReturnOnMove.getX());
@@ -89,7 +112,8 @@ public class CreatureFake implements CreatureInterface {
 
     @Override
     public CreatureInterface multiply(GridInterface grid) {
-        multiplyCalled = true;
+        timesMultiplyCalled++;
+        multiplyCalledTime = System.currentTimeMillis();
         return creatureToReturnOnMultiply;
     }
 }

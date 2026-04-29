@@ -111,6 +111,9 @@ class GridTest {
         assertEquals(creatureFake, grid.getCreature(initialPos));
         assertTrue(creatureFake.isMoveCalled());
         assertTrue(creatureFake.isMultiplyCalled());
+        assertEquals(1, creatureFake.getTimesMoveCalled());
+        assertEquals(1, creatureFake.getTimesMultiplyCalled());
+        assertTrue(creatureFake.getMoveCalledTime() <= creatureFake.getMultiplyCalledTime());
     }
 
     @Test
@@ -133,6 +136,9 @@ class GridTest {
         assertEquals(creatureFake, grid.getCreature(newPos));
         assertTrue(creatureFake.isMoveCalled());
         assertTrue(creatureFake.isMultiplyCalled());
+        assertEquals(1, creatureFake.getTimesMoveCalled());
+        assertEquals(1, creatureFake.getTimesMultiplyCalled());
+        assertTrue(creatureFake.getMoveCalledTime() <= creatureFake.getMultiplyCalledTime());
     }
 
     @Test
@@ -159,8 +165,13 @@ class GridTest {
         assertEquals(child, grid.getCreature(childPos));
         assertTrue(parent.isMoveCalled());
         assertTrue(parent.isMultiplyCalled());
+        assertEquals(1, parent.getTimesMoveCalled());
+        assertEquals(1, parent.getTimesMultiplyCalled());
+        assertTrue(parent.getMoveCalledTime() <= parent.getMultiplyCalledTime());
         assertFalse(child.isMoveCalled());
         assertFalse(child.isMultiplyCalled());
+        assertEquals(0, child.getTimesMoveCalled());
+        assertEquals(0, child.getTimesMultiplyCalled());
     }
 
     // --- Test getCreature --------------------------------------------------------------------------------------------

@@ -51,6 +51,7 @@ public class SimulationStep {
 
         if (step.size() != simulationStep.step.size()) return false;
 
+
         for (Map.Entry<Position, String> entry : step.entrySet()) {
             if (!entry.getValue().equals(simulationStep.getColor(entry.getKey()))) return false;
         }
