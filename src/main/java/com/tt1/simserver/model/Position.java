@@ -1,5 +1,7 @@
 package com.tt1.simserver.model;
 
+import java.util.Objects;
+
 /**
  * Modela las coordenadas 2D relativas de una casilla dentro del tablero de simulación.
  */
@@ -82,5 +84,32 @@ public class Position {
      */
     public void moveDown() {
         y -= 1;
+    }
+
+    /**
+     * Compara este objeto con otro para comprobar si son iguales basándose en sus atributos.
+     *
+     * @param o el objeto de referencia con el cual comparar.
+     * @return cierto si los objetos son posiciones con la misma x e y, falso en caso contrario.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Position position = (Position) o;
+
+        return x == position.x &&
+                y == position.y;
+    }
+
+    /**
+     * Calcula y devuelve el código hash para el objeto Position.
+     *
+     * @return el valor hash calculado.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }

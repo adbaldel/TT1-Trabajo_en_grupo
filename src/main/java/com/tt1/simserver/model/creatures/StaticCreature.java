@@ -1,6 +1,6 @@
 package com.tt1.simserver.model.creatures;
 
-import com.tt1.simserver.logic.Grid;
+import com.tt1.simserver.logic.GridInterface;
 import com.tt1.simserver.model.Position;
 
 /**
@@ -14,8 +14,8 @@ public class StaticCreature extends Creature {
      * Precondición: username no es nulo, user name no está vacío ni solo contiene carácteres invisibles (espacios,
      * saltos de línea, tabuladores, ...), color es un color reconocido por CSS, position es no nula.
      *
-     * @param name nombre indicativo de la especie.
-     * @param color color representativo asignado en su renderizado.
+     * @param name     nombre indicativo de la especie.
+     * @param color    color representativo asignado en su renderizado.
      * @param position las coordenadas definitivas donde habitará.
      */
     public StaticCreature(String name, String color, Position position) {
@@ -31,8 +31,8 @@ public class StaticCreature extends Creature {
      * @return siempre devuelve null indicando que no requiere reasignación en el tablero subyacente.
      */
     @Override
-    public Position move(Grid grid) {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+    public Position move(GridInterface grid) {
+        return null;
     }
 
     /**
@@ -43,7 +43,7 @@ public class StaticCreature extends Creature {
      * @return siempre null.
      */
     @Override
-    public Creature multiply(Grid grid) {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+    public Creature multiply(GridInterface grid) {
+        return null;
     }
 }

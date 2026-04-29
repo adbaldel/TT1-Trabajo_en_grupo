@@ -1,8 +1,9 @@
 package com.tt1.simserver.model.creatures;
 
-import com.tt1.simserver.logic.Grid;
+import com.tt1.simserver.logic.GridInterface;
 import com.tt1.simserver.model.Position;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -11,8 +12,8 @@ import java.util.Random;
  * bajo un sistema probabilístico.
  */
 public class StaticRabbit extends StaticCreature {
-    private Random random;
-    private double multiplyProbability;
+    private final Random random;
+    private final double multiplyProbability;
 
 
     /**
@@ -22,11 +23,11 @@ public class StaticRabbit extends StaticCreature {
      * saltos de línea, tabuladores, ...), color es un color reconocido por CSS, multiplyProbability entre 0.0 y 1.0 (ambos
      * incluidos), position es no nula, random es no nulo.
      *
-     * @param name el nombre representativo.
-     * @param color el color para el grid de la simulación.
+     * @param name                el nombre representativo.
+     * @param color               el color para el grid de la simulación.
      * @param multiplyProbability el valor base de probabilidad para crear copias en sus adyacencias.
-     * @param position sus coordenadas definitivas y origen reproductor.
-     * @param random el analizador probabilístico de azar para sus comprobaciones biológicas.
+     * @param position            sus coordenadas definitivas y origen reproductor.
+     * @param random              el analizador probabilístico de azar para sus comprobaciones biológicas.
      */
     public StaticRabbit(String name, String color, double multiplyProbability, Position position, Random random) {
         super(name, color, position);
@@ -41,10 +42,10 @@ public class StaticRabbit extends StaticCreature {
      * saltos de línea, tabuladores, ...), color es un color reconocido por CSS, multiplyProbability entre 0.0 y 1.0 (ambos
      * incluidos), position es no nula.
      *
-     * @param id identificador/nombre local de la criatura.
-     * @param color el color que la visibiliza.
+     * @param id                  identificador/nombre local de la criatura.
+     * @param color               el color que la visibiliza.
      * @param multiplyProbability la probabilidad estática en coma flotante de reproducción.
-     * @param position sus coordenadas iniciales en el tablero.
+     * @param position            sus coordenadas iniciales en el tablero.
      */
     public StaticRabbit(String id, String color, double multiplyProbability, Position position) {
         this(id, color, multiplyProbability, position, new Random());
@@ -70,7 +71,19 @@ public class StaticRabbit extends StaticCreature {
      * @return la nueva entidad infantil de conseguir clonarse, null de lo contrario.
      */
     @Override
-    public Creature multiply(Grid grid) {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+    public Creature multiply(GridInterface grid) {
+        Creature child = null;
+        List<Position> availablePositions;
+        Position childPosition;
+
+        if (random.nextDouble() <= multiplyProbability) {
+            availablePositions = grid.getAdjacentEmptyCells(getPosition());
+            if (!availablePositions.isEmpty()) {
+                childPosition = availablePositions.get(random.nextInt(availablePositions.size()));
+                child = new StaticRabbit(getName(), getColor(), getMultiplyProbability(), childPosition);
+            }
+        }
+
+        return child;
     }
 }

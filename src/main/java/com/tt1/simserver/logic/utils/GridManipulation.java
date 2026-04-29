@@ -1,8 +1,8 @@
 package com.tt1.simserver.logic.utils;
 
-import com.tt1.simserver.model.creatures.Creature;
-import com.tt1.simserver.logic.Grid;
+import com.tt1.simserver.logic.GridInterface;
 import com.tt1.simserver.model.Position;
+import com.tt1.simserver.model.creatures.CreatureInterface;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,10 +19,10 @@ public class GridManipulation {
      * @param grid el tablero que se desea copiar.
      * @return un diccionario mapeando posiciones a los respectivos colores de las criaturas que la ocupan.
      */
-    public static Map<Position, String> copyGridToMap(Grid grid) {
+    public static Map<Position, String> copyGridToMap(GridInterface grid) {
         Map<Position, String> map = new HashMap<>();
         Position position;
-        Creature creature;
+        CreatureInterface creature;
 
         for (int y = 0; y < grid.getSize(); y++) {
             for (int x = 0; x < grid.getSize(); x++) {

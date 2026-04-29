@@ -1,6 +1,6 @@
 package com.tt1.simserver.model;
 
-import com.tt1.simserver.logic.SimulationManager;
+import com.tt1.simserver.logic.SimulationManagerInterface;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class User {
     private final String username;
-    private final Map<Integer, SimulationManager> requestedSimulations;
+    private final Map<Integer, SimulationManagerInterface> requestedSimulations;
 
 
     /**
@@ -81,11 +81,11 @@ public class User {
 
     /**
      * Añade un nuevo gestor de simulación recién creado al historial y mapa de simulaciones de la cuenta de este usuario.
-     * Precondición: simulationManager es no nulo.
+     * Precondición: simulationManager es no nulo y está iniciado.
      *
      * @param simulationManager la instancia administradora de la tarea.
      */
-    public void addRequest(SimulationManager simulationManager) {
+    public void addRequest(SimulationManagerInterface simulationManager) {
         requestedSimulations.put(simulationManager.getToken(), simulationManager);
     }
 

@@ -1,9 +1,9 @@
-
 package com.tt1.simserver.model.creatures;
 
-import com.tt1.simserver.logic.Grid;
+import com.tt1.simserver.logic.GridInterface;
 import com.tt1.simserver.model.Position;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -11,8 +11,8 @@ import java.util.Random;
  * por el tablero basándose en una probabilidad definida.
  */
 public class MobileCreature extends Creature {
-    private Random random;
-    private double moveProbability;
+    private final Random random;
+    private final double moveProbability;
 
 
     /**
@@ -21,11 +21,11 @@ public class MobileCreature extends Creature {
      * saltos de línea, tabuladores, ...), color es un color reconocido por CSS, moveProbability entre 0.0 y 1.0 (ambos
      * incluidos), position es no nula, random es no nulo.
      *
-     * @param name denominación de la especie.
-     * @param color representación gráfica en texto de su color.
+     * @param name            denominación de la especie.
+     * @param color           representación gráfica en texto de su color.
      * @param moveProbability probabilidad (0.0 a 1.0) para que la criatura efectúe un movimiento en un turno.
-     * @param position las coordenadas iniciales donde se planta la criatura.
-     * @param random objeto generador numérico de probabilidad.
+     * @param position        las coordenadas iniciales donde se planta la criatura.
+     * @param random          objeto generador numérico de probabilidad.
      */
     public MobileCreature(String name, String color, double moveProbability, Position position, Random random) {
         super(name, color, position);
@@ -40,10 +40,10 @@ public class MobileCreature extends Creature {
      * saltos de línea, tabuladores, ...), color es un color reconocido por CSS, moveProbability entre 0.0 y 1.0 (ambos
      * incluidos), position es no nula.
      *
-     * @param id denominación de la especie.
-     * @param color representación gráfica en texto de su color.
+     * @param id              denominación de la especie.
+     * @param color           representación gráfica en texto de su color.
      * @param moveProbability probabilidad de moverse en cada turno.
-     * @param position las coordenadas iniciales donde se ubicará.
+     * @param position        las coordenadas iniciales donde se ubicará.
      */
     public MobileCreature(String id, String color, double moveProbability, Position position) {
         this(id, color, moveProbability, position, new Random());
@@ -69,8 +69,21 @@ public class MobileCreature extends Creature {
      * @return las coordenadas finalmente ocupadas en este turno (puede mantenerse de no cumplirse la probabilidad).
      */
     @Override
-    public Position move(Grid grid) {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+    public Position move(GridInterface grid) {
+        List<Position> availablePositions;
+        Position newPosition = null;
+
+        if (random.nextDouble() <= moveProbability) {
+            availablePositions = grid.getAdjacentEmptyCells(getPosition());
+
+            if (!availablePositions.isEmpty()) {
+                newPosition = availablePositions.get(random.nextInt(availablePositions.size()));
+                position.setX(newPosition.getX());
+                position.setY(newPosition.getY());
+            }
+        }
+
+        return newPosition;
     }
 
     /**
@@ -82,7 +95,7 @@ public class MobileCreature extends Creature {
      * @return siempre null para criaturas únicamente móviles.
      */
     @Override
-    public Creature multiply(Grid grid) {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+    public Creature multiply(GridInterface grid) {
+        return null;
     }
 }

@@ -1,7 +1,7 @@
 package com.tt1.simserver.logic;
 
 import com.tt1.simserver.model.Position;
-import com.tt1.simserver.model.creatures.Creature;
+import com.tt1.simserver.model.creatures.CreatureInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,10 @@ import java.util.List;
  * Representa el tablero bidimensional donde interactúan y se sitúan las criaturas de la simulación.
  * El tablero se modela como una matriz cuadrada.
  */
-public class Grid {
+public class Grid implements GridInterface {
+    private final CreatureInterface[][] grid;
+    private final int size;
+
 
     /**
      * Constructor que inicializa un tablero vacío calculando su tamaño en base
@@ -18,84 +21,140 @@ public class Grid {
      * Precondición: numberOfCreatures > 0, occupancy entre 0.0 y 1.0 (0.0 no incluido).
      *
      * @param numberOfCreatures el número total inicial de criaturas.
-     * @param occupancy la fracción de ocupación esperada en el tablero (ej. 0.35 para 35%).
+     * @param occupancy         la fracción de ocupación esperada en el tablero (ej. 0.35 para 35%).
      */
     public Grid(int numberOfCreatures, double occupancy) {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+        size = (int) Math.ceil(Math.sqrt(numberOfCreatures / occupancy));
+
+        grid = new CreatureInterface[size][size];
     }
 
     /**
      * Constructor que inicializa el tablero y lo puebla con una lista de criaturas.
      * Calcula su tamaño en base al número total de criaturas y el porcentaje de ocupación deseado.
-     * Precondición: creatures no es nulo ni vacío, occupancy entre 0.0 y 1.0 (0.0 no incluido).
+     * Precondición: creatures no es nulo ni vacío, occupancy entre 0.0 y 1.0 (0.0 no incluido) y todas las criaturas
+     * tienen posiciones diferentes y están dentro del tamaño calculado del tablero.
      *
      * @param creatures la lista de criaturas a ubicar en el tablero.
      * @param occupancy la fracción de ocupación esperada en el tablero.
      */
-    public Grid(List<Creature> creatures, double occupancy) {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+    public Grid(List<CreatureInterface> creatures, double occupancy) {
+        this(creatures.size(), occupancy);
+
+        for (CreatureInterface creature : creatures) {
+            addCreature(creature);
+        }
     }
 
 
     /**
-     * Avanza el estado del tablero en un tick temporal (un segundo en la simulación).
-     * Recorre la matriz de izquierda a derecha (eje X) y de arriba a abajo (eje Y).
-     * Durante el recorrido, invoca las reglas de movimiento y multiplicación de cada criatura
-     * en ese orden.
+     * {@inheritDoc}
      */
+    @Override
     public void tick() {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+        Position position;
+        CreatureInterface creature;
+        Position updatedCreaturePosition;
+        CreatureInterface creatureChild;
+        List<Position> newCreaturePositions;
+
+        newCreaturePositions = new ArrayList<>();
+
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                if (newCreaturePositions.contains(new Position(x, y))) {
+                    continue;
+                }
+
+                position = new Position(x, y);
+                creature = getCreature(position);
+
+                if (creature != null) {
+                    updatedCreaturePosition = creature.move(this);
+
+                    if (updatedCreaturePosition != null) {
+                        grid[position.getY()][position.getX()] = null;
+                        grid[updatedCreaturePosition.getY()][updatedCreaturePosition.getX()] = creature;
+                    }
+
+                    creatureChild = creature.multiply(this);
+
+                    if (creatureChild != null) {
+                        addCreature(creatureChild);
+                        newCreaturePositions.add(creatureChild.getPosition());
+                    }
+                }
+            }
+        }
     }
 
     /**
-     * Obtiene la criatura situada en una posición concreta del tablero.
-     * Precondición: la posición debe estar dentro del tablero.
-     *
-     * @param position las coordenadas donde buscar la criatura.
-     * @return la criatura en dicha posición, o null si está vacía.
+     * {@inheritDoc}
      */
-    public Creature getCreature(Position position) {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+    @Override
+    public CreatureInterface getCreature(Position position) {
+        return grid[position.getY()][position.getX()];
     }
 
     /**
-     * Devuelve el tamaño del lado del tablero (número de filas/columnas).
-     *
-     * @return el tamaño del tablero.
+     * {@inheritDoc}
      */
+    @Override
     public int getSize() {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+        return size;
     }
 
     /**
-     * Verifica si una posición se encuentra vacía y dentro de los límites del tablero.
-     *
-     * @param position la posición a evaluar.
-     * @return cierto si la posición está dentro del tablero y no contiene ninguna criatura, falso en caso contrario.
+     * {@inheritDoc}
      */
+    @Override
     public boolean isEmpty(Position position) {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+        if (position.getX() < 0 || position.getY() < 0 || position.getX() >= size || position.getY() >= size) {
+            return false;
+        }
+
+        return grid[position.getY()][position.getX()] == null;
     }
 
     /**
-     * Inserta o actualiza una criatura en el tablero utilizando las coordenadas internas de la propia criatura.
-     * Precondición: la criatura debe ocupar una posición vacía del tablero.
-     *
-     * @param creature la criatura a añadir al tablero.
+     * {@inheritDoc}
      */
-    public final void addCreature(Creature creature) {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+    @Override
+    public final void addCreature(CreatureInterface creature) {
+        grid[creature.getPosition().getY()][creature.getPosition().getX()] = creature;
     }
 
     /**
-     * Calcula y devuelve las posiciones adyacentes vacías (arriba, abajo, izquierda, derecha)
-     * a partir de una posición dada, verificando los límites del tablero.
-     * Precondición: la posición debe estar dentro del tablero.
-     *
-     * @param position la coordenada central desde la cual verificar celdas adyacentes.
-     * @return un arreglo con las posiciones adyacentes que se encuentran actualmente vacías.
+     * {@inheritDoc}
      */
-    public Position[] getAdjacentEmptyCells(Position position) {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+    @Override
+    public List<Position> getAdjacentEmptyCells(Position position) {
+        List<Position> positions = new ArrayList<>();
+        Position right, left, up, down;
+
+        right = new Position(position.getX(), position.getY());
+        right.moveRight();
+        if (isEmpty(right)) {
+            positions.add(right);
+        }
+
+        up = new Position(position.getX(), position.getY());
+        up.moveUp();
+        if (isEmpty(up)) {
+            positions.add(up);
+        }
+
+        left = new Position(position.getX(), position.getY());
+        left.moveLeft();
+        if (isEmpty(left)) {
+            positions.add(left);
+        }
+        down = new Position(position.getX(), position.getY());
+        down.moveDown();
+        if (isEmpty(down)) {
+            positions.add(down);
+        }
+
+        return positions;
     }
 }
