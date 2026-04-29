@@ -1,54 +1,69 @@
-# **Servidor de Simulaciones - Trabajo en Grupo TT1**
+# **Servidor de Simulaciones \- Trabajo en Grupo TT1**
 
 **Autores:** Juan Luis Medrano Miguel y Adrián Baldellou Aguirre.
 
-## **Descripción del Proyecto**
+[Informe del proyecto (Google Docs)](https://docs.google.com/document/d/12mSnx8gF6DMedae0g9ZdviFhDj2TXrpJABZuXUwqS_0/edit?usp=sharing)
 
-Este proyecto consiste en el servidor backend que proporciona el núcleo lógico para la ejecución de simulaciones y envío de correos electrónicos.
+## **¿De qué va este proyecto?**
 
-Actúa como una API REST independiente que procesa en segundo plano las solicitudes computacionales de simulación, gestiona su estado y almacena los resultados para su posterior consulta. La API se expone sobre el protocolo HTTP y está documentada rigurosamente bajo el estándar OpenAPI (Swagger), permitiendo una integración estandarizada con múltiples clientes.
+Este proyecto es un servidor backend (una API REST) creado en Java para la asignatura Taller Transversal I. Su objetivo principal es procesar simulaciones de criaturas en un tablero en segundo plano, gestionar el estado de estas simulaciones y permitir la consulta de resultados mediante un sistema de tokens.
 
-## **Arquitectura y Estructura Principal**
+### **La Simulación**
 
-La aplicación está diseñada bajo una arquitectura de capas orientada a servicios utilizando el estándar Jakarta RESTful Web Services (JAX-RS). Su estructura se divide en:
+La lógica central consiste en un tablero bidimensional (cuya ocupación inicial se calcula para rondar el 35%) poblado por distintas entidades que interactúan por turnos (de izquierda a derecha y de arriba a abajo). Tenemos 3 tipos de criaturas definidas:
 
-* **Presentación / API (`com.tt1.simserver.presentation`):** Define y expone los endpoints HTTP. Mapea las rutas web a los controladores correspondientes y estandariza las respuestas (ej. `EmailController`, `RequestController`, `ResultsController`).
-* **Modelo de Dominio (`com.tt1.simserver.model`):** Clases y registros que definen la estructura de los payloads JSON esperados y enviados en las peticiones HTTP (`Request`, `EmailResponse`, `ProblemDetails`, `ResultsResponse`).
-* **Lógica de Negocio / Servicios (`com.tt1.simserver.logic`):** El "cerebro" del servidor. Aquí residen los algoritmos principales de las simulaciones, la lógica para despachar correos y las reglas de negocio del sistema.
-* **Persistencia (`com.tt1.simserver.database`):** Repositorios o DAOs encargados de guardar el historial de solicitudes, el estado y los resultados finales de cada simulación (ya sea en memoria o base de datos).
+1. **Estáticas:** Se quedan quietas en su casilla.
+2. **Móviles:** Se mueven a una casilla adyacente libre basándose en una probabilidad.
+3. **Se multiplican:** No se mueven, pero pueden crear una cría clónica en una casilla libre adyacente con cierta probabilidad.
 
-## **Referencia de la API**
+Para evitar que el servidor se bloquee, la ejecución es asíncrona: cuando el usuario pide una simulación, el servidor devuelve rápidamente un `token` identificador y arranca la simulación en un hilo paralelo.
 
-El servidor expone y procesa peticiones y respuestas en formato JSON en las siguientes rutas:
+## **Metodología**
 
-### **Servicio de Email**
-* `POST /Email`: Envía un correo electrónico. Requiere recibir los parámetros `emailAddress` y `message`.
+El proyecto se está desarrollando siguiendo una **metodología ágil basada en Kanban** y aplicando **TDD (Test-Driven Development)**.
 
-### **Gestión de Simulaciones (Solicitudes)**
-* `POST /Solicitud/Solicitar`: Crea una nueva request de simulación para un usuario. Requiere un payload JSON (`Request`) especificando las `cantidadesIniciales` y `nombreEntidades`. Retorna un `token` identificador.
-* `GET /Solicitud/ComprobarSolicitud`: Comprueba el estado de una simulación específica asociando al `nombreUsuario` y el `tok` generado previamente.
-* `GET /Solicitud/GetSolicitudesUsuario`: Obtiene una lista con todas las solicitudes / tokens asociados a un `nombreUsuario`.
+## **Arquitectura**
+
+La aplicación sigue una arquitectura de capas estándar de Jakarta RESTful Web Services (JAX-RS):
+* **Presentación / API (`com.tt1.simserver.presentation`):** Expone los endpoints HTTP. Mapea las rutas web a los controladores y estandariza las respuestas.
+* **Modelo de Dominio (`com.tt1.simserver.model`):** Clases que definen la estructura de los datos (JSONs) y los actores de la simulación (Tablero, Posiciones, Criaturas).
+* **Lógica de Negocio (`com.tt1.simserver.logic`):** El cerebro del servidor. Contiene el motor de simulación, la gestión asíncrona de hilos y las reglas de negocio.
+* **Persistencia (`com.tt1.simserver.database`):** Capa encargada de guardar el historial y resultados para ser tolerante a fallos (en desarrollo).
+
+## **Endpoints de la API**
+
+El servidor expone y procesa peticiones en formato JSON (documentado bajo estándar OpenAPI) en las siguientes rutas:
+
+### **Gestión de Simulaciones**
+
+* `POST /Solicitud/Solicitar`: Crea una nueva simulación. Recibe un JSON con los tipos de criaturas y sus cantidades iniciales. Retorna un `token`.
+* `GET /Solicitud/ComprobarSolicitud`: Consulta si una simulación en concreto sigue ejecutándose o ya ha terminado (usando el nombre de usuario y el token).
+* `GET /Solicitud/GetSolicitudesUsuario`: Obtiene la lista de todos los tokens pertenecientes a un usuario.
 
 ### **Resultados**
-* `POST /Resultados`: Recupera los resultados finales de una simulación finalizada proporcionando el `nombreUsuario` y el `tok`.
 
-## **Tecnologías Utilizadas y Dependencias**
+* `POST /Resultados`: Recupera el historial completo de los pasos del tablero de una simulación finalizada.
+
+### **Extra**
+
+* `POST /Email`: Endpoint para enviar correos electrónicos de notificación.
+
+## **Tecnologías y Dependencias**
 
 * **Lenguaje:** Java 21
-* **Framework Principal:** JAX-RS (Jersey) + Grizzly
-* **Gestor de Dependencias:** Maven
+* **Framework Web:** JAX-RS (Jersey) \+ Grizzly (Servidor HTTP embebido para poder ejecutar desde un `main()` sin necesidad de Tomcat o equivalente).
+* **Serialización:** Jackson (`jersey-media-json-jackson`) para pasar de objetos Java a JSON y viceversa.
+* **Testing:** JUnit 5 (Jupiter)
+* **Construcción:** Maven (`maven-shade-plugin` para crear un ejecutable *uber-jar* autocontenido).
 
-Las dependencias principales configuradas en el `pom.xml` incluyen:
-* **Jakarta RESTful Web Services API (JAX-RS):** Anotaciones estándar (`@Path`, `@GET`, `@POST`) para el enrutamiento.
-* **Jersey Server & HK2:** Implementación oficial del estándar JAX-RS y framework de Inyección de Dependencias.
-* **Grizzly HTTP Server:** Servidor HTTP embebido y ligero que permite arrancar la API mediante un `main()` tradicional sin necesidad de contenedores de servlets como Tomcat.
-* **Jackson (jersey-media-json-jackson):** Proveedor para la serialización y deserialización automática entre objetos Java y JSON.
-* **JUnit 4:** Entorno de pruebas unitarias para la validación de la lógica.
+## **Cómo ejecutar**
 
-## **Instrucciones de Ejecución**
-
-La aplicación utiliza el `maven-shade-plugin` para crear un ejecutable autocontenido (uber-jar). Para compilar y empaquetar el proyecto, sitúate en la raíz y ejecuta:
-
+Sitúate en la raíz del proyecto y compílalo usando Maven:
 ```bash
 mvn clean package
-```  
+```
+
+Esto generará un archivo `.jar` ejecutable en la carpeta `target/`. Para arrancar el servidor Grizzly, ejecuta:
+```bash
+java -jar target/simserver-1.0-SNAPSHOT.jar
+```
