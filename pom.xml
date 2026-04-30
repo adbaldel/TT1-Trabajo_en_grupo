@@ -33,7 +33,7 @@
 
         <!-- Versions for our dependencies -->
         <jersey.version>3.1.8</jersey.version>
-        <jackson-version>2.15.2</jackson-version>
+        <jackson-version>2.17.2</jackson-version>
         <jakarta.ws.rs-version>3.1.0</jakarta.ws.rs-version>
         <junit-version>5.10.5</junit-version>
     </properties>

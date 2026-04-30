@@ -22,7 +22,7 @@ public class Grid implements GridInterface {
      * <p>Postcondición: Crea un tablero cuadrado. El tamaño se calcula como la raíz cuadrada de (criaturas / ocupación), redondeado hacia arriba. Todas las casillas están vacías.
      *
      * @param numberOfCreatures el número total de criaturas.
-     * @param occupancy la fracción de ocupación esperada en el tablero.
+     * @param occupancy         la fracción de ocupación esperada en el tablero.
      */
     public Grid(int numberOfCreatures, double occupancy) {
         size = (int) Math.ceil(Math.sqrt(numberOfCreatures / occupancy));

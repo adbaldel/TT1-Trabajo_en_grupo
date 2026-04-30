@@ -22,6 +22,8 @@ public class SimulationService implements SimulationServiceInterface {
     private static final double INITIAL_OCCUPANCY = 0.35;
     private static final int MAX_SECONDS = 100;
 
+    private static final SimulationServiceInterface instance = new SimulationService();
+
     // Diccionarios con los metadatos de entidades registrados en el sistema
     private static final Map<String, String> creatureNameToType;
     private static final Map<String, String> creatureNameToColor;
@@ -59,7 +61,7 @@ public class SimulationService implements SimulationServiceInterface {
      *
      * @param random la instancia de generador aleatorio.
      */
-    public SimulationService(Random random) {
+    private SimulationService(Random random) {
         users = new ConcurrentHashMap<>();
         this.random = random;
     }
@@ -71,8 +73,21 @@ public class SimulationService implements SimulationServiceInterface {
      *
      * <p>Postcondición: Crea el servicio inicializándolo con un generador de números aleatorios por defecto y una colección de usuarios vacía.
      */
-    public SimulationService() {
+    private SimulationService() {
         this(new Random());
+    }
+
+    /**
+     * Devuelve la instancia Singleton de {@code SimulationService}
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: Devuelve el servicio singleton.
+     *
+     * @return el servicio de la aplicación.
+     */
+    public static SimulationServiceInterface getInstance() {
+        return instance;
     }
 
     /**

@@ -13,7 +13,7 @@ public class RestApplication {
     /**
      * Define la ruta base y el puerto local donde el servidor aceptará conexiones.
      */
-    public static final String BASE_URI = "http://localhost:8080/";
+    public static final String BASE_URI = "http://localhost:8081/";
 
     /**
      * Punto de entrada principal de la aplicación.
@@ -50,7 +50,7 @@ public class RestApplication {
      */
     private static HttpServer startServer() {
         // Le decimos a Jersey que busque las clases @Path (controladores) en este paquete
-        final ResourceConfig rc = new ResourceConfig().packages("com.tt1.simserver.presentacion");
+        final ResourceConfig rc = new ResourceConfig().packages("com.tt1.simserver.presentation");
 
         // Crea e inicia el servidor HTTP Grizzly
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
