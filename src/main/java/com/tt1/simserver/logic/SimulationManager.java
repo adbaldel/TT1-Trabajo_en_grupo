@@ -5,6 +5,7 @@ import com.tt1.simserver.model.SimulationStatus;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Gestor encargado de coordinar la ejecución asíncrona de una simulación específica.
@@ -12,16 +13,20 @@ import java.util.concurrent.Executors;
  * a la vez que gestiona el estado y el token identificador de esta ejecución.
  */
 public class SimulationManager implements SimulationManagerInterface {
-    private static final ExecutorService pool = Executors.newCachedThreadPool();
-    /**
-     * Contador estático para asignar los identificadores de token globales.
-     * ¡CUIDADO! Varios métodos accediendo y modificando esta variable a la vez en varios hilos
-     * podría generar problemas de condición de carrera. Requiere AtomicInteger o bloqueo sincronizado.
-     */
-    private static int numberOfSimulations = 0;
+    // Aprovechamos Java 21: Usamos Virtual Threads. Son extremadamente ligeros y perfectos
+    // para ejecutar miles de simulaciones concurrentes sin agotar la RAM del servidor.
+    private static final ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor();
+
+    // AtomicInteger garantiza que múltiples peticiones HTTP concurrentes
+    // nunca obtengan el mismo token (Thread-safe).
+    private static final AtomicInteger tokenGenerator = new AtomicInteger(0);
+
     private final SimulationEngineInterface simulationEngine;
     private int token;
-    private SimulationStatus status;
+
+    // 'volatile' asegura que si el hilo de la simulación cambia este valor,
+    // los hilos HTTP de Jersey vean el cambio instantáneamente.
+    private volatile SimulationStatus status;
 
     /**
      * Inicializa el gestor y prepara el motor de simulación para ser lanzado.
@@ -64,7 +69,6 @@ public class SimulationManager implements SimulationManagerInterface {
     @Override
     public SimulationStatus getSimulationStatus() {
         updateSimulationStatus();
-
         return status;
     }
 
@@ -77,7 +81,7 @@ public class SimulationManager implements SimulationManagerInterface {
      */
     @Override
     public void updateSimulationStatus() {
-        if (simulationEngine.isDone()) {
+        if (status != SimulationStatus.COMPLETED && simulationEngine.isDone()) {
             status = SimulationStatus.COMPLETED;
         }
     }
@@ -106,16 +110,16 @@ public class SimulationManager implements SimulationManagerInterface {
      * @return el token numérico identificador emitido.
      */
     @Override
-    public int startSimulation() {
-        if (getToken() >= 0) {
-            return getToken();
+    public synchronized int startSimulation() {
+        if (token >= 0) {
+            return token; // Evita que se inicie dos veces
         }
 
-        token = numberOfSimulations++;
+        // getAndIncrement() es una operación atómica y 100% segura entre hilos
+        token = tokenGenerator.getAndIncrement();
+        status = SimulationStatus.RUNNING;
 
         pool.submit(simulationEngine);
-
-        status = SimulationStatus.RUNNING;
 
         return token;
     }

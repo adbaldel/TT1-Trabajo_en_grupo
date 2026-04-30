@@ -10,6 +10,9 @@ import com.tt1.simserver.model.creatures.StaticRabbit;
 import com.tt1.simserver.model.jsonrepresentations.Request;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
 
 /**
  * Servicio centralizado del negocio que coordina los usuarios, procesa peticiones web,
@@ -43,7 +46,8 @@ public class SimulationService implements SimulationServiceInterface {
         creatureNameToMultiplyProbability.put("conejo", 0.2);
     }
 
-    private final Collection<User> users;
+    // Usamos ConcurrentMap para búsquedas O(1) e inserciones Thread-safe
+    private final ConcurrentMap<String, User> users;
     private final Random random;
 
     /**
@@ -56,7 +60,7 @@ public class SimulationService implements SimulationServiceInterface {
      * @param random la instancia de generador aleatorio.
      */
     public SimulationService(Random random) {
-        users = new ArrayList<>();
+        users = new ConcurrentHashMap<>();
         this.random = random;
     }
 
@@ -83,32 +87,15 @@ public class SimulationService implements SimulationServiceInterface {
      */
     @Override
     public User getUser(User user) {
-        User storedUser = null;
-        boolean userLoaded;
-
-        userLoaded = false;
-
-        for (User existingUser : users) {
-            if (user.equals(existingUser)) {
-                storedUser = existingUser;
-                userLoaded = true;
+        // computeIfAbsent es atómico: Si el usuario existe, lo devuelve.
+        // Si no existe, lo crea, lo guarda de forma segura en el mapa y lo devuelve.
+        return users.computeIfAbsent(user.getUsername(), new Function<String, User>() {
+            @Override
+            public User apply(String usernameKey) {
+                // Aquí en un futuro puedes añadir la lógica para cargarlo de la Base de Datos
+                return new User(usernameKey);
             }
-        }
-
-        // En un futuro se llamará a la capa de persistencia para ver si se tiene almacenado un usuario con la misma
-        // clave (username) y si existe se cargará en la lista.
-
-        if (!userLoaded) {
-            if (storedUser == null) {
-                storedUser = new User(user.getUsername());
-                // También se guardará el usuario en la capa de persistencia.
-                // NOTA: cuando implementemos esto cuidado con la concurrencia.
-            }
-
-            users.add(storedUser);
-        }
-
-        return storedUser;
+        });
     }
 
     /**
@@ -124,20 +111,8 @@ public class SimulationService implements SimulationServiceInterface {
      */
     @Override
     public boolean existsSimulation(User user, int token) {
-        boolean simulationLoaded = false;
-        boolean simulationExists = false;
         User storedUser = getUser(user);
-
-        simulationLoaded = storedUser.existsSimulation(token);
-
-        if (!simulationLoaded) {
-            // En un futuro se llamará a la capa de persistencia para ver si se tiene almacenado una simulación con la
-            // misma clave (token, ó username y token) y si existe se cargará en el usuario de la lista.
-        } else {
-            simulationExists = true;
-        }
-
-        return simulationExists;
+        return storedUser.existsSimulation(token);
     }
 
     /**
@@ -154,7 +129,6 @@ public class SimulationService implements SimulationServiceInterface {
     @Override
     public SimulationStatus getSimulationStatus(User user, int token) {
         User storedUser = getUser(user);
-
         return storedUser.getSimulationStatus(token);
     }
 
@@ -172,7 +146,6 @@ public class SimulationService implements SimulationServiceInterface {
     @Override
     public SimulationResult getSimulationResult(User user, int token) {
         User storedUser = getUser(user);
-
         return storedUser.getSimulationResult(token);
     }
 
@@ -207,22 +180,17 @@ public class SimulationService implements SimulationServiceInterface {
     public int requestSimulation(User user, Request request) {
         List<String> creatureNames = request.getCreatureNames();
         List<Integer> initialCreatureQuantities = request.getInitialCreatureQuantities();
-        int numberOfCreatures;
-        GridInterface grid;
-        SimulationEngineInterface simulationEngine;
-        SimulationManagerInterface simulationManager;
-        User storedUser;
-        int token;
 
-        numberOfCreatures = calculateInitialNumberOfCreatures(initialCreatureQuantities);
+        int numberOfCreatures = calculateInitialNumberOfCreatures(initialCreatureQuantities);
 
-        grid = new Grid(numberOfCreatures, INITIAL_OCCUPANCY);
+        GridInterface grid = new Grid(numberOfCreatures, INITIAL_OCCUPANCY);
         loadGrid(grid, creatureNames, initialCreatureQuantities);
-        simulationEngine = new SimulationEngine(grid, MAX_SECONDS);
-        simulationManager = new SimulationManager(simulationEngine);
 
-        storedUser = getUser(user);
-        token = simulationManager.startSimulation();
+        SimulationEngineInterface simulationEngine = new SimulationEngine(grid, MAX_SECONDS);
+        SimulationManagerInterface simulationManager = new SimulationManager(simulationEngine);
+
+        User storedUser = getUser(user);
+        int token = simulationManager.startSimulation();
         storedUser.addRequest(simulationManager);
 
         return token;
@@ -282,29 +250,22 @@ public class SimulationService implements SimulationServiceInterface {
             creatureQuantity = initialCreatureQuantities.get(i);
             creatureType = creatureNameToType.get(creatureName);
             creatureColor = creatureNameToColor.get(creatureName);
-            creaturePosition = emptyPositions.get(random.nextInt(emptyPositions.size()));
 
-            if (creatureType.equals("static")) {
-                for (int j = 0; j < creatureQuantity; j++) {
+            for (int j = 0; j < creatureQuantity; j++) {
+                creaturePosition = emptyPositions.remove(random.nextInt(emptyPositions.size()));
+
+                if (creatureType.equals("static")) {
                     grid.addCreature(new StaticCreature(creatureName, creatureColor, creaturePosition));
-                }
-            } else if (creatureType.equals("mobile")) {
-                creatureMoveProbability = creatureNameToMoveProbability.get(creatureName);
-
-                for (int j = 0; j < creatureQuantity; j++) {
+                } else if (creatureType.equals("mobile")) {
+                    creatureMoveProbability = creatureNameToMoveProbability.get(creatureName);
                     grid.addCreature(new MobileCreature(creatureName, creatureColor, creatureMoveProbability, creaturePosition));
-                }
-            } else if (creatureType.equals("rabbit")) {
-                creatureMultiplyProbability = creatureNameToMultiplyProbability.get(creatureName);
-
-                for (int j = 0; j < creatureQuantity; j++) {
+                } else if (creatureType.equals("rabbit")) {
+                    creatureMultiplyProbability = creatureNameToMultiplyProbability.get(creatureName);
                     grid.addCreature(new StaticRabbit(creatureName, creatureColor, creatureMultiplyProbability, creaturePosition));
+                } else {
+                    throw new IllegalArgumentException("Invalid creature type");
                 }
-            } else {
-                throw new IllegalArgumentException("Invalid creature type");
             }
-
-            emptyPositions.remove(creaturePosition);
         }
     }
 }
