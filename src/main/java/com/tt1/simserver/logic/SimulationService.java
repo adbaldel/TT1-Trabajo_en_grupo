@@ -7,7 +7,7 @@ import com.tt1.simserver.model.User;
 import com.tt1.simserver.model.creatures.MobileCreature;
 import com.tt1.simserver.model.creatures.StaticCreature;
 import com.tt1.simserver.model.creatures.StaticRabbit;
-import com.tt1.simserver.model.jsonrepresentations.Request;
+import com.tt1.simserver.presentation.jsonobjects.Request;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

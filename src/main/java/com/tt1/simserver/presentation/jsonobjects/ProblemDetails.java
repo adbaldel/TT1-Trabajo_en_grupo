@@ -1,4 +1,4 @@
-package com.tt1.simserver.model.jsonrepresentations;
+package com.tt1.simserver.presentation.jsonobjects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;

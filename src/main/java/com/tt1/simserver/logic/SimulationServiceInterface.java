@@ -3,7 +3,7 @@ package com.tt1.simserver.logic;
 import com.tt1.simserver.model.SimulationResult;
 import com.tt1.simserver.model.SimulationStatus;
 import com.tt1.simserver.model.User;
-import com.tt1.simserver.model.jsonrepresentations.Request;
+import com.tt1.simserver.presentation.jsonobjects.Request;
 
 import java.util.Collection;
 

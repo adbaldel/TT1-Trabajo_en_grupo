@@ -4,7 +4,7 @@ import com.tt1.simserver.mocks.SimulationManagerFake;
 import com.tt1.simserver.model.SimulationResult;
 import com.tt1.simserver.model.SimulationStatus;
 import com.tt1.simserver.model.User;
-import com.tt1.simserver.model.jsonrepresentations.Request;
+import com.tt1.simserver.presentation.jsonobjects.Request;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
