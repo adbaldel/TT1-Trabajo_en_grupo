@@ -1,8 +1,16 @@
 package com.tt1.simserver.presentation;
 
-import com.tt1.simserver.model.jsonrepresentations.Request;
+import com.tt1.simserver.logic.SimulationService;
+import com.tt1.simserver.logic.SimulationServiceInterface;
+import com.tt1.simserver.model.SimulationStatus;
+import com.tt1.simserver.model.User;
+import com.tt1.simserver.presentation.jsonobjects.ProblemDetails;
+import com.tt1.simserver.presentation.jsonobjects.Request;
+import com.tt1.simserver.presentation.jsonobjects.RequestResponse;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
+
+import java.util.Collection;
 
 /**
  * Controlador que implementa las acciones y reglas de negocio conectadas al servicio de solicitudes de simulación.
@@ -10,17 +18,19 @@ import jakarta.ws.rs.core.Response;
 @Path("/Solicitud")
 public class RequestController implements RequestApi {
 
+    // Recuperamos la instancia global del servicio
+    private final SimulationServiceInterface service = SimulationService.getInstance();
+
     /**
      * Endpoint GET: Comprueba el estado actual de una solicitud de simulación existente.
      *
      * <p>Precondición: {@code username} no es nulo y {@code token} contiene un identificador válido.
      *
-     * <p>Postcondición: Lanza siempre una excepción de operación no soportada, ya que la funcionalidad no ha sido implementada todavía.
+     * <p>Postcondición: TODO
      *
      * @param username el nombre de la cuenta del usuario.
-     * @param token el identificador numérico de la simulación.
+     * @param token    el identificador numérico de la simulación.
      * @return la respuesta HTTP con el estado de la simulación.
-     * @throws UnsupportedOperationException siempre, porque el método aún no está programado.
      */
     @Override
     public Response solicitudComprobarSolicitudGet(String username, Integer token) {
@@ -32,11 +42,10 @@ public class RequestController implements RequestApi {
      *
      * <p>Precondición: {@code username} no es nulo.
      *
-     * <p>Postcondición: Lanza siempre una excepción de operación no soportada, ya que la funcionalidad no ha sido implementada todavía.
+     * <p>Postcondición: TODO
      *
      * @param username el nombre de cuenta del usuario a consultar.
      * @return la respuesta HTTP con la lista de identificadores.
-     * @throws UnsupportedOperationException siempre, porque el método aún no está programado.
      */
     @Override
     public Response solicitudGetSolicitudesUsuarioGet(String username) {
@@ -48,12 +57,11 @@ public class RequestController implements RequestApi {
      *
      * <p>Precondición: {@code username} no es nulo y {@code request} contiene los datos iniciales válidos de las criaturas.
      *
-     * <p>Postcondición: Lanza siempre una excepción de operación no soportada, ya que la funcionalidad no ha sido implementada todavía.
+     * <p>Postcondición: TODO
      *
      * @param username el identificador del usuario que hace la solicitud.
-     * @param request el objeto con la especificación y cantidades de criaturas a incluir en el tablero.
+     * @param request  el objeto con la especificación y cantidades de criaturas a incluir en el tablero.
      * @return la respuesta HTTP informando del token asignado a la simulación.
-     * @throws UnsupportedOperationException siempre, porque el método aún no está programado.
      */
     @Override
     public Response solicitudSolicitarPost(String username, Request request) {

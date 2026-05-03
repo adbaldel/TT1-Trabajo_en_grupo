@@ -1,6 +1,6 @@
 package com.tt1.simserver.presentation;
 
-import com.tt1.simserver.model.jsonrepresentations.Request;
+import com.tt1.simserver.presentation.jsonobjects.Request;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 
@@ -14,12 +14,11 @@ public interface RequestApi {
      *
      * <p>Precondición: {@code username} no es nulo y {@code token} contiene un identificador válido.
      *
-     * <p>Postcondición: Lanza siempre una excepción de operación no soportada, ya que la funcionalidad no ha sido implementada todavía.
+     * <p>Postcondición: TODO
      *
      * @param username el nombre de la cuenta del usuario.
-     * @param token el identificador numérico de la simulación.
+     * @param token    el identificador numérico de la simulación.
      * @return la respuesta HTTP con el estado de la simulación.
-     * @throws UnsupportedOperationException siempre, porque el método aún no está programado.
      */
     @GET
     @Path("/ComprobarSolicitud")
@@ -31,11 +30,10 @@ public interface RequestApi {
      *
      * <p>Precondición: {@code username} no es nulo.
      *
-     * <p>Postcondición: Lanza siempre una excepción de operación no soportada, ya que la funcionalidad no ha sido implementada todavía.
+     * <p>Postcondición: TODO
      *
      * @param username el nombre de cuenta del usuario a consultar.
      * @return la respuesta HTTP con la lista de identificadores.
-     * @throws UnsupportedOperationException siempre, porque el método aún no está programado.
      */
     @GET
     @Path("/GetSolicitudesUsuario")
@@ -46,12 +44,11 @@ public interface RequestApi {
      *
      * <p>Precondición: {@code username} no es nulo y {@code request} contiene los datos iniciales válidos de las criaturas.
      *
-     * <p>Postcondición: Lanza siempre una excepción de operación no soportada, ya que la funcionalidad no ha sido implementada todavía.
+     * <p>Postcondición: TODO
      *
      * @param username el identificador del usuario que hace la solicitud.
-     * @param request el objeto con la especificación y cantidades de criaturas a incluir en el tablero.
+     * @param request  el objeto con la especificación y cantidades de criaturas a incluir en el tablero.
      * @return la respuesta HTTP informando del token asignado a la simulación.
-     * @throws UnsupportedOperationException siempre, porque el método aún no está programado.
      */
     @POST
     @Path("/Solicitar")

@@ -18,7 +18,7 @@ public interface EmailApi {
      * <p>Postcondición: Crea un objeto de respuesta indicando que la operación fue un éxito y devuelve una respuesta HTTP 201 (Created) lista para ser enviada al cliente.
      *
      * @param emailAddress la dirección de correo del destinatario.
-     * @param message el contenido del correo a enviar.
+     * @param message      el contenido del correo a enviar.
      * @return la respuesta HTTP empaquetada con el estado de la operación.
      */
     @POST

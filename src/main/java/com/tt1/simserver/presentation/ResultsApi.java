@@ -15,12 +15,11 @@ public interface ResultsApi {
      *
      * <p>Precondición: {@code username} no es nulo y {@code tok} contiene un identificador válido de una simulación registrada.
      *
-     * <p>Postcondición: Lanza siempre una excepción de operación no soportada, ya que la funcionalidad no ha sido implementada todavía.
+     * <p>Postcondición: TODO
      *
      * @param username el nombre del usuario al cual pertenecen los resultados.
-     * @param tok el token identificador de la simulación.
+     * @param tok      el token identificador de la simulación.
      * @return la respuesta HTTP con los datos históricos del tablero en cada turno.
-     * @throws UnsupportedOperationException siempre, porque el método aún no está programado.
      */
     @POST
     @Produces({"text/plain", "application/json", "text/json"})
