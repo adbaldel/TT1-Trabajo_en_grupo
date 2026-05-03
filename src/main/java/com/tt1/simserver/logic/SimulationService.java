@@ -61,7 +61,7 @@ public class SimulationService implements SimulationServiceInterface {
      *
      * @param random la instancia de generador aleatorio.
      */
-    public SimulationService(Random random) {
+    private SimulationService(Random random) {
         users = new ConcurrentHashMap<>();
         this.random = random;
     }
@@ -73,7 +73,7 @@ public class SimulationService implements SimulationServiceInterface {
      *
      * <p>Postcondición: Crea el servicio inicializándolo con un generador de números aleatorios por defecto y una colección de usuarios vacía.
      */
-    public SimulationService() {
+    private SimulationService() {
         this(new Random());
     }
 
@@ -209,6 +209,36 @@ public class SimulationService implements SimulationServiceInterface {
         storedUser.addRequest(simulationManager);
 
         return token;
+    }
+
+    /**
+     * Libera de memoria de ejecución los usuarios y simulaciones almacenadas, y reinicia el generador de números aleatorios.
+     * No borra de la base de datos.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: La lista de usuarios guardada en memoria está vacía y se reinicia la generación de números aleatorios
+     * con un generador nuevo.
+     */
+    public void reset() {
+        users.clear();
+        random.setSeed(System.currentTimeMillis());
+    }
+
+    /**
+     * Libera de memoria de ejecución los usuarios y simulaciones almacenadas, y reinicia el generador de números aleatorios con la semilla dada.
+     * No borra de la base de datos.
+     *
+     * <p>Precondición: Ninguna.
+     *
+     * <p>Postcondición: La lista de usuarios guardada en memoria está vacía y se reinicia la generación de números aleatorios
+     * con la semilla pasada cómo parámetro.
+     *
+     * @param seed la semilla que se establecerá en el generador de números aleatorios.
+     */
+    public void reset(long seed) {
+        users.clear();
+        random.setSeed(seed);
     }
 
     /**

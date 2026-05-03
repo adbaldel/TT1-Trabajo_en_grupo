@@ -25,13 +25,14 @@ public class SimulationServiceTest {
 
     @BeforeEach
     public void setUp() {
-        service = new SimulationService();
+        service = SimulationService.getInstance();
         defaultUser = new User("testUser");
         managerFake = new SimulationManagerFake();
     }
 
     @AfterEach
     public void tearDown() {
+        service.reset();
         service = null;
         defaultUser = null;
         managerFake = null;
