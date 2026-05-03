@@ -26,7 +26,7 @@ public class SimulationEngine implements SimulationEngineInterface {
     public SimulationEngine(GridInterface initialGrid, int maxSteps) {
         this.grid = initialGrid;
         this.maxSteps = maxSteps;
-        result = new SimulationResult();
+        result = new SimulationResult(initialGrid.getSize());
         done = false;
     }
 
@@ -84,10 +84,10 @@ public class SimulationEngine implements SimulationEngineInterface {
      */
     @Override
     public void run() { // Cuando se le llama, token > 0
-        result.addStep(new SimulationStep(grid));
+        result.addStep(SimulationStep.convertToSimulationStep(grid));
         for (int second = 0; second < maxSteps; second++) {
             grid.tick();
-            result.addStep(new SimulationStep(grid));
+            result.addStep(SimulationStep.convertToSimulationStep(grid));
         }
 
         setDone(true);

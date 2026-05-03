@@ -69,7 +69,7 @@ public class SimulationManagerTest {
     void given_simulationManager_when_getSimulationResult_then_returnsResultFromEngine() {
         // Arrange (Given)
         SimulationManager manager = new SimulationManager(engineFake);
-        SimulationResult expectedResult = new SimulationResult();
+        SimulationResult expectedResult = new SimulationResult(1);
         engineFake.setDone(true);
         engineFake.setResult(expectedResult);
 

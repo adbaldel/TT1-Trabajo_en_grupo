@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.Objects;
 
-import static com.tt1.simserver.logic.utils.StringManipulation.toIndentedString;
+import static com.tt1.simserver.presentation.jsonobjects.utils.StringManipulation.toIndentedString;
 
 /**
  * Representa la respuesta devuelta por el servidor tras intentar enviar un correo electrónico.

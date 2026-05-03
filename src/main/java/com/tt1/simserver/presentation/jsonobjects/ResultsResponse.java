@@ -2,10 +2,15 @@ package com.tt1.simserver.presentation.jsonobjects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.tt1.simserver.model.Position;
+import com.tt1.simserver.model.SimulationStep;
+import com.tt1.simserver.model.SimulationResult;
 
+import java.lang.reflect.Field;
+import java.util.Map;
 import java.util.Objects;
 
-import static com.tt1.simserver.logic.utils.StringManipulation.toIndentedString;
+import static com.tt1.simserver.presentation.jsonobjects.utils.StringManipulation.toIndentedString;
 
 /**
  * Representa la respuesta devuelta por el servidor al consultar el historial de resultados de un tablero.
@@ -185,5 +190,59 @@ public class ResultsResponse {
                 "\terrorMessage: " + toIndentedString(errorMessage) + "\n" +
                 "\tdata: " + toIndentedString(data) + "\n" +
                 "}";
+    }
+
+//    ESPECIFICACIÓN DE CONVERT TO SIMULATION STEP
+//    /**
+//     * Construye una captura extrayendo los datos del tablero en este instante.
+//     *
+//     * <p>Precondición: {@code grid} no es nulo.
+//     *
+//     * <p>Postcondición: El estado actual del tablero es copiado en memoria, asociando de forma inmutable el color de cada criatura con la casilla exacta que ocupa.
+//     *
+//     * @param grid el tablero que se va a fotografiar.
+//     * @return una copia del estado actual del tablero en forma de paso de simulación.
+//     */
+    /**
+     * Convierte un resultado de simulación en la cadena que se envía en el campo data de una respuesta de resultado.
+     *
+     * <p>Precondición: {@code result} no es nulo.
+     *
+     * <p>Postcondición: Devuelve una cadena que representa el resultado de la simulación con el formato en el que se envía
+     * como respuesta de resultado en la presentación. Este formato es el siguiente:
+     *    <ancho_tablero>
+     *    <tiempo><x><y><color>
+     *    <tiempo><x><y><color>
+     *    <tiempo><x><y><color>
+     *    ...
+     *    <tiempo><x><y><color>
+     * Donde para cada instante de tiempo se incluyen todas las posiciones donde hay criaturas con su color correspondiente.
+     *
+     * @param result el resultado de simulación a representar en formato cadena.
+     * @return la cadena que representa el resultado de la simulación.
+     */
+    public static String convertToResultResponseData(SimulationResult result) {
+        StringBuilder dataBuilder = new StringBuilder();
+        int size = result.getSize();
+        SimulationStep step;
+        String creatureColor;
+
+        // Guardamos la primera línea con el tamaño base inferido del tablero
+        dataBuilder.append(size).append("\n");
+
+        // Construimos las líneas formato "tiempo,x,y,color"
+        for (int t = 0; t < result.getSeconds(); t++) {
+            step = result.getSimulationStep(t);
+
+            for (Position p : step.getNonEmptyPositions()) {
+                creatureColor = step.getColor(p);
+                dataBuilder.append(t).append(",")
+                        .append(p.getY()).append(",")
+                        .append(p.getX()).append(",")
+                        .append(creatureColor).append("\n");
+            }
+        }
+
+        return dataBuilder.toString().trim();
     }
 }

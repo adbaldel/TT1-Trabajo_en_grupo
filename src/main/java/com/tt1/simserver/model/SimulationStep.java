@@ -1,28 +1,41 @@
 package com.tt1.simserver.model;
 
 import com.tt1.simserver.logic.GridInterface;
+import com.tt1.simserver.model.creatures.CreatureInterface;
 
-import java.util.Map;
-
-import static com.tt1.simserver.logic.utils.GridManipulation.copyGridToMap;
+import java.util.*;
 
 /**
  * Almacena una captura o fotografía de todas las posiciones y criaturas del tablero en un único paso de la simulación.
  */
 public class SimulationStep {
     private final Map<Position, String> step;
+    private final int size;
 
     /**
-     * Construye una captura extrayendo los datos del tablero en este instante.
+     * Construye un paso de simulación vacío, sin criaturas.
      *
-     * <p>Precondición: {@code grid} no es nulo.
+     * <p>Precondición: El tamaño pasado es mayor que cero y se corresponde con el tamaño del tablero que se va a representar.
      *
-     * <p>Postcondición: El estado actual del tablero es copiado en memoria, asociando de forma inmutable el color de cada criatura con la casilla exacta que ocupa.
-     *
-     * @param grid el tablero que se va a fotografiar.
+     * <p>Postcondición: Se crea un paso de simulación vacío preparado para ser una captura de un tablero de tamaño {@code size}.
      */
-    public SimulationStep(GridInterface grid) {
-        step = copyGridToMap(grid);
+    private SimulationStep(int size) {
+        step = new HashMap<>();
+        this.size = size;
+    }
+
+
+    /**
+     * Obtiene el tamaño del lado del tablero cuyo paso se representa.
+     *
+     * <p>Precondición: El paso de simulación está inicializado.
+     *
+     * <p>Postcondición: Devuelve el número de filas (o columnas) del tablero cuyo paso se representa.
+     *
+     * @return el tamaño del tablero cuyo paso se representa.
+     */
+    public int getSize() {
+        return size;
     }
 
     /**
@@ -37,6 +50,32 @@ public class SimulationStep {
      */
     public String getColor(Position position) {
         return step.get(position);
+    }
+
+    /**
+     * Obtiene el número de criaturas que hay en la simulación en este paso.
+     *
+     * <p>Precondición: El paso de simulación está inicializado.
+     *
+     * <p>Postcondición: Devuelve el número de criaturas que hay en la simulación en este paso.
+     *
+     * @return número de criaturas que hay en la simulación en este paso.
+     */
+    public int getNumberOfCreatures() {
+        return step.size();
+    }
+
+    /**
+     * Obtiene una colección con las posiciones de todas las criaturas que hay en la simulación en este paso.
+     *
+     * <p>Precondición: El paso de simulación está inicializado.
+     *
+     * <p>Postcondición: Devuelve una colección con las posiciones de todas las criaturas que hay en la simulación en este paso.
+     *
+     * @return una colección con las posiciones de todas las criaturas que hay en la simulación en este paso.
+     */
+    public Collection<Position> getNonEmptyPositions() {
+        return step.keySet();
     }
 
     /**
@@ -63,5 +102,35 @@ public class SimulationStep {
         }
 
         return true;
+    }
+
+    /**
+     * Construye una captura extrayendo los datos del tablero en este instante.
+     *
+     * <p>Precondición: {@code grid} no es nulo.
+     *
+     * <p>Postcondición: El estado actual del tablero es copiado en memoria, asociando de forma inmutable el color de cada criatura con la casilla exacta que ocupa.
+     *
+     * @param grid el tablero que se va a fotografiar.
+     * @return una copia del estado actual del tablero en forma de paso de simulación.
+     */
+    public static SimulationStep convertToSimulationStep(GridInterface grid) {
+        SimulationStep simulationStep = new SimulationStep(grid.getSize());
+        Position position;
+        CreatureInterface creature;
+
+        for (int y = 0; y < grid.getSize(); y++) {
+            for (int x = 0; x < grid.getSize(); x++) {
+                position = new Position(x, y);
+
+                creature = grid.getCreature(position);
+
+                if (creature != null) {
+                    simulationStep.step.put(position, creature.getColor());
+                }
+            }
+        }
+
+        return simulationStep;
     }
 }

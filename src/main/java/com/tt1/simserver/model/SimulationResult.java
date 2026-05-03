@@ -8,16 +8,20 @@ import java.util.List;
  */
 public class SimulationResult {
     private final List<SimulationStep> simulationSteps;
+    private final int size;
 
     /**
      * Inicializa un nuevo historial de resultados vacío.
      *
-     * <p>Precondición: Ninguna.
+     * <p>Precondición: El tamaño pasado es mayor que cero.
      *
-     * <p>Postcondición: El objeto queda preparado para recibir capturas del tablero. El contador de pasos comienza en cero.
+     * <p>Postcondición: El objeto queda preparado para recibir capturas de un tablero de tamaño {@code size}. El contador de pasos comienza en cero.
+     *
+     * @param size el tamaño del tablero de la simulación de la que se representa el resultado.
      */
-    public SimulationResult() {
+    public SimulationResult(int size) {
         simulationSteps = new ArrayList<>();
+        this.size = size;
     }
 
     /**
@@ -32,6 +36,19 @@ public class SimulationResult {
      */
     public SimulationStep getSimulationStep(int second) {
         return simulationSteps.get(second);
+    }
+
+    /**
+     * Obtiene el tamaño del lado del tablero cuyo resultado se representa.
+     *
+     * <p>Precondición: El resultado de simulación está inicializado.
+     *
+     * <p>Postcondición: Devuelve el número de filas (o columnas) del tablero cuyo resultado se representa.
+     *
+     * @return el tamaño del tablero cuyo resultado se representa.
+     */
+    public int getSize() {
+        return size;
     }
 
     /**
@@ -50,7 +67,7 @@ public class SimulationResult {
     /**
      * Añade una nueva captura del tablero al final del historial.
      *
-     * <p>Precondición: {@code simulationStep} no es nulo.
+     * <p>Precondición: {@code simulationStep} no es nulo y el tamaño de la simulación que representa es el mismo que el del resultado de simulación.
      *
      * <p>Postcondición: La captura se añade a la lista, incrementando en uno el total de turnos almacenados. Devuelve verdadero si la inserción tuvo éxito.
      *

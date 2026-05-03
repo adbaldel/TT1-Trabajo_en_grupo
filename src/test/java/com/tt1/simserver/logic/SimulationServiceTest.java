@@ -127,7 +127,7 @@ public class SimulationServiceTest {
         // Arrange (Given)
         User storedUser = service.getUser(defaultUser);
         managerFake.setToken(20);
-        SimulationResult expectedResult = new SimulationResult();
+        SimulationResult expectedResult = new SimulationResult(1);
         managerFake.setSimulationResult(expectedResult);
         storedUser.addRequest(managerFake);
 

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.HashMap;
 import java.util.Objects;
 
-import static com.tt1.simserver.logic.utils.StringManipulation.toIndentedString;
+import static com.tt1.simserver.presentation.jsonobjects.utils.StringManipulation.toIndentedString;
 
 /**
  * Representa los detalles de un problema o error en una respuesta HTTP,

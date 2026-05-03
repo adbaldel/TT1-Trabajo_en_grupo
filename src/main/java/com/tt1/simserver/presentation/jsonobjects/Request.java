@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.tt1.simserver.logic.utils.StringManipulation.toIndentedString;
+import static com.tt1.simserver.presentation.jsonobjects.utils.StringManipulation.toIndentedString;
 
 /**
  * Representa los datos iniciales necesarios que envía el cliente para crear una nueva simulación.
