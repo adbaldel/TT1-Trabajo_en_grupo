@@ -50,7 +50,7 @@ public class RestApplication {
      */
     private static HttpServer startServer() {
         // Le decimos a Jersey que busque las clases @Path (controladores) en este paquete
-        final ResourceConfig rc = new ResourceConfig().packages("com.tt1.simserver.presentation");
+        final ResourceConfig rc = new ResourceConfig().packages("com.tt1.simserver.api");
 
         // Crea e inicia el servidor HTTP Grizzly
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
