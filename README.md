@@ -27,7 +27,7 @@ El proyecto se está desarrollando siguiendo una **metodología ágil basada en 
 ## **Arquitectura**
 
 La aplicación sigue una arquitectura de capas estándar de Jakarta RESTful Web Services (JAX-RS):
-* **Presentación / API (`com.tt1.simserver.presentation`):** Expone los endpoints HTTP. Mapea las rutas web a los controladores y estandariza las respuestas.
+* **Presentación / API (`com.tt1.simserver.api`):** Expone los endpoints HTTP. Mapea las rutas web a los controladores y estandariza las respuestas.
 * **Modelo de Dominio (`com.tt1.simserver.model`):** Clases que definen la estructura de los datos (JSONs) y los actores de la simulación (Tablero, Posiciones, Criaturas).
 * **Lógica de Negocio (`com.tt1.simserver.logic`):** El cerebro del servidor. Contiene el motor de simulación, la gestión asíncrona de hilos y las reglas de negocio.
 * **Persistencia (`com.tt1.simserver.database`):** Capa encargada de guardar el historial y resultados para ser tolerante a fallos (en desarrollo).

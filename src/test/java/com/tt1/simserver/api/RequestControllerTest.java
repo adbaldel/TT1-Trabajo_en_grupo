@@ -1,4 +1,4 @@
-package com.tt1.simserver.presentation;
+package com.tt1.simserver.api;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,4 @@
-package com.tt1.simserver.presentation;
+package com.tt1.simserver.api;
 
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Produces;
@@ -20,6 +20,7 @@ public interface ResultsApi {
      * @param username el nombre del usuario al cual pertenecen los resultados.
      * @param tok      el token identificador de la simulación.
      * @return la respuesta HTTP con los datos históricos del tablero en cada turno.
+     * @throws UnsupportedOperationException siempre, porque el método aún no está programado.
      */
     @POST
     @Produces({"text/plain", "application/json", "text/json"})

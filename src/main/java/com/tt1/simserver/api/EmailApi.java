@@ -1,4 +1,4 @@
-package com.tt1.simserver.presentation;
+package com.tt1.simserver.api;
 
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Produces;

@@ -1,6 +1,6 @@
-package com.tt1.simserver.presentation;
+package com.tt1.simserver.api;
 
-import com.tt1.simserver.presentation.jsonobjects.Request;
+import com.tt1.simserver.api.jsonobjects.Request;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 
@@ -19,6 +19,7 @@ public interface RequestApi {
      * @param username el nombre de la cuenta del usuario.
      * @param token    el identificador numérico de la simulación.
      * @return la respuesta HTTP con el estado de la simulación.
+     * @throws UnsupportedOperationException siempre, porque el método aún no está programado.
      */
     @GET
     @Path("/ComprobarSolicitud")
@@ -34,6 +35,7 @@ public interface RequestApi {
      *
      * @param username el nombre de cuenta del usuario a consultar.
      * @return la respuesta HTTP con la lista de identificadores.
+     * @throws UnsupportedOperationException siempre, porque el método aún no está programado.
      */
     @GET
     @Path("/GetSolicitudesUsuario")
@@ -49,6 +51,7 @@ public interface RequestApi {
      * @param username el identificador del usuario que hace la solicitud.
      * @param request  el objeto con la especificación y cantidades de criaturas a incluir en el tablero.
      * @return la respuesta HTTP informando del token asignado a la simulación.
+     * @throws UnsupportedOperationException siempre, porque el método aún no está programado.
      */
     @POST
     @Path("/Solicitar")

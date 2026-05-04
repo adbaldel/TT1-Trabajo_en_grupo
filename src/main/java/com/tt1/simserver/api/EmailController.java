@@ -1,6 +1,6 @@
-package com.tt1.simserver.presentation;
+package com.tt1.simserver.api;
 
-import com.tt1.simserver.presentation.jsonobjects.EmailResponse;
+import com.tt1.simserver.api.jsonobjects.EmailResponse;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 
@@ -23,6 +23,24 @@ public class EmailController implements EmailApi {
      */
     @Override
     public Response emailPost(String emailAddress, String message) {
-        throw new UnsupportedOperationException("Clase aún no implementada.");
+
+        // Validaciones preventivas básicas por si faltan los parámetros
+        if (emailAddress == null || emailAddress.isEmpty() || message == null || message.isEmpty()) {
+            EmailResponse errorResponse = new EmailResponse();
+            errorResponse.setDone(false);
+            errorResponse.setErrorMessage("La dirección de correo y el mensaje son obligatorios.");
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(errorResponse)
+                    .build();
+        }
+
+        // [Futuros Sprints]: Integración con el servicio real de envío de correos.
+
+        EmailResponse emailResponse = new EmailResponse();
+        emailResponse.setDone(true);
+
+        return Response.status(Response.Status.CREATED)
+                .entity(emailResponse)
+                .build();
     }
 }

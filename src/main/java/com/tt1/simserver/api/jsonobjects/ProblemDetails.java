@@ -1,4 +1,4 @@
-package com.tt1.simserver.presentation.jsonobjects;
+package com.tt1.simserver.api.jsonobjects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.HashMap;
 import java.util.Objects;
 
-import static com.tt1.simserver.presentation.jsonobjects.utils.StringManipulation.toIndentedString;
+import static com.tt1.simserver.api.jsonobjects.utils.StringManipulation.toIndentedString;
 
 /**
  * Representa los detalles de un problema o error en una respuesta HTTP,

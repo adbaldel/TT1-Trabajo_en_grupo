@@ -1,4 +1,4 @@
-package com.tt1.simserver.presentation.jsonobjects.utils;
+package com.tt1.simserver.api.jsonobjects.utils;
 
 /**
  * Clase utilitaria que agrupa funciones relacionadas con el formato y procesado de cadenas de texto.

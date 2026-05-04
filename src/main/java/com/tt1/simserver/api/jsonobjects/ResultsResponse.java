@@ -1,4 +1,4 @@
-package com.tt1.simserver.presentation.jsonobjects;
+package com.tt1.simserver.api.jsonobjects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -6,11 +6,9 @@ import com.tt1.simserver.model.Position;
 import com.tt1.simserver.model.SimulationStep;
 import com.tt1.simserver.model.SimulationResult;
 
-import java.lang.reflect.Field;
-import java.util.Map;
 import java.util.Objects;
 
-import static com.tt1.simserver.presentation.jsonobjects.utils.StringManipulation.toIndentedString;
+import static com.tt1.simserver.api.jsonobjects.utils.StringManipulation.toIndentedString;
 
 /**
  * Representa la respuesta devuelta por el servidor al consultar el historial de resultados de un tablero.
