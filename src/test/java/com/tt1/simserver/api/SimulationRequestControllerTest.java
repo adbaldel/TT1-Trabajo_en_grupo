@@ -3,7 +3,7 @@ package com.tt1.simserver.api;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
-public class ResultsControllerTest {
+public class SimulationRequestControllerTest {
 
     // --- Arrange Before/After each test ------------------------------------------------------------------------------
 
@@ -21,7 +21,15 @@ public class ResultsControllerTest {
     //     TESTS UNITARIOS
     // -----------------------------------------------------------------------------------------------------------------
 
-    // --- Test resultadosPost(String username, Integer token) ---------------------------------------------------------
+    // --- Test solicitudComprobarSolicitudGet(String username, Integer token) -----------------------------------------
+
+    // TODO: TESTS
+
+    // --- Test solicitudGetSolicitudesUsuarioGet(String username) -----------------------------------------------------
+
+    // TODO: TESTS
+
+    // --- Test solicitudSolicitarPost(String username, SimulationRequestJson simulationRequestJson) -------------------
 
     // TODO: TESTS
 
@@ -29,7 +37,15 @@ public class ResultsControllerTest {
     //     TESTS DE SISTEMA
     // -----------------------------------------------------------------------------------------------------------------
 
-    // --- Test resultadosPost(String username, Integer token) ---------------------------------------------------------
+    // --- Test solicitudComprobarSolicitudGet(String username, Integer token) -----------------------------------------
+
+    // TODO: TESTS
+
+    // --- Test solicitudGetSolicitudesUsuarioGet(String username) -----------------------------------------------------
+
+    // TODO: TESTS
+
+    // --- Test solicitudSolicitarPost(String username, SimulationRequestJson simulationRequestJson) -------------------
 
     // TODO: TESTS
 }

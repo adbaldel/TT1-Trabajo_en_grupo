@@ -1,46 +1,34 @@
 package com.tt1.simserver.api;
 
-import com.tt1.simserver.api.jsonobjects.EmailResponse;
+import com.tt1.simserver.api.jsonobjects.EmailResponseJson;
+import com.tt1.simserver.api.jsonobjects.ProblemDetailsJson;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 
 /**
- * Controlador que implementa las acciones y reglas de negocio conectadas al envío de correos electrónicos.
+ * Controlador REST que implementa la API de correos electrónicos.
  */
 @Path("/Email")
 public class EmailController implements EmailApi {
 
-    /**
-     * Endpoint POST: Procesa la solicitud para enviar un correo electrónico a un destinatario.
-     *
-     * <p>Precondición: {@code emailAddress} y {@code message} no son nulos.
-     *
-     * <p>Postcondición: Crea un objeto de respuesta indicando que la operación fue un éxito y devuelve una respuesta HTTP 201 (Created) lista para ser enviada al cliente.
-     *
-     * @param emailAddress la dirección de correo del destinatario.
-     * @param message      el contenido del correo a enviar.
-     * @return la respuesta HTTP empaquetada con el estado de la operación.
-     */
     @Override
     public Response emailPost(String emailAddress, String message) {
 
-        // Validaciones preventivas básicas por si faltan los parámetros
-        if (emailAddress == null || emailAddress.isEmpty() || message == null || message.isEmpty()) {
-            EmailResponse errorResponse = new EmailResponse();
-            errorResponse.setDone(false);
-            errorResponse.setErrorMessage("La dirección de correo y el mensaje son obligatorios.");
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(errorResponse)
-                    .build();
+        if (emailAddress == null || !emailAddress.matches("^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,}$") || message == null) {
+            ProblemDetailsJson problemDetailsJson = new ProblemDetailsJson();
+            problemDetailsJson.setType("https://api.simserver.com/errors/invalid-email-address");
+            problemDetailsJson.setTitle("Dirección de correo no válida");
+            problemDetailsJson.setStatus(Response.Status.BAD_REQUEST.getStatusCode());
+            problemDetailsJson.setDetail("La dirección " + emailAddress + " no es una dirección de correo válida");
+            problemDetailsJson.setInstance("/Email");
+
+            return Response.status(Response.Status.BAD_REQUEST).entity(problemDetailsJson).build();
         }
 
-        // [Futuros Sprints]: Integración con el servicio real de envío de correos.
+        EmailResponseJson emailResponseJson = new EmailResponseJson();
+        emailResponseJson.setDone(true);
+        emailResponseJson.setErrorMessage(null);
 
-        EmailResponse emailResponse = new EmailResponse();
-        emailResponse.setDone(true);
-
-        return Response.status(Response.Status.CREATED)
-                .entity(emailResponse)
-                .build();
+        return Response.status(Response.Status.CREATED).entity(emailResponseJson).build();
     }
 }
