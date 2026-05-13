@@ -1,0 +1,95 @@
+<configuration>
+
+    <!-- ========================================== -->
+    <!-- APPENDERS (With custom colors and level filters) -->
+    <!-- ========================================== -->
+
+    <!-- ERROR logs (Red) -->
+    <appender name="STDOUT_ERROR" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>%boldRed([%-5level] %logger{0} - %msg%n)</pattern>
+        </encoder>
+    </appender>
+
+    <!-- WARN logs (Magenta) -->
+    <appender name="STDOUT_WARN" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>%magenta([%-5level] %logger{0} - %msg%n)</pattern>
+        </encoder>
+    </appender>
+
+    <!-- INFO logs (Blue) -->
+    <appender name="STDOUT_INFO" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>%blue([%-5level] %logger{0} - %msg%n)</pattern>
+        </encoder>
+    </appender>
+
+    <!-- DEBUG logs (Green) -->
+    <appender name="STDOUT_DEBUG" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>%green([%-5level] %logger{0} - %msg%n)</pattern>
+        </encoder>
+    </appender>
+
+    <!-- TRACE logs (Cyan) -->
+    <appender name="STDOUT_TRACE" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>TRACE</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>%cyan([%-5level] %logger{0} - %msg%n)</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ========================================== -->
+    <!-- SPECIFIC LOGGERS                           -->
+    <!-- ========================================== -->
+
+    <!-- Enable DEBUG logs for your own application package -->
+    <logger name="com.tt1.simserver" level="DEBUG"/>
+
+    <!-- Enable Hibernate SQL Query Logging -->
+    <logger name="org.hibernate.SQL" level="DEBUG"/>
+
+    <!-- Enable Hibernate SQL Parameter Logging -->
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"/>
+
+    <!-- Suppress the stack traces when Hibernate tries to drop non-existent tables -->
+    <logger name="org.hibernate.tool.schema.internal.ExceptionHandlerLoggedImpl" level="ERROR"/>
+
+    <!-- Suppress overly verbose generic Hibernate startup info by raising it to WARN -->
+    <logger name="org.hibernate" level="WARN"/>
+
+    <!-- Root logger set to INFO. -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT_ERROR"/>
+        <appender-ref ref="STDOUT_WARN"/>
+        <appender-ref ref="STDOUT_INFO"/>
+        <appender-ref ref="STDOUT_DEBUG"/>
+        <appender-ref ref="STDOUT_TRACE"/>
+    </root>
+
+</configuration>

@@ -5,12 +5,6 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!--
-		=============================================================
-		PROJECT METADATA
-		=============================================================
-		Unique identifiers of the application.
-	-->
     <groupId>com.tt1</groupId>
     <artifactId>simserver</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -19,12 +13,6 @@
         Servidor de simulaciones para el trabajo en grupo de TT1.
     </description>
 
-    <!--
-        =============================================================
-        PROPERTIES
-        =============================================================
-        Centralized version numbers so they are easy to update later.
-    -->
     <properties>
         <java.version>21</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -32,14 +20,32 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Versions for our dependencies -->
-        <jersey.version>3.1.8</jersey.version>
-        <jackson-version>2.17.2</jackson-version>
-        <jakarta.ws.rs-version>3.1.0</jakarta.ws.rs-version>
-        <junit-version>5.10.5</junit-version>
+        <jersey.version>3.1.11</jersey.version>
+        <hibernate.version>7.3.4.Final</hibernate.version>
+        <junit-version>6.0.3</junit-version>
+        <testcontainers.version>2.0.5</testcontainers.version>
+        <logback.version>1.5.32</logback.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!-- JAX-RS (Java API for RESTful Web Services) implemented by Jersey -->
+            <dependency>
+                <groupId>org.glassfish.jersey</groupId>
+                <artifactId>jersey-bom</artifactId>
+                <version>${jersey.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- JPA (Java Persistence API) implemented by Hibernate -->
+            <dependency>
+                <groupId>org.hibernate.orm</groupId>
+                <artifactId>hibernate-platform</artifactId>
+                <version>${hibernate.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- JUnit 5 -->
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
@@ -47,105 +53,113 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- Testcontainers BOM for modern DB integration testing -->
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${testcontainers.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Log4j -->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-bom</artifactId>
+                <version>2.26.0</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <!--
-		=============================================================
-		DEPENDENCIES
-		=============================================================
-	-->
     <dependencies>
-        <!-- 1. CORE REST API (JAX-RS & JERSEY) -->
-
-        <!-- Jakarta RESTful Web Services API:
-             Provides the standard annotations (@Path, @GET, @POST, @Produces).
-             Notice we removed <scope>provided</scope> because we are running standalone. -->
-        <dependency>
-            <groupId>jakarta.ws.rs</groupId>
-            <artifactId>jakarta.ws.rs-api</artifactId>
-            <version>${jakarta.ws.rs-version}</version>
-        </dependency>
-
-        <!-- Jersey Server:
-             The actual implementation of the JAX-RS API. It does the heavy lifting of
-             routing HTTP requests to your @Path annotated Java methods. -->
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-server</artifactId>
-            <version>${jersey.version}</version>
-        </dependency>
-
-        <!-- Jersey HK2 (Dependency Injection):
-             Jersey uses HK2 under the hood to instantiate your controllers and inject
-             dependencies into them. -->
-        <dependency>
-            <groupId>org.glassfish.jersey.inject</groupId>
-            <artifactId>jersey-hk2</artifactId>
-            <version>${jersey.version}</version>
-        </dependency>
-
-
-        <!-- 2. STANDALONE SERVER (GRIZZLY) -->
-
-        <!-- Grizzly HTTP Server integration for Jersey:
-             Instead of deploying a .war file to Tomcat, this allows you to spin up
-             a lightweight HTTP server directly from your public static void main() method. -->
+        <!-- ============================== -->
+        <!-- 1. WEB API (JAX-RS / JERSEY)   -->
+        <!-- ============================== -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-grizzly2-http</artifactId>
-            <version>${jersey.version}</version>
         </dependency>
-
-
-        <!-- 3. JSON SERIALIZATION (JACKSON) -->
-
-        <!-- Jersey Media JSON Jackson:
-             Tells our Jersey server to use Jackson to convert between Java Objects (like Solicitud)
-             and JSON. We use Jackson instead of Eclipse Yasson because the OpenAPI
-             generator placed Jackson annotations (@JsonProperty) in your models. -->
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
-            <version>${jersey.version}</version>
         </dependency>
 
-        <!-- Jackson JAX-RS JSON Provider:
-             Provides the actual integration layer between Jakarta REST (JAX-RS) and Jackson. -->
+        <!-- ============================== -->
+        <!-- 2. DATABASE (JPA / HIBERNATE)  -->
+        <!-- ============================== -->
         <dependency>
-            <groupId>com.fasterxml.jackson.jakarta.rs</groupId>
-            <artifactId>jackson-jakarta-rs-json-provider</artifactId>
-            <version>${jackson-version}</version>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
         </dependency>
-
-        <!-- Jackson Datatype JSR310:
-             Allows Jackson to properly serialize/deserialize modern Java 8+ Date and Time
-             objects (like LocalDate, OffsetDateTime). -->
         <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson-version}</version>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.3.0</version>
         </dependency>
 
+        <!-- ============================== -->
+        <!-- 3. LOGGING                     -->
+        <!-- ============================== -->
+        <!-- Required so Hibernate and Jersey can output errors and info properly -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
 
-        <!-- 4. TESTING -->
+        <!-- ============================== -->
+        <!-- 4. TESTING (UNIT & DB & API)   -->
+        <!-- ============================== -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-mysql</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- OPTIONAL: API Testing dependencies (Uncomment when ready)
+        <dependency>
+            <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+            <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>5.4.0</version>
+            <scope>test</scope>
+        </dependency>
+        -->
     </dependencies>
 
-    <!--
-		=============================================================
-		BUILD & PLUGINS
-		=============================================================
-	-->
     <build>
         <plugins>
-            <!-- Maven Shade Plugin:
-                 Configures how the final executable .jar (uber-jar) is built by packaging
-                 the application code along with all its dependencies. -->
+            <!-- FIX: explicitly configure Surefire to ensure JUnit 5 tests execute properly -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.5</version>
+            </plugin>
+
+            <!-- Maven Shade Plugin: Packages the application and dependencies -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -157,26 +171,21 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <filters>
+                                <!-- Good practice: prevents signature errors when packaging signed jars -->
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                             <transformers>
-                                <!-- =========================================================
-                                     CRITICAL FIX FOR JERSEY/JACKSON: ServicesResourceTransformer
-                                     =========================================================
-                                     Libraries like Jersey and Jackson use Java's SPI (Service Provider Interface)
-                                     to dynamically load components (like JSON writers/readers). They do this
-                                     by placing configuration files inside the META-INF/services/ directory.
-
-                                     When the shade plugin packages multiple jars together, it finds multiple
-                                     files with the same name in META-INF/services/ and, by default, OVERWRITES them.
-                                     This causes Jersey to completely "forget" that Jackson exists, leading to
-                                     the "MessageBodyWriter not found for media type=text/json" error.
-
-                                     This transformer tells Maven to MERGE those files together instead of
-                                     overwriting them, preserving all dynamic registrations. -->
+                                <!-- Preserves Jersey and Jackson SPI configurations -->
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-
-                                <!-- ManifestResourceTransformer:
-                                     Specifies the entry point of the application so that you can simply run
-                                     `java -jar target/simserver-1.0-SNAPSHOT.jar` without specifying the class. -->
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>com.tt1.simserver.RestApplication</mainClass>
                                 </transformer>
