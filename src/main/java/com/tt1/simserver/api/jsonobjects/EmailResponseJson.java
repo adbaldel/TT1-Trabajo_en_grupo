@@ -19,6 +19,8 @@ public class EmailResponseJson {
      * Construye una respuesta de email vacía.
      */
     public EmailResponseJson() {
+        done = null;
+        errorMessage = null;
     }
 
     /**

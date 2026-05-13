@@ -6,6 +6,13 @@ package com.tt1.simserver.utils;
 public class StringManipulation {
 
     /**
+     * Constructor privado para evitar que se construyan objetos instancia de esta utilidad.
+     */
+    private StringManipulation() {
+        // No hace nada
+    }
+
+    /**
      * Convierte un objeto a una representación textual indentada de forma legible.
      *
      * @param o el objeto a convertir.

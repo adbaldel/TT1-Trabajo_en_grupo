@@ -75,6 +75,13 @@ public class CreatureFactory {
     }
 
     /**
+     * Constructor privado para evitar que se construyan objetos instancia de esta factoría.
+     */
+    private CreatureFactory() {
+        // No hace nada
+    }
+
+    /**
      * Crea una criatura con el id dado a partir del nombre dado y con el color asociado a dicho nombre. Asume que el
      * nombre existe, y que el id es no nulo y único para esta criatura.
      *

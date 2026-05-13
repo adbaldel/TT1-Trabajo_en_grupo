@@ -10,6 +10,13 @@ import com.tt1.simserver.model.User;
 public class UserTransformer {
 
     /**
+     * Constructor privado para evitar que se construyan objetos instancia de este transformador.
+     */
+    private UserTransformer() {
+        // No hace nada
+    }
+
+    /**
      * Transforma a usuario del modelo de dominio el usuario de la persistencia ({@code userEntity}). Asume que el
      * usuario de la persistencia es no nulo y tiene nombre de usuario válido según {@link User#User(String)}.
      *

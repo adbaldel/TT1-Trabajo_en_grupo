@@ -21,6 +21,10 @@ public class SimulationResultResponseJson {
      * Construye una respuesta de resultados vacía.
      */
     public SimulationResultResponseJson() {
+        done = null;
+        requestToken = null;
+        errorMessage = null;
+        data = null;
     }
 
     /**

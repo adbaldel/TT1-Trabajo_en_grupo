@@ -11,6 +11,13 @@ import com.tt1.simserver.model.SimulationData;
 public class SimulationResultTransformer {
 
     /**
+     * Constructor privado para evitar que se construyan objetos instancia de este transformador.
+     */
+    private SimulationResultTransformer() {
+        // No hace nada
+    }
+
+    /**
      * Transforma a datos de simulación del modelo de dominio el resultado de simulación de la persistencia
      * ({@code simulationResultEntity}). Asume que el resultado de simulación de la persistencia es no nulo.
      *

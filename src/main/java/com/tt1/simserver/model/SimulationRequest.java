@@ -73,8 +73,8 @@ public class SimulationRequest {
         this.random = random;
 
         int numberOfCreaturesAccumulator = 0;
-        for (String requestedCreatureName : creaturesNamesQuantities.keySet()) {
-            numberOfCreaturesAccumulator += creaturesNamesQuantities.get(requestedCreatureName);
+        for (Map.Entry<String, Integer> entry : creaturesNamesQuantities.entrySet()) {
+            numberOfCreaturesAccumulator += entry.getValue();
         }
         totalNumberOfCreatures = numberOfCreaturesAccumulator;
     }

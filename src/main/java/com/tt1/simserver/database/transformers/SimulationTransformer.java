@@ -4,6 +4,7 @@ import com.tt1.simserver.database.entities.SimulationEntity;
 import com.tt1.simserver.database.entities.UserEntity;
 import com.tt1.simserver.model.Simulation;
 import com.tt1.simserver.model.SimulationData;
+import com.tt1.simserver.model.SimulationStatus;
 import com.tt1.simserver.model.SimulationStep;
 
 /**
@@ -11,6 +12,13 @@ import com.tt1.simserver.model.SimulationStep;
  * ({@code SimulationEntity}).
  */
 public class SimulationTransformer {
+
+    /**
+     * Constructor privado para evitar que se construyan objetos instancia de este transformador.
+     */
+    private SimulationTransformer() {
+        // No hace nada
+    }
 
     /**
      * Transforma a simulación del modelo de dominio la simulación de la persistencia ({@code simulationEntity}). Asume
@@ -30,10 +38,8 @@ public class SimulationTransformer {
                 // este no se guarda en la base de datos)
         );
 
-        switch (simulationEntity.getStatus()) {
-            case RUNNING:
-                simulation.startSimulation();
-                break;
+        if (simulationEntity.getStatus() ==  SimulationStatus.RUNNING) {
+            simulation.startSimulation();
         }
 
         return simulation;

@@ -23,6 +23,11 @@ public class ProblemDetailsJson extends HashMap<String, Object> {
      * Construye un detalle de problema vacío.
      */
     public ProblemDetailsJson() {
+        type = null;
+        title = null;
+        status = null;
+        detail = null;
+        instance = null;
     }
 
     /**

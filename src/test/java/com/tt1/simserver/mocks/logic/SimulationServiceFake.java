@@ -80,5 +80,6 @@ public class SimulationServiceFake implements SimulationServiceInterface {
 
     @Override
     public void shutdown() {
+        // No hay recursos a apagar en el fake
     }
 }

@@ -29,6 +29,13 @@ public class RequestTransformer {
     }
 
     /**
+     * Constructor privado para evitar que se construyan objetos instancia de este transformador.
+     */
+    private RequestTransformer() {
+        // No hace nada
+    }
+
+    /**
      * Transforma una solicitud del la capa de api {@code request} a un a solicitud del modelo de dominio con el mismo
      * usuario; cantidades de criaturas asociadas a las criaturas representadas por los nombres y cantidades dadas en la
      * solicitud; los ticks a correr, ocupación incial y probabilidad de comida por defecto de la aplicación; y el

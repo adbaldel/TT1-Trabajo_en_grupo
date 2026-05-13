@@ -21,6 +21,8 @@ public class SimulationRequestJson {
      * Construye una solicitud vacía.
      */
     public SimulationRequestJson() {
+        creatureQuantities = null;
+        creatureNames = null;
     }
 
     /**

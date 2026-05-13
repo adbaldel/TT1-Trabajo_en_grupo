@@ -30,11 +30,13 @@ public class RestApplication {
             final HttpServer server = startServer(baseUri, appBinder);
             System.out.println("Servidor Grizzly de Simulaciones iniciado.");
             System.out.println("Escuchando en: " + baseUri);
+            // NO DOCKER
 //            System.out.println("Presiona ENTER para detener el servidor...");
 
 //            System.in.read();
 //            appBinder.getSimulationService().shutdown();
 //            server.shutdown();
+            // FIN NO DOCKER
 
             // DOCKER
             // 1. Registramos un "Shutdown Hook" para apagar el servidor limpiamente
@@ -48,7 +50,7 @@ public class RestApplication {
             // 2. Bloqueamos el hilo principal para siempre para que el servidor no se cierre
             Thread.currentThread().join();
             // FIN DOCKER
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

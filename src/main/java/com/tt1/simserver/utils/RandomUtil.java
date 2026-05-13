@@ -6,7 +6,14 @@ import java.util.Random;
 /**
  * Proveedor de métodos utilitarios para generación de pseudo-aleatoriedad.
  */
-public class RandomUtils {
+public class RandomUtil {
+
+    /**
+     * Constructor privado para evitar que se construyan objetos instancia de esta utilidad.
+     */
+    private RandomUtil() {
+        // No hace nada
+    }
 
     /**
      * Obtiene un elemento de manera pseudo-aleatoria de la colección {@code collection} usando el generador de

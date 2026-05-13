@@ -48,7 +48,9 @@ public class SimulationDataConverter implements AttributeConverter<SimulationDat
         int gridSize = Integer.parseInt(dataLines[0]);
         SimulationData result = new SimulationData(gridSize);
         Map<Integer, Map<Position, Creature>> simulationSteps = new HashMap<>();
-        int tick, x, y;
+        int tick;
+        int x;
+        int y;
         String color;
 
         for (int i = 1; i < dataLines.length; i++) {
@@ -68,8 +70,8 @@ public class SimulationDataConverter implements AttributeConverter<SimulationDat
             );
         }
 
-        for (Integer step : simulationSteps.keySet()) {
-            result.addStep(new SimulationStep(gridSize, simulationSteps.get(step)));
+        for (Map.Entry<Integer, Map<Position, Creature>> entry : simulationSteps.entrySet()) {
+            result.addStep(new SimulationStep(gridSize, entry.getValue()));
         }
 
         return result;

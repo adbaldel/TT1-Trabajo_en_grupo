@@ -65,7 +65,7 @@ public class DBManagerFake implements DBManagerInterface {
     // --- Getters de control para los tests ---------------------------------------------------------------------------
 
     public long getGetUserCalledTime() {
-        return getUserTokensCalledTime;
+        return getUserCalledTime;
     }
 
     public long getSaveUserCalledTime() {
@@ -176,5 +176,6 @@ public class DBManagerFake implements DBManagerInterface {
 
     @Override
     public void close() {
+        // No hay recursos que cerrar en el fake
     }
 }

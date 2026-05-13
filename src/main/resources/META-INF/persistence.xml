@@ -14,10 +14,6 @@
         <properties>
             <!-- Configuración de la conexión a MySQL (Ajusta la IP si Docker no está en localhost) -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-<!--            <property name="jakarta.persistence.jdbc.url"-->
-<!--                      value="jdbc:mysql://localhost:3306/simserver_db?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=UTC"/>-->
-<!--            <property name="jakarta.persistence.jdbc.user" value="root"/>-->
-<!--            <property name="jakarta.persistence.jdbc.password" value="K3zf%z2r6tGb@q"/>-->
 <!--            DOCKER-->
 <!--            <property name="jakarta.persistence.jdbc.url" value="${DB_URL}"/>-->
 <!--            <property name="jakarta.persistence.jdbc.user" value="${DB_USER}"/>-->
