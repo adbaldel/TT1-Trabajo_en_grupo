@@ -5,7 +5,7 @@ import com.tt1.simserver.logic.creatures.abilities.MoveBehaviour;
 import com.tt1.simserver.logic.creatures.abilities.MultiplyBehaviour;
 import com.tt1.simserver.model.Creature;
 import com.tt1.simserver.model.Position;
-import com.tt1.simserver.utils.RandomUtils;
+import com.tt1.simserver.utils.RandomUtil;
 
 import java.util.Collection;
 import java.util.Random;
@@ -51,8 +51,8 @@ public abstract class LogicCreature extends Creature implements LogicCreatureInt
      * @param position            la posición de la criatura.
      * @param simulationGrid      el tablero de simulación en el que está la criatura.
      */
-    public LogicCreature(String id, String name, String color, int starvationThreshold, Position position,
-                         SimulationGridInterface simulationGrid) {
+    protected LogicCreature(String id, String name, String color, int starvationThreshold, Position position,
+                            SimulationGridInterface simulationGrid) {
         super(id, name, color);
         this.starvationThreshold = starvationThreshold;
         ticksUntilStarvation = starvationThreshold;
@@ -77,7 +77,7 @@ public abstract class LogicCreature extends Creature implements LogicCreatureInt
      * @param starvationThreshold el número de ticks que la criatura aguanta sin comer antes de morirse.
      * @param position            la posición de la criatura.
      */
-    public LogicCreature(String id, String name, String color, int starvationThreshold, Position position) {
+    protected LogicCreature(String id, String name, String color, int starvationThreshold, Position position) {
         this(id, name, color, starvationThreshold, position, null);
     }
 
@@ -128,6 +128,21 @@ public abstract class LogicCreature extends Creature implements LogicCreatureInt
     @Override
     public LogicCreatureInterface performMultiply() {
         return multiplyBehaviour.multiply();
+    }
+
+    /**
+     * Comprueba si esta criatura lógica es igual al objeto {@code o}. Devuelve cierto si el objeto es una criatura
+     * lógica con el mismo id.
+     *
+     * @param o el objeto a comparar.
+     * @return cierto si esta criatura lógica es igual al objeto, falso en caso contrario.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LogicCreature creature = (LogicCreature) o;
+        return getId().equals(creature.getId());
     }
 
     /**
@@ -184,7 +199,7 @@ public abstract class LogicCreature extends Creature implements LogicCreatureInt
                 availablePositions = getSimulationGrid().getEmptyAdjacentCells(getPosition());
 
                 if (!availablePositions.isEmpty()) {
-                    newPosition = RandomUtils.getRandomElement(availablePositions, random);
+                    newPosition = RandomUtil.getRandomElement(availablePositions, random);
                     position = newPosition;
                 }
             }
@@ -250,7 +265,7 @@ public abstract class LogicCreature extends Creature implements LogicCreatureInt
                 availablePositions = getSimulationGrid().getEmptyAdjacentCells(getPosition());
 
                 if (!availablePositions.isEmpty()) {
-                    childPosition = RandomUtils.getRandomElement(availablePositions, random);
+                    childPosition = RandomUtil.getRandomElement(availablePositions, random);
                     child = new StaticRabbit(
                             UUID.randomUUID().toString(),
                             getName(),

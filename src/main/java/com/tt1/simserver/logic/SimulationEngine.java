@@ -1,95 +1,74 @@
 package com.tt1.simserver.logic;
 
-import com.tt1.simserver.model.SimulationResult;
-import com.tt1.simserver.model.SimulationStep;
+import com.tt1.simserver.database.DBManagerInterface;
 
 /**
- * Motor encargado de ejecutar la lógica interna de una simulación.
- * Implementa {@link Runnable} para permitir su ejecución en un hilo de procesamiento independiente.
+ * Implementa la funcionalidad de un motor de simulaciones.
  */
 public class SimulationEngine implements SimulationEngineInterface {
-    private final GridInterface grid;
-    private final int maxSteps;
-    private final SimulationResult result;
-    private boolean done;
+    private final LogicSimulation simulation;
+    private final SimulationEngineManagerInterface manager;
+    private final DBManagerInterface dbManager;
 
     /**
-     * Inicializa el motor de simulación definiendo su tablero y su límite de duración.
+     * Construye un motor de simulación con la simulación lógica, gestor de simulaciones y gestor de base de datos
+     * pasados cómo parámetros. Asume que la simulación lógica es no nula; el gestor de motor de simulaciones es no nulo
+     * y gestiona la simulación pasada; el gestor de base de datos es no nulo y gestiona una base de datos en la que la
+     * simulación está almacenada.
      *
-     * <p>Precondición: {@code initialGrid} no es nulo y {@code maxSteps} es mayor que cero.
-     *
-     * <p>Postcondición: Prepara la ejecución reteniendo el tablero inicial y fijando el total de turnos a procesar. El estado inicial se marca como no terminado.
-     *
-     * @param initialGrid el estado inicial del tablero configurado a simular.
-     * @param maxSteps    el número máximo de turnos de vida de la simulación.
+     * @param simulation la simulación lógica sobre la que se van a correr los ticks.
+     * @param manager    el gestor de simulaciones que gestiona la simulación.
+     * @param dbManager  el gestor de base de datos que almacena la simulación.
      */
-    public SimulationEngine(GridInterface initialGrid, int maxSteps) {
-        this.grid = initialGrid;
-        this.maxSteps = maxSteps;
-        result = new SimulationResult(initialGrid.getSize());
-        done = false;
+    public SimulationEngine(LogicSimulation simulation, SimulationEngineManagerInterface manager,
+                            DBManagerInterface dbManager) {
+        this.simulation = simulation;
+        this.manager = manager;
+        this.dbManager = dbManager;
     }
 
     /**
-     * Comprueba de forma segura y sincronizada si el motor de la simulación ha terminado.
+     * {@inheritDoc}
      *
-     * <p>Precondición: Ninguna.
-     *
-     * <p>Postcondición: Devuelve verdadero si la simulación completó la ejecución de todos los turnos preestablecidos. Devuelve falso mientras no ha arrancado o sigue procesando.
-     *
-     * @return el estado actual de finalización.
+     * <p>Notas sobre implementación: primero actualiza el estado de la simulación a corriendo, tanto en memoria con
+     * en la persistencia; después corre {@code ticksToRun} ticks de simulación partiendo del paso final almacenado en
+     * la simulación, añadiendo cada nuevo paso a la simulación; y finalmente actualiza el estado de la simulación a
+     * acabada, tanto en memoria como en la base de datos, guarda el resultado en la base de datos y elimina la
+     * simulación del gestor de simulaciones. Si en algún momento el hilo es interrumpido se para la simulación en el
+     * siguiente tick, se actualiza el estado de la simulación a interrumpido, tanto en memoria como en la base de
+     * datos, y se elimina la simulación del gestor de simulaciones.</p>
      */
     @Override
-    public synchronized boolean isDone() {
-        return done;
-    }
+    public void run() {
+        boolean interrupted = false;
+        // Update simulation status to running
+        simulation.startSimulation();
+        dbManager.updateSimulationStatus(simulation);
 
-    /**
-     * Establece de forma sincronizada el estado de finalización del motor.
-     *
-     * <p>Precondición: Ninguna.
-     *
-     * <p>Postcondición: Actualiza internamente la bandera de finalización al valor indicado.
-     *
-     * @param done verdadero para registrar que la simulación ha concluido.
-     */
-    private synchronized void setDone(boolean done) {
-        this.done = done;
-    }
-
-    /**
-     * Extrae el objeto que empaqueta los historiales del proceso simulado.
-     *
-     * <p>Precondición: Ninguna.
-     *
-     * <p>Postcondición: Devuelve el contenedor histórico poblado con las disposiciones del tablero solo si la simulación ya ha terminado. Devuelve nulo para evitar accesos tempranos si no ha finalizado.
-     *
-     * @return los datos con el resultado de la simulación o nulo si sigue en ejecución.
-     */
-    @Override
-    public SimulationResult getResult() {
-        if (!isDone()) {
-            return null;
+        // Run simulation
+        // NOTE: Simulation already has the initial state added.
+        for (int i = 0; i < simulation.getTicksToRun(); i++) {
+            if (Thread.interrupted()) {
+                interrupted = true;
+                break;
+            }
+            simulation.tick();
         }
 
-        return result;
-    }
+        if (!interrupted) {
+            // Update simulation status to complete
+            simulation.completeSimulation();
+            dbManager.saveSimulationResult(simulation);
 
-    /**
-     * Lógica principal del cálculo continuo a lanzar desde un hilo.
-     *
-     * <p>Precondición: El tablero asociado en el constructor está disponible y es válido.
-     *
-     * <p>Postcondición: Captura y empuja al historial el tablero de origen. A continuación obliga iterativamente al tablero a avanzar exactamente los turnos solicitados en {@code maxSteps}, almacenando el estado interno tras resolver cada turno. Al agotar el límite temporal, se auto marca de forma sincronizada como terminado.
-     */
-    @Override
-    public void run() { // Cuando se le llama, token > 0
-        result.addStep(SimulationStep.convertToSimulationStep(grid));
-        for (int second = 0; second < maxSteps; second++) {
-            grid.tick();
-            result.addStep(SimulationStep.convertToSimulationStep(grid));
+            // Remove simulation from memory
+            manager.removeSimulation(simulation);
+        } else {
+            // Update simulation status to interrupted
+            simulation.interruptSimulation();
+            dbManager.updateSimulationStatus(simulation);
+
+            // Remove simulation from memory
+            manager.removeSimulation(simulation);
         }
-
-        setDone(true);
     }
 }
