@@ -35,7 +35,7 @@ public class RestApplication {
             final HttpServer server = startServer(baseUri, appBinder);
 
             server.getServerConfiguration().addHttpHandler(
-                    new CLStaticHttpHandler(Main.class.getClassLoader(), "swagger-ui/"), "/swagger"
+                    new CLStaticHttpHandler(RestApplication.class.getClassLoader(), "swagger-ui/"), "/swagger"
             );
 
             System.out.println("Servidor Grizzly de Simulaciones iniciado.");

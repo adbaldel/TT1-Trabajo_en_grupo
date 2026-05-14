@@ -10,20 +10,20 @@ services:
       MYSQL_PASSWORD: eSOJJ09xVJqtyjxv
     volumes:
       # Montamos el script de inicialización para que se ejecute al crear el contenedor
-      - ./Trabajo_grupal/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
       # Volumen para persistencia de datos reales entre reinicios del contenedor
       - mysql_data:/var/lib/mysql
     # A healthcheck ensures the DB is ready before the API tries to connect
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 2s
       timeout: 2s
-      retries: 50
+      retries: 30
     networks:
       - simnetwork
 
   simserver:
-    image: simserver
-    container_name: simserver
+    image: tt1/simserver
     environment:
       # These environment variables must map to what you set in your persistence.xml
       - DB_URL=jdbc:mysql://db:3306/simserver_db?useSSL=false&allowPublicKeyRetrieval=true
@@ -32,19 +32,24 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8081/Solicitud/GetCriaturas" ]
+      interval: 2s
+      timeout: 2s
+      retries: 10
     networks:
       - simnetwork
 
   simwebapp:
-    image: simwebapp
-    container_name: simwebapp
+    image: tt1/simwebapp
     ports:
       - "8080:8080"
     environment:
       # This environment variable maps to the placeholder in application.properties
       - API_URL=http://simserver:8081
     depends_on:
-      - simserver
+      simserver:
+        condition: service_healthy
     networks:
       - simnetwork
 

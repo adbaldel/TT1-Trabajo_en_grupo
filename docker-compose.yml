@@ -10,20 +10,20 @@ services:
       MYSQL_PASSWORD: eSOJJ09xVJqtyjxv
     volumes:
       # Montamos el script de inicialización para que se ejecute al crear el contenedor
-      - ./Trabajo_grupal/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
       # Volumen para persistencia de datos reales entre reinicios del contenedor
       - mysql_data:/var/lib/mysql
     # A healthcheck ensures the DB is ready before the API tries to connect
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 2s
       timeout: 2s
-      retries: 50
+      retries: 30
     networks:
       - simnetwork
 
   simserver:
-    image: simserver
-    container_name: simserver
+    image: tt1/simserver
     ports:
       - "8081:8081"
     environment:

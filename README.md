@@ -126,7 +126,7 @@ java -jar target/simserver-1.0-SNAPSHOT.jar
 
 En vez de ejecutar el `.jar` directamente, se puede crear una imagen de docker con el `Dockerfile` del proyecto:
 ```bash
-docker image build -t simserver .
+docker image build -t tt1/simserver .
 ```
 
 Después para arrancar el servidor con el puerto 8081 publicado, conectado a un contenedor con una base de datos 

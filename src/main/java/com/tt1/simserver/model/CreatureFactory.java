@@ -8,8 +8,8 @@ import java.util.*;
  * Factoría de criaturas.
  */
 public class CreatureFactory {
-    private static final Set<String> CREATURE_NAMES;
-    private static final Map<String, String> CREATURE_COLORS_MAP;
+    private static final Set<String> CREATURES_NAMES;
+    private static final Map<String, String> CREATURES_COLORS_MAP;
 
     static {
         ConfigManager config = ConfigManager.getInstance();
@@ -57,20 +57,20 @@ public class CreatureFactory {
         }
 
         // POBLAR LAS ESTRUCTURAS DE DATOS EFICIENTES
-        CREATURE_NAMES = new HashSet<>();
-        CREATURE_NAMES.addAll(staticCreatureNames);
-        CREATURE_NAMES.addAll(mobileCreatureNames);
-        CREATURE_NAMES.addAll(staticRabbitNames);
+        CREATURES_NAMES = new HashSet<>();
+        CREATURES_NAMES.addAll(staticCreatureNames);
+        CREATURES_NAMES.addAll(mobileCreatureNames);
+        CREATURES_NAMES.addAll(staticRabbitNames);
 
-        CREATURE_COLORS_MAP = new HashMap<>();
+        CREATURES_COLORS_MAP = new HashMap<>();
         for (int i = 0; i < staticCreatureNames.size(); i++) {
-            CREATURE_COLORS_MAP.put(staticCreatureNames.get(i), staticCreatureColors.get(i));
+            CREATURES_COLORS_MAP.put(staticCreatureNames.get(i), staticCreatureColors.get(i));
         }
         for (int i = 0; i < mobileCreatureNames.size(); i++) {
-            CREATURE_COLORS_MAP.put(mobileCreatureNames.get(i), mobileCreatureColors.get(i));
+            CREATURES_COLORS_MAP.put(mobileCreatureNames.get(i), mobileCreatureColors.get(i));
         }
         for (int i = 0; i < staticRabbitNames.size(); i++) {
-            CREATURE_COLORS_MAP.put(staticRabbitNames.get(i), staticRabbitColors.get(i));
+            CREATURES_COLORS_MAP.put(staticRabbitNames.get(i), staticRabbitColors.get(i));
         }
     }
 
@@ -82,16 +82,12 @@ public class CreatureFactory {
     }
 
     /**
-     * Crea una criatura con el id dado a partir del nombre dado y con el color asociado a dicho nombre. Asume que el
-     * nombre existe, y que el id es no nulo y único para esta criatura.
+     * Obtiene los nombres de todas las criaturas que el servicio sabe simular.
      *
-     * @param name el nombre de la criatura.
-     * @param id   el id de la criatura.
-     * @return la criatura creada.
+     * @return la colección los nombres de todas las criaturas que el servicio sabe simular.
      */
-    public static Creature createCreatureFromName(String name, String id) {
-        String color = CREATURE_COLORS_MAP.get(name);
-        return new Creature(id, name, color);
+    public static Collection<String> getCreaturesNames() {
+        return CREATURES_NAMES;
     }
 
     /**
@@ -102,7 +98,20 @@ public class CreatureFactory {
      * @param name el nombre a comprobar.
      * @return cierto si es reconocido por la aplicación, falso en caso contrario.
      */
-    public static boolean existsCreatureName(String name) {
-        return CREATURE_NAMES.contains(name);
+    public static boolean existsCreature(String name) {
+        return CREATURES_NAMES.contains(name);
+    }
+
+    /**
+     * Crea una criatura con el id dado a partir del nombre dado y con el color asociado a dicho nombre. Asume que el
+     * nombre existe, y que el id es no nulo y único para esta criatura.
+     *
+     * @param name el nombre de la criatura.
+     * @param id   el id de la criatura.
+     * @return la criatura creada.
+     */
+    public static Creature createCreature(String name, String id) {
+        String color = CREATURES_COLORS_MAP.get(name);
+        return new Creature(id, name, color);
     }
 }
