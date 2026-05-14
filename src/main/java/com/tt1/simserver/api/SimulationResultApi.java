@@ -1,5 +1,12 @@
 package com.tt1.simserver.api;
 
+import com.tt1.simserver.api.jsonobjects.ProblemDetailsJson;
+import com.tt1.simserver.api.jsonobjects.SimulationResultResponseJson;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
@@ -20,6 +27,29 @@ public interface SimulationResultApi {
      * problema y estado 400 BAD_REQUEST.
      */
     @POST
-    @Produces({"text/plain", "application/json", "text/json"})
-    Response resultadosPost(@QueryParam("nombreUsuario") String username, @QueryParam("tok") Integer token);
+    @Produces({"application/json", "text/json"})
+    @Operation(
+            summary = "Obtener resultados",
+            description = "Recupera los datos en formato CSV de una simulación. Esta operación solo tendrá éxito si " +
+                    "la simulación ha finalizado completamente (Estado COMPLETED).",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Resultados obtenidos con éxito",
+                            content = @Content(schema = @Schema(implementation = SimulationResultResponseJson.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "La simulación no existe, no pertenece al usuario, o aún no ha terminado",
+                            content = @Content(schema = @Schema(implementation = ProblemDetailsJson.class))
+                    )
+            }
+    )
+    Response resultadosPost(
+            @Parameter(description = "Nombre del usuario propietario", required = true)
+            @QueryParam("nombreUsuario") String username,
+
+            @Parameter(description = "Token de la simulación finalizada", required = true)
+            @QueryParam("tok") Integer token
+    );
 }

@@ -1,5 +1,12 @@
 package com.tt1.simserver.api;
 
+import com.tt1.simserver.api.jsonobjects.EmailResponseJson;
+import com.tt1.simserver.api.jsonobjects.ProblemDetailsJson;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
@@ -20,6 +27,31 @@ public interface EmailApi {
      * estado 400 BAD_REQUEST.
      */
     @POST
-    @Produces({"text/plain", "application/json", "text/json"})
-    Response emailPost(@QueryParam("emailAddress") String emailAddress, @QueryParam("message") String message);
+    @Produces({"application/json", "text/json"})
+    @Operation(
+            summary = "Enviar mensaje por correo electrónico",
+            description = "Simula el envío de un correo electrónico. Valida que el formato de la dirección de correo " +
+                    "sea correcto.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Correo procesado con éxito",
+                            content = @Content(schema = @Schema(implementation = EmailResponseJson.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Dirección de correo no válida o parámetros faltantes",
+                            content = @Content(schema = @Schema(implementation = ProblemDetailsJson.class))
+                    )
+            }
+    )
+    Response emailPost(
+            @Parameter(description = "Dirección de correo electrónico de destino", required = true, example =
+                    "usuario@ejemplo.com")
+            @QueryParam("emailAddress") String emailAddress,
+
+            @Parameter(description = "Contenido del mensaje a enviar", required = true, example = "La simulación ha " +
+                    "terminado.")
+            @QueryParam("message") String message
+    );
 }

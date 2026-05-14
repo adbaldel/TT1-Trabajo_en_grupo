@@ -41,9 +41,9 @@ public class RequestTransformer {
      * solicitud; los ticks a correr, ocupación incial y probabilidad de comida por defecto de la aplicación; y el
      * generador de pseudo-aleatoriedad {@code random}. Asume que {@code request} posee listas no nulas de nombres y
      * cantidades; que hay la misma cantidad de nombres y de cantidades; que todos los nombres son reconocidos por la
-     * aplicación según {@link CreatureFactory#existsCreatureName(String)}; que todas las cantidades son mayores o
-     * iguales que cero; que {@code user} es no nulo y tiene información completa (no es de consulta); y que el
-     * generador de números pseudo-aleatorios es no nulo.
+     * aplicación según {@link CreatureFactory#existsCreature(String)}; que todas las cantidades son mayores o iguales
+     * que cero; que {@code user} es no nulo y tiene información completa (no es de consulta); y que el generador de
+     * números pseudo-aleatorios es no nulo.
      *
      * @param simulationRequestJSON la solicitud de la capa de api.
      * @param user                  el usuario que hace la solicitud.

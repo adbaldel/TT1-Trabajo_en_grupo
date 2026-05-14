@@ -4,16 +4,16 @@ import com.tt1.simserver.logic.SimulationServiceInterface;
 import com.tt1.simserver.model.*;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Implementa la funcionalidad de un servicio de simulaciones devolviendo datos preconfigurados.
  */
 public class SimulationServiceFake implements SimulationServiceInterface {
+    private Collection<String> creaturesToReturn;
     private boolean existsSimulationToReturn;
     private SimulationStatus simulationStatusToReturn;
     private SimulationData simulationResultToReturn;
-    private List<Integer> userTokensToReturn;
+    private Collection<Integer> userTokensToReturn;
     private Simulation simulationToReturn;
 
     /**
@@ -29,6 +29,10 @@ public class SimulationServiceFake implements SimulationServiceInterface {
 
     // --- Setters de control para los tests ---------------------------------------------------------------------------
 
+    public void setCreaturesToReturn(Collection<String> creaturesToReturn) {
+        this.creaturesToReturn = creaturesToReturn;
+    }
+
     public void setExistsSimulationToReturn(boolean existsSimulationToReturn) {
         this.existsSimulationToReturn = existsSimulationToReturn;
     }
@@ -41,7 +45,7 @@ public class SimulationServiceFake implements SimulationServiceInterface {
         this.simulationResultToReturn = simulationResultToReturn;
     }
 
-    public void setUserTokensToReturn(List<Integer> userTokensToReturn) {
+    public void setUserTokensToReturn(Collection<Integer> userTokensToReturn) {
         this.userTokensToReturn = userTokensToReturn;
     }
 
@@ -52,6 +56,11 @@ public class SimulationServiceFake implements SimulationServiceInterface {
     // --- Getters de control para los tests ---------------------------------------------------------------------------
 
     // --- Implementación de la interfaz -------------------------------------------------------------------------------
+
+    @Override
+    public Collection<String> getCreatures() {
+        return creaturesToReturn;
+    }
 
     @Override
     public boolean existsSimulation(Simulation simulation) {

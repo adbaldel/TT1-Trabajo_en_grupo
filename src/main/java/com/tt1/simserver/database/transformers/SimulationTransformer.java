@@ -5,7 +5,6 @@ import com.tt1.simserver.database.entities.UserEntity;
 import com.tt1.simserver.model.Simulation;
 import com.tt1.simserver.model.SimulationData;
 import com.tt1.simserver.model.SimulationStatus;
-import com.tt1.simserver.model.SimulationStep;
 
 /**
  * Transformador entre simulaciones del modelo de dominio ({@code Simulation}) y simulaciones entidad de la persistencia
@@ -38,7 +37,7 @@ public class SimulationTransformer {
                 // este no se guarda en la base de datos)
         );
 
-        if (simulationEntity.getStatus() ==  SimulationStatus.RUNNING) {
+        if (simulationEntity.getStatus() == SimulationStatus.RUNNING) {
             simulation.startSimulation();
         }
 

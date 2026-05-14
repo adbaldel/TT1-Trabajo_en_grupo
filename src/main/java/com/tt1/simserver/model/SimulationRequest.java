@@ -21,9 +21,9 @@ public class SimulationRequest {
      * número total de criaturas, número de ticks a simular, porcentaje inicial de ocupación, la probabilidad que cada
      * celda tiene de tener comida y generador de números pseudo-aleatorios pasados como parámetros. Asume que el
      * usuario es no nulo; los nombres de criaturas son no nulos y válidos según
-     * {@link CreatureFactory#createCreatureFromName(String, String)}; las cantidades de criaturas son mayores o iguales
-     * a cero; el número total de criaturas es igual a la suma de todas las cantidades de criaturas; el número de ticks
-     * a simular es mayor o igual a cero; el porcentaje de ocupación inicial está entre 0.0 y 1.0 (1.0 incluido); la
+     * {@link CreatureFactory#createCreature(String, String)}; las cantidades de criaturas son mayores o iguales a cero;
+     * el número total de criaturas es igual a la suma de todas las cantidades de criaturas; el número de ticks a
+     * simular es mayor o igual a cero; el porcentaje de ocupación inicial está entre 0.0 y 1.0 (1.0 incluido); la
      * probabilidad que cada celda tiene de tener comida está entre 0.0 y 1.0 (ambos incluidos); y el generador de
      * números pseudo-aleatorios es no nulo.
      *
@@ -51,10 +51,10 @@ public class SimulationRequest {
      * número total de criaturas implícito en el mapa, número de ticks a simular, porcentaje inicial de ocupación, la
      * probabilidad que cada celda tiene de tener comida y generador de números pseudo-aleatorios pasados como
      * parámetros. Asume que el usuario es no nulo; los nombres de criaturas son no nulos y válidos según
-     * {@link CreatureFactory#createCreatureFromName(String, String)}; las cantidades de criaturas son mayores o iguales
-     * a cero; el número de ticks a simular es mayor o igual a cero; el porcentaje de ocupación inicial está entre 0.0 y
-     * 1.0 (1.0 incluido); la probabilidad que cada celda tiene de tener comida está entre 0.0 y 1.0 (ambos incluidos);
-     * y el generador de números pseudo-aleatorios es no nulo.
+     * {@link CreatureFactory#createCreature(String, String)}; las cantidades de criaturas son mayores o iguales a cero;
+     * el número de ticks a simular es mayor o igual a cero; el porcentaje de ocupación inicial está entre 0.0 y 1.0
+     * (1.0 incluido); la probabilidad que cada celda tiene de tener comida está entre 0.0 y 1.0 (ambos incluidos); y el
+     * generador de números pseudo-aleatorios es no nulo.
      *
      * @param user                     el usuario que solicita la simulación.
      * @param creaturesNamesQuantities el mapa de nombres a cantidades de criaturas.

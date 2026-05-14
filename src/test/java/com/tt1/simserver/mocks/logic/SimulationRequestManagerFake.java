@@ -2,7 +2,6 @@ package com.tt1.simserver.mocks.logic;
 
 import com.tt1.simserver.logic.LogicSimulation;
 import com.tt1.simserver.logic.SimulationRequestManagerInterface;
-import com.tt1.simserver.model.Simulation;
 import com.tt1.simserver.model.SimulationRequest;
 
 /**

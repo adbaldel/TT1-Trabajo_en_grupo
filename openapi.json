@@ -1,0 +1,431 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "Simulation Server",
+    "description" : "Este proyecto es un servidor backend (una API REST) creado en Java para la asignatura Taller Transversal I. Su objetivo principal es procesar simulaciones de criaturas en un tablero en segundo plano, gestionar el estado de estas simulaciones y permitir la consulta de resultados mediante un sistema de tokens.",
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://mit-license.org"
+    },
+    "version" : "1.0"
+  },
+  "paths" : {
+    "/Email" : {
+      "post" : {
+        "summary" : "Enviar mensaje por correo electrónico",
+        "description" : "Simula el envío de un correo electrónico. Valida que el formato de la dirección de correo sea correcto.",
+        "operationId" : "emailPost",
+        "parameters" : [ {
+          "name" : "emailAddress",
+          "in" : "query",
+          "description" : "Dirección de correo electrónico de destino",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "usuario@ejemplo.com"
+        }, {
+          "name" : "message",
+          "in" : "query",
+          "description" : "Contenido del mensaje a enviar",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "La simulación ha terminado."
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Correo procesado con éxito",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EmailResponseJson"
+                }
+              },
+              "text/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EmailResponseJson"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Dirección de correo no válida o parámetros faltantes",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetailsJson"
+                }
+              },
+              "text/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetailsJson"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Solicitud/ComprobarSolicitud" : {
+      "get" : {
+        "summary" : "Comprobar estado de la simulación",
+        "description" : "Consulta el estado actual (ej. PENDING, RUNNING, COMPLETED) de una simulación específica usando el nombre de usuario y el token asociado.",
+        "operationId" : "solicitudComprobarSolicitudGet",
+        "parameters" : [ {
+          "name" : "nombreUsuario",
+          "in" : "query",
+          "description" : "Nombre del usuario propietario de la simulación",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "tok",
+          "in" : "query",
+          "description" : "Token identificador de la simulación",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Estado de la simulación devuelto con éxito",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "text/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "El token no pertenece al usuario o la simulación no existe",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetailsJson"
+                }
+              },
+              "text/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetailsJson"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Solicitud/GetCriaturas" : {
+      "get" : {
+        "summary" : "Obtener criaturas disponibles",
+        "description" : "Devuelve una lista con los nombres de todas las criaturas registradas en el sistema que pueden ser simuladas.",
+        "operationId" : "solicitudGetCriaturasGet",
+        "responses" : {
+          "201" : {
+            "description" : "Lista de criaturas obtenida correctamente",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string"
+                  }
+                }
+              },
+              "text/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Solicitud/GetSolicitudesUsuario" : {
+      "get" : {
+        "summary" : "Obtener tokens del usuario",
+        "description" : "Devuelve una lista de todos los tokens de simulación que pertenecen al usuario proporcionado.",
+        "operationId" : "solicitudGetSolicitudesUsuarioGet",
+        "parameters" : [ {
+          "name" : "nombreUsuario",
+          "in" : "query",
+          "description" : "Nombre del usuario",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Lista de tokens obtenida",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "integer",
+                    "format" : "int32"
+                  }
+                }
+              },
+              "text/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "integer",
+                    "format" : "int32"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Solicitud/Solicitar" : {
+      "post" : {
+        "summary" : "Solicitar nueva simulación",
+        "description" : "Envía una petición para iniciar una nueva simulación. Valida que el usuario no sea nulo, que las criaturas existan y que las cantidades no sean negativas.",
+        "operationId" : "solicitudSolicitarPost",
+        "parameters" : [ {
+          "name" : "nombreUsuario",
+          "in" : "query",
+          "description" : "Nombre del usuario que solicita la simulación",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Detalles de las criaturas a simular",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SimulationRequestJson"
+              }
+            },
+            "text/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SimulationRequestJson"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Simulación solicitada y token generado",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SimulationRequestResponseJson"
+                }
+              },
+              "text/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SimulationRequestResponseJson"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Nombre de usuario inválido, criatura desconocida o cantidad negativa",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetailsJson"
+                }
+              },
+              "text/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetailsJson"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Resultados" : {
+      "post" : {
+        "summary" : "Obtener resultados",
+        "description" : "Recupera los datos en formato CSV de una simulación. Esta operación solo tendrá éxito si la simulación ha finalizado completamente (Estado COMPLETED).",
+        "operationId" : "resultadosPost",
+        "parameters" : [ {
+          "name" : "nombreUsuario",
+          "in" : "query",
+          "description" : "Nombre del usuario propietario",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "tok",
+          "in" : "query",
+          "description" : "Token de la simulación finalizada",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Resultados obtenidos con éxito",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SimulationResultResponseJson"
+                }
+              },
+              "text/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SimulationResultResponseJson"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "La simulación no existe, no pertenece al usuario, o aún no ha terminado",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetailsJson"
+                }
+              },
+              "text/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetailsJson"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "EmailResponseJson" : {
+        "type" : "object",
+        "properties" : {
+          "done" : {
+            "type" : "boolean"
+          },
+          "errorMessage" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ProblemDetailsJson" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "description" : "URI que identifica el tipo de error específico",
+            "example" : "https://api.simserver.com/errors/invalid-email-address"
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "Un resumen corto y legible por humanos sobre el problema",
+            "example" : "Dirección de correo no válida"
+          },
+          "status" : {
+            "type" : "integer",
+            "description" : "El código de estado HTTP generado por el servidor original para esta ocurrencia",
+            "format" : "int32",
+            "example" : 400
+          },
+          "detail" : {
+            "type" : "string",
+            "description" : "Explicación legible por humanos específica a esta ocurrencia del problema",
+            "example" : "La dirección null no es una dirección de correo válida"
+          },
+          "instance" : {
+            "type" : "string",
+            "description" : "Referencia a la ruta (URI) específica que causó el error",
+            "example" : "/Email"
+          }
+        },
+        "description" : "Detalles de un problema siguiendo el estándar RFC 7807 para el reporte de errores en APIs HTTP."
+      },
+      "SimulationRequestResponseJson" : {
+        "type" : "object",
+        "properties" : {
+          "done" : {
+            "type" : "boolean"
+          },
+          "tokenSolicitud" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "errorMessage" : {
+            "type" : "string"
+          },
+          "data" : {
+            "type" : "string"
+          }
+        }
+      },
+      "SimulationRequestJson" : {
+        "required" : [ "cantidadesIniciales", "nombreEntidades" ],
+        "type" : "object",
+        "properties" : {
+          "cantidadesIniciales" : {
+            "type" : "array",
+            "description" : "Lista con la cantidad de cada criatura a generar. No se permiten números negativos.",
+            "example" : [ 10, 5, 20 ],
+            "items" : {
+              "type" : "integer",
+              "description" : "Lista con la cantidad de cada criatura a generar. No se permiten números negativos.",
+              "format" : "int32"
+            }
+          },
+          "nombreEntidades" : {
+            "type" : "array",
+            "description" : "Nombres de las criaturas correspondientes a las cantidades. Deben existir en la factoría del servidor.",
+            "example" : [ "perezoso", "gato", "conejo" ],
+            "items" : {
+              "type" : "string",
+              "description" : "Nombres de las criaturas correspondientes a las cantidades. Deben existir en la factoría del servidor.",
+              "example" : "[\"perezoso\",\"gato\",\"conejo\"]"
+            }
+          }
+        },
+        "description" : "Objeto que representa la petición de criaturas para una simulación. Las listas de nombres y cantidades deben coincidir en tamaño y orden."
+      },
+      "SimulationResultResponseJson" : {
+        "type" : "object",
+        "properties" : {
+          "done" : {
+            "type" : "boolean"
+          },
+          "tokenSolicitud" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "errorMessage" : {
+            "type" : "string"
+          },
+          "data" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  }
+}

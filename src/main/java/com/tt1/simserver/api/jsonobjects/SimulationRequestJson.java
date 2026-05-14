@@ -2,6 +2,7 @@ package com.tt1.simserver.api.jsonobjects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,8 @@ import static com.tt1.simserver.utils.StringManipulation.toIndentedString;
  * Representa un objeto JSON para los parámetros enviados al crear una nueva simulación.
  */
 @JsonTypeName("Solicitud")
+@Schema(description = "Objeto que representa la petición de criaturas para una simulación. Las listas de nombres y " +
+        "cantidades deben coincidir en tamaño y orden.")
 public class SimulationRequestJson {
     private List<Integer> creatureQuantities;
     private List<String> creatureNames;
@@ -31,6 +34,8 @@ public class SimulationRequestJson {
      * @return la lista de cantidades iniciales.
      */
     @JsonProperty("cantidadesIniciales")
+    @Schema(description = "Lista con la cantidad de cada criatura a generar. No se permiten números negativos.",
+            example = "[10, 5, 20]", requiredMode = Schema.RequiredMode.REQUIRED)
     public List<Integer> getCreatureQuantities() {
         return creatureQuantities;
     }
@@ -80,6 +85,9 @@ public class SimulationRequestJson {
      * @return la lista de nombres.
      */
     @JsonProperty("nombreEntidades")
+    @Schema(description = "Nombres de las criaturas correspondientes a las cantidades. Deben existir en la factoría " +
+            "del servidor.", example = "[\"perezoso\", \"gato\", \"conejo\"]", requiredMode =
+            Schema.RequiredMode.REQUIRED)
     public List<String> getCreatureNames() {
         return creatureNames;
     }

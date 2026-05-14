@@ -2,8 +2,8 @@ package com.tt1.simserver.api.jsonobjects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.util.HashMap;
 import java.util.Objects;
 
 import static com.tt1.simserver.utils.StringManipulation.toIndentedString;
@@ -12,7 +12,8 @@ import static com.tt1.simserver.utils.StringManipulation.toIndentedString;
  * Representa un objeto JSON para reportar detalles estructurados de errores en la API.
  */
 @JsonTypeName("ProblemDetails")
-public class ProblemDetailsJson extends HashMap<String, Object> {
+@Schema(description = "Detalles de un problema siguiendo el estándar RFC 7807 para el reporte de errores en APIs HTTP.")
+public class ProblemDetailsJson {
     private String type;
     private String title;
     private Integer status;
@@ -36,6 +37,8 @@ public class ProblemDetailsJson extends HashMap<String, Object> {
      * @return el tipo del problema.
      */
     @JsonProperty("type")
+    @Schema(description = "URI que identifica el tipo de error específico", example = "https://api.simserver" +
+            ".com/errors/invalid-email-address")
     public String getType() {
         return type;
     }
@@ -56,6 +59,8 @@ public class ProblemDetailsJson extends HashMap<String, Object> {
      * @return el título del problema.
      */
     @JsonProperty("title")
+    @Schema(description = "Un resumen corto y legible por humanos sobre el problema", example = "Dirección de correo " +
+            "no válida")
     public String getTitle() {
         return title;
     }
@@ -76,6 +81,8 @@ public class ProblemDetailsJson extends HashMap<String, Object> {
      * @return el estado HTTP.
      */
     @JsonProperty("status")
+    @Schema(description = "El código de estado HTTP generado por el servidor original para esta ocurrencia", example
+            = "400")
     public Integer getStatus() {
         return status;
     }
@@ -96,6 +103,8 @@ public class ProblemDetailsJson extends HashMap<String, Object> {
      * @return el detalle del error.
      */
     @JsonProperty("detail")
+    @Schema(description = "Explicación legible por humanos específica a esta ocurrencia del problema", example = "La " +
+            "dirección null no es una dirección de correo válida")
     public String getDetail() {
         return detail;
     }
@@ -116,6 +125,7 @@ public class ProblemDetailsJson extends HashMap<String, Object> {
      * @return la instancia del error.
      */
     @JsonProperty("instance")
+    @Schema(description = "Referencia a la ruta (URI) específica que causó el error", example = "/Email")
     public String getInstance() {
         return instance;
     }

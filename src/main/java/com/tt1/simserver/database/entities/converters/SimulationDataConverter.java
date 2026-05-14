@@ -66,7 +66,7 @@ public class SimulationDataConverter implements AttributeConverter<SimulationDat
 
             simulationSteps.get(tick).put(
                     new Position(x, y),
-                    CreatureFactory.createCreatureFromName(color, UUID.randomUUID().toString())
+                    CreatureFactory.createCreature(color, UUID.randomUUID().toString())
             );
         }
 

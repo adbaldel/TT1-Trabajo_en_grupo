@@ -10,8 +10,16 @@ import java.util.Collection;
 public interface SimulationServiceInterface {
 
     /**
-     * Comprueba si existe una simulación almacenada con la misma clave que la simulación de consulta
-     * {@code simulation}. Asume que la simulación de consulta no es nula.
+     * Obtiene los nombres de todas las criaturas que el servicio sabe simular.
+     *
+     * @return la colección los nombres de todas las criaturas que el servicio sabe simular.
+     */
+    Collection<String> getCreatures();
+
+    /**
+     * Comprueba si existe una simulación almacenada con la misma clave que la simulación de consulta {@code simulation}
+     * y asociada al usuario con la misma clave que el usuario de la simulación. Asume que la simulación de consulta y
+     * el usuario de consulta no son nulos.
      *
      * @param simulation la simulación de consulta.
      * @return cierto hay una simulación almacenada con la misma clave, falso en caso contrario.
@@ -19,9 +27,10 @@ public interface SimulationServiceInterface {
     boolean existsSimulation(Simulation simulation);
 
     /**
-     * Obtiene el estado de la simulación almacenada con la misma clave que la simulación de consulta
-     * {@code simulation}. Asume que la simulación de consulta no es nula y que existe una simulación almacenada con la
-     * misma clave.
+     * Obtiene el estado de la simulación almacenada con la misma clave que la simulación de consulta {@code simulation}
+     * y asociada al usuario con la misma clave que el usuario de la simulación. Asume que la simulación de consulta y
+     * el usuario de consulta no son nulos; y que existe una simulación almacenada con la misma clave asociado al
+     * usuario con la misma clave.
      *
      * @param simulation la simulación de consulta.
      * @return el estado de la simulación almacenada.
@@ -30,8 +39,9 @@ public interface SimulationServiceInterface {
 
     /**
      * Obtiene el resultado de la simulación almacenada con la misma clave que la simulación de consulta
-     * {@code simulaiton}. Asume que la simulación de consulta no es nula, que existe una simulación almacenada con la
-     * misma clave y que el estado de la simulación almacenada es acabada.
+     * {@code simulaiton} y asociada al usuario con la misma clave que el usuario de la simulación. Asume que la
+     * simulación de consulta y el usuario de consulta no son nulos, que existe una simulación almacenada con la misma
+     * clave asoicada al usuario con la misma clave y que el estado de la simulación almacenada es acabada.
      *
      * @param simulation la simulación de consulta.
      * @return el resultado de la simulación almacenado.

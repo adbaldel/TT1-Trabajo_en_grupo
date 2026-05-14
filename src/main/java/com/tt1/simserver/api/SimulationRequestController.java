@@ -33,6 +33,13 @@ public class SimulationRequestController implements SimulationRequestApi {
     }
 
     @Override
+    public Response solicitudGetCriaturasGet() {
+        Collection<String> creatures = service.getCreatures();
+
+        return Response.status(Response.Status.CREATED).entity(creatures).build();
+    }
+
+    @Override
     public Response solicitudComprobarSolicitudGet(String username, Integer token) {
         User queryUser = new User(username);
         Simulation querySimulation = new Simulation(token, queryUser, 0);
@@ -82,7 +89,7 @@ public class SimulationRequestController implements SimulationRequestApi {
         boolean creatureNamesAreValid = true;
         String invalidCreatureName = null;
         for (String creatureName : simulationRequestJson.getCreatureNames()) {
-            if (!CreatureFactory.existsCreatureName(creatureName)) {
+            if (!CreatureFactory.existsCreature(creatureName)) {
                 creatureNamesAreValid = false;
                 invalidCreatureName = creatureName;
             }

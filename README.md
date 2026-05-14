@@ -33,6 +33,7 @@ El servidor expone y procesa peticiones en formato JSON (documentado bajo están
 * `POST /Solicitud/Solicitar`: Crea una nueva simulación asociada a un `usuario`. Recibe un JSON con los nombres de criaturas y sus cantidades iniciales. Retorna un `token`.
 * `GET /Solicitud/ComprobarSolicitud`: Consulta si una simulación en concreto sigue ejecutándose o ya ha terminado (usando el `nombre de usuario` y el `token`).
 * `GET /Solicitud/GetSolicitudesUsuario`: Obtiene la lista de todos los `tokens` pertenecientes a un `usuario`.
+* `GET /Solicitud/GetCriaturas`: Obtiene la lista de nombres de criaturas que el servidor sabe simular.
 
 ### Resultados
 
@@ -41,6 +42,12 @@ El servidor expone y procesa peticiones en formato JSON (documentado bajo están
 ### Extra
 
 * `POST /Email`: Endpoint para enviar correos electrónicos de notificación.
+
+### OpenAPI
+
+* `GET /openapi.json`: Obtiene la especificación OpenAPI de la API en formato `JSON`.
+* `GET /openapi.yaml`: Obtiene la especificación OpenAPI de la API en formato `YAML`.
+* `GET /swagger/index.html`: Obtiene una web interactiva ver la especificación de la API y probarla. Web proporcionada por Swagger UI.
 
 ## Configuración
 
