@@ -51,14 +51,14 @@ public class SimulationDataConverter implements AttributeConverter<SimulationDat
         int tick;
         int x;
         int y;
-        String color;
+        String name;
 
         for (int i = 1; i < dataLines.length; i++) {
             stepData = dataLines[i].split(",");
             tick = Integer.parseInt(stepData[0]);
             x = Integer.parseInt(stepData[1]);
             y = Integer.parseInt(stepData[2]);
-            color = stepData[3];
+            name = stepData[3];
 
             if (!simulationSteps.containsKey(tick)) {
                 simulationSteps.put(tick, new HashMap<>());
@@ -66,7 +66,7 @@ public class SimulationDataConverter implements AttributeConverter<SimulationDat
 
             simulationSteps.get(tick).put(
                     new Position(x, y),
-                    CreatureFactory.createCreature(color, UUID.randomUUID().toString())
+                    CreatureFactory.createCreature(name, UUID.randomUUID().toString())
             );
         }
 

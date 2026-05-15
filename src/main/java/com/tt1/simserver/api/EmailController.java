@@ -19,7 +19,7 @@ public class EmailController implements EmailApi {
             problemDetailsJson.setType("https://api.simserver.com/errors/invalid-email-address");
             problemDetailsJson.setTitle("Dirección de correo no válida");
             problemDetailsJson.setStatus(Response.Status.BAD_REQUEST.getStatusCode());
-            problemDetailsJson.setDetail("La dirección " + emailAddress + " no es una dirección de correo válida");
+            problemDetailsJson.setDetail("La dirección " + emailAddress + " no es una dirección de correo válida.");
             problemDetailsJson.setInstance("/Email");
 
             return Response.status(Response.Status.BAD_REQUEST).entity(problemDetailsJson).build();
