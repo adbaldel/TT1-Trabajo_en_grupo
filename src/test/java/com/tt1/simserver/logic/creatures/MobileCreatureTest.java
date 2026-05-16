@@ -1,6 +1,7 @@
 package com.tt1.simserver.logic.creatures;
 
 import com.tt1.simserver.mocks.logic.SimulationGridFake;
+import com.tt1.simserver.model.Creature;
 import com.tt1.simserver.model.Position;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,7 +67,7 @@ public class MobileCreatureTest {
     @ValueSource(ints = {0, 1, 5, 10})
     public void given_newMobileCreatureAndNoFood_when_performEat_then_survivesZeroTicks() {
         // Arrange (Given)
-        mobileCreature = new MobileCreature(id, name, color, starvationThreshold, 1.0, position, random);
+        mobileCreature = new MobileCreature(new Creature(id, name), starvationThreshold, 1.0, position, random);
         mobileCreature.setSimulationGrid(gridFake);
         gridFake.setFoodPositions(List.of());
 
@@ -83,7 +84,7 @@ public class MobileCreatureTest {
     @ValueSource(ints = {0, 1, 5, 10})
     public void given_newMobileCreatureAndNoFood_when_performEat_then_isAliveInStarvationThresholdTicks(int starvationThreshold) {
         // Arrange (Given)
-        mobileCreature = new MobileCreature(id, name, color, starvationThreshold, 1.0, position, random);
+        mobileCreature = new MobileCreature(new Creature(id, name), starvationThreshold, 1.0, position, random);
         mobileCreature.setSimulationGrid(gridFake);
         gridFake.setFoodPositions(List.of());
 
@@ -102,7 +103,7 @@ public class MobileCreatureTest {
     @ValueSource(ints = {0, 1, 5, 10})
     public void given_newMobileCreatureAndNoFood_when_performEat_then_isNotAliveInStarvationThresholdTicksPlusOne(int starvationThreshold) {
         // Arrange (Given)
-        mobileCreature = new MobileCreature(id, name, color, starvationThreshold, 1.0, position, random);
+        mobileCreature = new MobileCreature(new Creature(id, name), starvationThreshold, 1.0, position, random);
         mobileCreature.setSimulationGrid(gridFake);
         gridFake.setFoodPositions(List.of());
 
@@ -123,7 +124,7 @@ public class MobileCreatureTest {
     @ValueSource(ints = {1, 5, 10})
     public void given_newMobileCreatureAndFood_when_performEat_then_isAliveInStarvationThresholdTicksAfterEating(int starvationThreshold) {
         // Arrange (Given)
-        mobileCreature = new MobileCreature(id, name, color, starvationThreshold, 1.0, position, random);
+        mobileCreature = new MobileCreature(new Creature(id, name), starvationThreshold, 1.0, position, random);
         mobileCreature.setSimulationGrid(gridFake);
         gridFake.setFoodPositions(List.of());
 
@@ -149,7 +150,7 @@ public class MobileCreatureTest {
     @ValueSource(ints = {1, 5, 10})
     public void given_newMobileCreatureAndFood_when_performEat_then_isNotAliveInStarvationThresholdTicksPlusOneAfterEating(int starvationThreshold) {
         // Arrange (Given)
-        mobileCreature = new MobileCreature(id, name, color, starvationThreshold, 1.0, position, random);
+        mobileCreature = new MobileCreature(new Creature(id, name), starvationThreshold, 1.0, position, random);
         mobileCreature.setSimulationGrid(gridFake);
         gridFake.setFoodPositions(List.of());
 
@@ -178,7 +179,7 @@ public class MobileCreatureTest {
     @DisplayName("performMove: sin casillas adyacentes vacías no se mueve")
     public void given_mobileCreatureAndNoEmptyAdjacentCells_when_performMove_then_returnsNull() {
         // Arrange (Given)
-        mobileCreature = new MobileCreature(id, name, color, starvationThreshold, 1.0, position, random);
+        mobileCreature = new MobileCreature(new Creature(id, name), starvationThreshold, 1.0, position, random);
         mobileCreature.setSimulationGrid(gridFake);
         gridFake.setEmptyAdjacentCells(List.of());
 
@@ -211,7 +212,7 @@ public class MobileCreatureTest {
         boolean notEmptyAdjacentCell = false;
 
         // Arrange (Given)
-        mobileCreature = new MobileCreature(id, name, color, starvationThreshold, 1.0, position, random);
+        mobileCreature = new MobileCreature(new Creature(id, name), starvationThreshold, 1.0, position, random);
         mobileCreature.setSimulationGrid(gridFake);
         gridFake.setEmptyAdjacentCells(List.of(emptyAdjacentCell1, emptyAdjacentCell2));
 
@@ -266,7 +267,7 @@ public class MobileCreatureTest {
         double upperBound = mean + margin;
 
         // Arrange (Given)
-        mobileCreature = new MobileCreature(id, name, color, starvationThreshold, p, position, random);
+        mobileCreature = new MobileCreature(new Creature(id, name), starvationThreshold, p, position, random);
         mobileCreature.setSimulationGrid(gridFake);
         gridFake.setEmptyAdjacentCells(List.of(emptyAdjacentCell1, emptyAdjacentCell2));
 
@@ -290,7 +291,7 @@ public class MobileCreatureTest {
     @DisplayName("performMultiply: sin casillas adyacentes vacías no se reproduce")
     public void given_mobileCreatureAndNoEmptyAdjacentCells_when_performMultiply_then_returnsNull() {
         // Arrange (Given)
-        mobileCreature = new MobileCreature(id, name, color, starvationThreshold, 1.0, position, random);
+        mobileCreature = new MobileCreature(new Creature(id, name), starvationThreshold, 1.0, position, random);
         mobileCreature.setSimulationGrid(gridFake);
         gridFake.setEmptyAdjacentCells(List.of());
 
@@ -305,7 +306,7 @@ public class MobileCreatureTest {
     @DisplayName("performMultiply: con casillas adyacentes vacías no se reproduce")
     public void given_mobileCreatureAndEmptyAdjacentCells_when_performMultiply_then_returnsNull() {
         // Arrange (Given)
-        mobileCreature = new MobileCreature(id, name, color, starvationThreshold, 1.0, position, random);
+        mobileCreature = new MobileCreature(new Creature(id, name), starvationThreshold, 1.0, position, random);
         mobileCreature.setSimulationGrid(gridFake);
         gridFake.setEmptyAdjacentCells(List.of(emptyAdjacentCell1, emptyAdjacentCell2));
 

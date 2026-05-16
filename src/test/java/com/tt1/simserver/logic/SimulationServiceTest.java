@@ -67,10 +67,10 @@ public class SimulationServiceTest {
         bottomRight = new Position(gridSize - 1, gridSize - 1);
         moveProbability = 0.5;
         multiplyProbability = 0.2;
-        mobileCreature = new MobileCreature("mc", "mobile-test", "mobile_color-test", starvationThreshold,
-                moveProbability, topLeft, random);
-        staticRabbit = new StaticRabbit("sr", "rabbit-test", "rabbit_color-test", starvationThreshold,
-                multiplyProbability, bottomRight, random);
+        mobileCreature = new MobileCreature(new Creature("mc", "mobile-test"), starvationThreshold, moveProbability,
+                topLeft, random);
+        staticRabbit = new StaticRabbit(new Creature("sr", "rabbit-test"), starvationThreshold, multiplyProbability,
+                bottomRight, random);
         stepMap = new HashMap<>();
         stepMap.put(topLeft, mobileCreature);
         stepMap.put(bottomRight, staticRabbit);
@@ -161,8 +161,8 @@ public class SimulationServiceTest {
         SimulationStatus status = service.getSimulationStatus(simulation);
 
         // Assert (Then)
-        assertEquals(SimulationStatus.RUNNING, status, String.format("El estado devuelto debía ser RUNNING, pero fue " +
-                "%s.", status));
+        assertEquals(SimulationStatus.RUNNING, status, String.format("El estado devuelto debía ser RUNNING, pero fue "
+                + "%s.", status));
     }
 
     // --- Test getSimulationResult(Simulation simulation) -------------------------------------------------------------
@@ -230,8 +230,8 @@ public class SimulationServiceTest {
         Simulation returnedSimulation = service.requestSimulation(request);
 
         // Assert (Then)
-        assertTrue(dbFake.isSaveUserCalled(), "El usuario no existía en BD, por lo tanto debió llamarse a guardar el " +
-                "usuario.");
+        assertTrue(dbFake.isSaveUserCalled(), "El usuario no existía en BD, por lo tanto debió llamarse a guardar el "
+                + "usuario.");
         assertEquals(simulation, returnedSimulation, "La simulación devuelta no es la generada por el RequestManager.");
         assertTrue(engineManagerFake.isRunningSimulation(simulation), "La simulación debía haber sido mandada a " +
                 "correr al EngineManager.");
@@ -298,7 +298,7 @@ public class SimulationServiceTest {
                 "actualizando su estado en Mock a COMPLETED.");
 
         SimulationData resultData = dbMock.getSimulationResult(runningSim);
-        assertNotNull(resultData, "Al completarse, los resultados debían guardarse y ser recuperables desde la DB " +
-                "Mock.");
+        assertNotNull(resultData,
+                "Al completarse, los resultados debían guardarse y ser recuperables desde la DB " + "Mock.");
     }
 }

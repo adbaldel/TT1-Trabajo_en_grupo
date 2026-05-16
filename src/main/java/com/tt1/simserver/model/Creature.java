@@ -10,44 +10,39 @@ import java.util.Objects;
 public class Creature {
     private final String id;
     private final String name;
-    private final String color;
 
     /**
-     * Construye una criatura con el id, nombre y color pasados como parámetros. Asume que el id es no nulo y único para
-     * esta criatura; y que el nombre y color no son nulos y no blanks.
+     * Construye una criatura con el id y nombre pasados como parámetros. Asume que el id es no nulo y único para esta
+     * criatura; y que el nombre no es nulo ni blank.
      *
-     * @param id    el id de la criatura.
-     * @param name  el nombre de la criatura.
-     * @param color el color de la criatura.
+     * @param id   el id de la criatura.
+     * @param name el nombre de la criatura.
      */
-    public Creature(String id, String name, String color) {
+    public Creature(String id, String name) {
         this.id = id;
         this.name = name;
-        this.color = color;
     }
 
     /**
-     * Construye una criatura con el mismo id, nombre y color que la criatura {@code creature}. Asume que la criatura no
-     * es nula.
+     * Construye una criatura con el mismo id y nombre que la criatura {@code creature}. Asume que la criatura no es
+     * nula.
      *
      * @param creature la criatura a clonar.
      */
     public Creature(Creature creature) {
         this.id = creature.getId();
         this.name = creature.getName();
-        this.color = creature.getColor();
     }
 
     /**
-     * Construye una criatura con el mismo id, nombre y color que la criatura {@code logicCreature}. Asume que la
-     * criatura no es nula.
+     * Construye una criatura con el mismo id y color que la criatura {@code logicCreature}. Asume que la criatura no es
+     * nula.
      *
      * @param logicCreature la criatura a clonar.
      */
     public Creature(LogicCreatureInterface logicCreature) {
         this.id = logicCreature.getId();
         this.name = logicCreature.getName();
-        this.color = logicCreature.getColor();
     }
 
     /**
@@ -66,15 +61,6 @@ public class Creature {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * Obtiene el color de esta criatura.
-     *
-     * @return el color de esta criatura.
-     */
-    public String getColor() {
-        return color;
     }
 
     /**

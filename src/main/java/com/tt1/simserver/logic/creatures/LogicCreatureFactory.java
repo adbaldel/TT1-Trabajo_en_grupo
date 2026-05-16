@@ -21,32 +21,20 @@ public class LogicCreatureFactory {
         ConfigManager config = ConfigManager.getInstance();
 
         // CARGAR CRIATURAS ESTÁTICAS
-        List<String> staticCreatureNames = config.getStringList(
-                "creature.static.names",
-                List.of("perezoso")
-        );
-        List<Integer> staticCreatureStarvationThresholds = config.getIntList(
-                "creature.static.starvation_thresholds",
-                List.of(5)
-        );
+        List<String> staticCreatureNames = config.getStringList("creature.static.names", List.of("perezoso"));
+        List<Integer> staticCreatureStarvationThresholds = config.getIntList("creature.static.starvation_thresholds",
+                List.of(5));
         if (staticCreatureNames.size() != staticCreatureStarvationThresholds.size()) {
             staticCreatureNames = List.of("perezoso");
             staticCreatureStarvationThresholds = List.of(5);
         }
 
         // CARGAR CRIATURAS MÓVILES
-        List<String> mobileCreatureNames = config.getStringList(
-                "creature.mobile.names",
-                List.of("gato")
-        );
-        List<Integer> mobileCreatureStarvationThresholds = config.getIntList(
-                "creature.mobile.starvation_thresholds",
-                List.of(5)
-        );
-        List<Double> mobileCreatureMoveProbabilities = config.getDoubleList(
-                "creature.mobile.move_probabilities",
-                List.of(0.5)
-        );
+        List<String> mobileCreatureNames = config.getStringList("creature.mobile.names", List.of("gato"));
+        List<Integer> mobileCreatureStarvationThresholds = config.getIntList("creature.mobile.starvation_thresholds",
+                List.of(5));
+        List<Double> mobileCreatureMoveProbabilities = config.getDoubleList("creature.mobile.move_probabilities",
+                List.of(0.5));
         if (mobileCreatureNames.size() != mobileCreatureStarvationThresholds.size() || mobileCreatureNames.size() != mobileCreatureMoveProbabilities.size()) {
             mobileCreatureNames = List.of("gato");
             mobileCreatureStarvationThresholds = List.of(5);
@@ -54,18 +42,9 @@ public class LogicCreatureFactory {
         }
 
         // CARGAR CONEJOS ESTÁTICOS
-        List<String> staticRabbitNames = config.getStringList(
-                "creature.static_rabbit.names",
-                List.of("conejo")
-        );
-        List<Integer> staticRabbitStarvationThresholds = config.getIntList(
-                "creature.static_rabbit.starvation_thresholds",
-                List.of(5)
-        );
-        List<Double> staticRabbitMultiplyProbabilities = config.getDoubleList(
-                "creature.static_rabbit.multiply_probabilities",
-                List.of(0.2)
-        );
+        List<String> staticRabbitNames = config.getStringList("creature.static_rabbit.names", List.of("conejo"));
+        List<Integer> staticRabbitStarvationThresholds = config.getIntList("creature.static_rabbit.starvation_thresholds", List.of(5));
+        List<Double> staticRabbitMultiplyProbabilities = config.getDoubleList("creature.static_rabbit.multiply_probabilities", List.of(0.2));
         if (staticRabbitNames.size() != staticRabbitStarvationThresholds.size() || staticRabbitNames.size() != staticRabbitMultiplyProbabilities.size()) {
             staticRabbitNames = List.of("conejo");
             staticRabbitStarvationThresholds = List.of(5);
@@ -99,8 +78,7 @@ public class LogicCreatureFactory {
                     mobileCreatureStarvationThresholds.get(i));
         }
         for (int i = 0; i < staticRabbitNames.size(); i++) {
-            CREATURES_STARVATION_THRESHOLD_MAP.put(staticRabbitNames.get(i),
-                    staticRabbitStarvationThresholds.get(i));
+            CREATURES_STARVATION_THRESHOLD_MAP.put(staticRabbitNames.get(i), staticRabbitStarvationThresholds.get(i));
         }
 
         CREATURES_MOVE_PROBABILITY_MAP = new HashMap<>();
@@ -110,8 +88,7 @@ public class LogicCreatureFactory {
 
         CREATURES_MULTIPLY_PROBABILITY_MAP = new HashMap<>();
         for (int i = 0; i < staticRabbitNames.size(); i++) {
-            CREATURES_MULTIPLY_PROBABILITY_MAP.put(staticRabbitNames.get(i),
-                    staticRabbitMultiplyProbabilities.get(i));
+            CREATURES_MULTIPLY_PROBABILITY_MAP.put(staticRabbitNames.get(i), staticRabbitMultiplyProbabilities.get(i));
         }
     }
 
@@ -140,18 +117,15 @@ public class LogicCreatureFactory {
 
         switch (type) {
             case "static":
-                logicCreature = new StaticCreature(creature.getId(), creature.getName(), creature.getColor(),
-                        starvationThreshold, position);
+                logicCreature = new StaticCreature(creature, starvationThreshold, position);
                 break;
             case "mobile":
                 double moveProbability = CREATURES_MOVE_PROBABILITY_MAP.get(creature.getName());
-                logicCreature = new MobileCreature(creature.getId(), creature.getName(), creature.getColor(),
-                        starvationThreshold, moveProbability, position, random);
+                logicCreature = new MobileCreature(creature, starvationThreshold, moveProbability, position, random);
                 break;
             case "static_rabbit":
                 double multiplyProbability = CREATURES_MULTIPLY_PROBABILITY_MAP.get(creature.getName());
-                logicCreature = new StaticRabbit(creature.getId(), creature.getName(), creature.getColor(),
-                        starvationThreshold, multiplyProbability, position, random);
+                logicCreature = new StaticRabbit(creature, starvationThreshold, multiplyProbability, position, random);
                 break;
             default:
                 throw new IllegalArgumentException("Tipo de criatura desconocido: " + creature.getName());

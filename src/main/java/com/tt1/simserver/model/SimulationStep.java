@@ -144,27 +144,6 @@ public class SimulationStep {
     }
 
     /**
-     * Genera una representación de este paso de simulación como una cadena en formato csv siguiendo el siguiente
-     * patrón: por cada posición no vacía se añade una línea con los datos tick,x,y,color siendo tick {@code tick}, x e
-     * y las componentes x e y de la posición, y color el color de la criatura que se encuentra en dicha posición en
-     * este paso.
-     *
-     * @param tick el tick que representa este paso de simulación.
-     * @return la representación en formato csv de este paso de simulación.
-     */
-    public String toCsvStringUsingCreatureColor(int tick) {
-        StringBuilder dataBuilder = new StringBuilder();
-
-        for (Position p : getNonEmptyPositions()) {
-            dataBuilder.append(tick).append(",")
-                    .append(p.y()).append(",")
-                    .append(p.x()).append(",")
-                    .append(getCreatureAt(p).getColor()).append("\n");
-        }
-        return dataBuilder.toString().trim();
-    }
-
-    /**
      * Comprueba si este paso de simulación es igual al objeto {@code o}. Devuelve cierto si el objeto es un paso de
      * simulación con criaturas iguales asociados a las mismas posiciones.
      *

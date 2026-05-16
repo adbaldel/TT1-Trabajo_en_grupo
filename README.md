@@ -69,20 +69,17 @@ pueden configurar son:
 #### Criaturas estáticas
 
 * `creature.static.names`: Los nombres de criaturas estáticas que conoce el servidor.
-* `creature.static.colors`: Los colores asociados a dichas criaturas.
 * `creature.static.starvation_thresholds`: El número de ticks que aguantan sin comer dichas criaturas.
 
 #### Criaturas móviles
 
 * `creature.mobile.names`: Los nombres de criaturas estáticas que conoce el servidor.
-* `creature.mobile.colors`: Los colores asociados a dichas criaturas.
 * `creature.mobile.starvation_thresholds`: El número de ticks que aguantan sin comer dichas criaturas.
 * `creature.mobile.move_probabilities`: La probabilidad que tienen de moverse dichas criaturas.
 
 #### Criaturas que se reproducen
 
 * `creature.static_rabbit.names`: Los nombres de criaturas estáticas que conoce el servidor.
-* `creature.static_rabbit.colors`: Los colores asociados a dichas criaturas.
 * `creature.static_rabbit.starvation_thresholds`: El número de ticks que aguantan sin comer dichas criaturas.
 * `creature.static_rabbit.multiply_probabilities`: La probabilidad que tienen de reproducirse dichas criaturas.
 

@@ -104,28 +104,6 @@ public class SimulationData {
     }
 
     /**
-     * Genera una representación de estos datos de simulación como una cadena en formato csv siguiendo el siguiente
-     * patrón: la primera línea indica el tamaño del tablero, y después por cada tick se añade el paso de simulación
-     * correspondiente representado en formato csv según {@link SimulationStep#toCsvStringUsingCreatureColor(int)}.
-     *
-     * @return la representación en formato csv de estos datos de simulación.
-     */
-    public String toCsvStringUsingCreatureColor() {
-        StringBuilder dataBuilder = new StringBuilder();
-        SimulationStep step;
-
-        // Guardamos la primera línea con el tamaño base inferido del tablero
-        dataBuilder.append(gridSize).append("\n");
-
-        // Construimos las líneas formato "tick,x,y,color"
-        for (int tick = 0; tick < getTicks(); tick++) {
-            step = getSimulationStepAt(tick);
-            dataBuilder.append(step.toCsvStringUsingCreatureColor(tick)).append("\n");
-        }
-        return dataBuilder.toString().trim();
-    }
-
-    /**
      * Comprueba si estos datos de simulación son iguales al objeto {@code o}. Devuelve cierto si el objeto son datos de
      * simulación con pasos iguales asociados a los mismos ticks.
      *

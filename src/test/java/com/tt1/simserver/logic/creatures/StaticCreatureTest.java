@@ -1,6 +1,7 @@
 package com.tt1.simserver.logic.creatures;
 
 import com.tt1.simserver.mocks.logic.SimulationGridFake;
+import com.tt1.simserver.model.Creature;
 import com.tt1.simserver.model.Position;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,7 +63,7 @@ public class StaticCreatureTest {
     @ValueSource(ints = {0, 1, 5, 10})
     public void given_newStaticCreatureAndNoFood_when_performEat_then_survivesZeroTicks() {
         // Arrange (Given)
-        staticCreature = new StaticCreature(id, name, color, starvationThreshold, position);
+        staticCreature = new StaticCreature(new Creature(id, name), starvationThreshold, position);
         staticCreature.setSimulationGrid(gridFake);
         gridFake.setFoodPositions(List.of());
 
@@ -79,7 +80,7 @@ public class StaticCreatureTest {
     @ValueSource(ints = {0, 1, 5, 10})
     public void given_newStaticCreatureAndNoFood_when_performEat_then_isAliveInStarvationThresholdTicks(int starvationThreshold) {
         // Arrange (Given)
-        staticCreature = new StaticCreature(id, name, color, starvationThreshold, position);
+        staticCreature = new StaticCreature(new Creature(id, name), starvationThreshold, position);
         staticCreature.setSimulationGrid(gridFake);
         gridFake.setFoodPositions(List.of());
 
@@ -98,7 +99,7 @@ public class StaticCreatureTest {
     @ValueSource(ints = {0, 1, 5, 10})
     public void given_newStaticCreatureAndNoFood_when_performEat_then_isNotAliveInStarvationThresholdTicksPlusOne(int starvationThreshold) {
         // Arrange (Given)
-        staticCreature = new StaticCreature(id, name, color, starvationThreshold, position);
+        staticCreature = new StaticCreature(new Creature(id, name), starvationThreshold, position);
         staticCreature.setSimulationGrid(gridFake);
         gridFake.setFoodPositions(List.of());
 
@@ -119,7 +120,7 @@ public class StaticCreatureTest {
     @ValueSource(ints = {1, 5, 10})
     public void given_newStaticCreatureAndFood_when_performEat_then_isAliveInStarvationThresholdTicksAfterEating(int starvationThreshold) {
         // Arrange (Given)
-        staticCreature = new StaticCreature(id, name, color, starvationThreshold, position);
+        staticCreature = new StaticCreature(new Creature(id, name), starvationThreshold, position);
         staticCreature.setSimulationGrid(gridFake);
         gridFake.setFoodPositions(List.of());
 
@@ -145,7 +146,7 @@ public class StaticCreatureTest {
     @ValueSource(ints = {1, 5, 10})
     public void given_newStaticCreatureAndFood_when_performEat_then_isNotAliveInStarvationThresholdTicksPlusOneAfterEating(int starvationThreshold) {
         // Arrange (Given)
-        staticCreature = new StaticCreature(id, name, color, starvationThreshold, position);
+        staticCreature = new StaticCreature(new Creature(id, name), starvationThreshold, position);
         staticCreature.setSimulationGrid(gridFake);
         gridFake.setFoodPositions(List.of());
 
@@ -174,7 +175,7 @@ public class StaticCreatureTest {
     @DisplayName("performMove: sin casillas adyacentes vacías no se mueve")
     public void given_staticCreatureAndNoEmptyAdjacentCells_when_performMove_then_returnsNull() {
         // Arrange (Given)
-        staticCreature = new StaticCreature(id, name, color, starvationThreshold, position);
+        staticCreature = new StaticCreature(new Creature(id, name), starvationThreshold, position);
         staticCreature.setSimulationGrid(gridFake);
         gridFake.setEmptyAdjacentCells(List.of());
 
@@ -189,7 +190,7 @@ public class StaticCreatureTest {
     @DisplayName("performMove: con casillas adyacentes vacías no se mueve")
     public void given_staticCreatureThatAlwaysMovesAndEmptyAdjacentCells_when_performMove_then_returnsNull() {
         // Arrange (Given)
-        staticCreature = new StaticCreature(id, name, color, starvationThreshold, position);
+        staticCreature = new StaticCreature(new Creature(id, name), starvationThreshold, position);
         staticCreature.setSimulationGrid(gridFake);
         gridFake.setEmptyAdjacentCells(List.of(emptyAdjacentCell1, emptyAdjacentCell2));
 
@@ -206,7 +207,7 @@ public class StaticCreatureTest {
     @DisplayName("performMultiply: sin casillas adyacentes vacías no se reproduce")
     public void given_staticCreatureAndNoEmptyAdjacentCells_when_performMultiply_then_returnsNull() {
         // Arrange (Given)
-        staticCreature = new StaticCreature(id, name, color, starvationThreshold, position);
+        staticCreature = new StaticCreature(new Creature(id, name), starvationThreshold, position);
         staticCreature.setSimulationGrid(gridFake);
         gridFake.setEmptyAdjacentCells(List.of());
 
@@ -221,7 +222,7 @@ public class StaticCreatureTest {
     @DisplayName("performMultiply: con casillas adyacentes vacías no se reproduce")
     public void given_staticCreatureAndEmptyAdjacentCells_when_performMultiply_then_returnsNull() {
         // Arrange (Given)
-        staticCreature = new StaticCreature(id, name, color, starvationThreshold, position);
+        staticCreature = new StaticCreature(new Creature(id, name), starvationThreshold, position);
         staticCreature.setSimulationGrid(gridFake);
         gridFake.setEmptyAdjacentCells(List.of(emptyAdjacentCell1, emptyAdjacentCell2));
 

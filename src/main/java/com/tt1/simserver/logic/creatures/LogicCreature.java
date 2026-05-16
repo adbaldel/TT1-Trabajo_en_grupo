@@ -37,23 +37,20 @@ public abstract class LogicCreature extends Creature implements LogicCreatureInt
     private SimulationGridInterface simulationGrid;
 
     /**
-     * Define cómo se construye la parte común de las criaturas con funcionalidad. La criatura se construye viva, con el
-     * id, nombre, color, aguante sin comida y posición pasadas como parámetros; sin comportamiento de movimiento ni de
-     * reproducción; y asociada al tablero {@code simulationGrid}. Asume que id es no nulo y único para esta criatura;
-     * que el nombre y color no son nulos y no blanks; que el número de ticks que aguanta sin comer antes de morirse de
-     * hambre {@code starvationThreshold} es mayor o igual a cero; que la posición es no nula; y que el tablero es no
-     * nulo y contiene a la criatura en la posición de la criatura.
+     * Define cómo se construye la parte común de las criaturas con funcionalidad. La criatura se construye viva, con la
+     * criatura base, aguante sin comida y posición pasadas como parámetros; sin comportamiento de movimiento ni de
+     * reproducción; y asociada al tablero {@code simulationGrid}. Asume que la criatura base es no nula; que el número
+     * de ticks que aguanta sin comer antes de morirse de hambre {@code starvationThreshold} es mayor o igual a cero;
+     * que la posición es no nula; y que el tablero es no nulo y contiene a la criatura en la posición de la criatura.
      *
-     * @param id                  el id de la criatura.
-     * @param name                el nombre de la criatura.
-     * @param color               el color de la criatura.
+     * @param creature            la criatura base.
      * @param starvationThreshold el número de ticks que la criatura aguanta sin comer antes de morirse.
      * @param position            la posición de la criatura.
      * @param simulationGrid      el tablero de simulación en el que está la criatura.
      */
-    protected LogicCreature(String id, String name, String color, int starvationThreshold, Position position,
+    protected LogicCreature(Creature creature, int starvationThreshold, Position position,
                             SimulationGridInterface simulationGrid) {
-        super(id, name, color);
+        super(creature);
         this.starvationThreshold = starvationThreshold;
         ticksUntilStarvation = starvationThreshold;
         alive = true;
@@ -65,20 +62,18 @@ public abstract class LogicCreature extends Creature implements LogicCreatureInt
     }
 
     /**
-     * Define cómo se construye la parte común de las criaturas con funcionalidad. La criatura se construye viva, con el
-     * id, nombre, color, aguante sin comida y posición pasadas como parámetros; sin comportamiento de movimiento ni
-     * reproducción; y asociada a ningún tablero. Asume que id es no nulo y único para esta criatura; que el nombre y
-     * color no son nulos y no blanks; que el número de ticks que aguanta sin comer antes de morirse de hambre
-     * {@code starvationThreshold} es mayor o igual a cero; y que la posición es no nula.
+     * Define cómo se construye la parte común de las criaturas con funcionalidad. La criatura se construye viva, con la
+     * criatura base, aguante sin comida y posición pasadas como parámetros; sin comportamiento de movimiento ni
+     * reproducción; y asociada a ningún tablero. Asume que la criatura base es no nula; que el número de ticks que
+     * aguanta sin comer antes de morirse de hambre {@code starvationThreshold} es mayor o igual a cero; y que la
+     * posición es no nula.
      *
-     * @param id                  el id de la criatura.
-     * @param name                el nombre de la criatura.
-     * @param color               el color de la criatura.
+     * @param creature            la criatura base.
      * @param starvationThreshold el número de ticks que la criatura aguanta sin comer antes de morirse.
      * @param position            la posición de la criatura.
      */
-    protected LogicCreature(String id, String name, String color, int starvationThreshold, Position position) {
-        this(id, name, color, starvationThreshold, position, null);
+    protected LogicCreature(Creature creature, int starvationThreshold, Position position) {
+        this(creature, starvationThreshold, position, null);
     }
 
     @Override
@@ -252,8 +247,8 @@ public abstract class LogicCreature extends Creature implements LogicCreatureInt
          * <p>Notas sobre implementación: si hay alguna casilla adyacente libre se reproduce con la probabilidad
          * definida para esta criatura en una de las casillas adyacentes libres. Todas las casillas adyacentes libres
          * tienen la misma probabilidad de ser elegidas. Si se reproduce la cría tiene un id único, pero el mismo
-         * nombre, color, aguante sin comida, probabilidad de multiplicarse y generador de números pseudo-aleatorios que
-         * el padre; y está asociado al mismo tablero de simulación que el padre.</p>
+         * nombre, aguante sin comida, probabilidad de multiplicarse y generador de números pseudo-aleatorios que el
+         * padre; y está asociado al mismo tablero de simulación que el padre.</p>
          */
         @Override
         public LogicCreatureInterface multiply() {
@@ -266,15 +261,8 @@ public abstract class LogicCreature extends Creature implements LogicCreatureInt
 
                 if (!availablePositions.isEmpty()) {
                     childPosition = RandomUtil.getRandomElement(availablePositions, random);
-                    child = new StaticRabbit(
-                            UUID.randomUUID().toString(),
-                            getName(),
-                            getColor(),
-                            getStarvationThreshold(),
-                            multiplyProbability,
-                            childPosition,
-                            random
-                    );
+                    child = new StaticRabbit(new Creature(UUID.randomUUID().toString(), getName()),
+                            getStarvationThreshold(), multiplyProbability, childPosition, random);
                     child.setSimulationGrid(simulationGrid);
                 }
             }

@@ -1,6 +1,7 @@
 package com.tt1.simserver.logic.creatures;
 
 import com.tt1.simserver.mocks.logic.SimulationGridFake;
+import com.tt1.simserver.model.Creature;
 import com.tt1.simserver.model.Position;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,7 +69,7 @@ public class StaticRabbitTest {
     @ValueSource(ints = {0, 1, 5, 10})
     public void given_newStaticRabbitAndNoFood_when_performEat_then_survivesZeroTicks() {
         // Arrange (Given)
-        staticRabbit = new StaticRabbit(id, name, color, starvationThreshold, 1.0, position, random);
+        staticRabbit = new StaticRabbit(new Creature(id, name), starvationThreshold, 1.0, position, random);
         staticRabbit.setSimulationGrid(gridFake);
         gridFake.setFoodPositions(List.of());
 
@@ -86,7 +87,7 @@ public class StaticRabbitTest {
     @ValueSource(ints = {0, 1, 5, 10})
     public void given_newStaticRabbitAndNoFood_when_performEat_then_isAliveInStarvationThresholdTicks(int starvationThreshold) {
         // Arrange (Given)
-        staticRabbit = new StaticRabbit(id, name, color, starvationThreshold, 1.0, position, random);
+        staticRabbit = new StaticRabbit(new Creature(id, name), starvationThreshold, 1.0, position, random);
         staticRabbit.setSimulationGrid(gridFake);
         gridFake.setFoodPositions(List.of());
 
@@ -106,7 +107,7 @@ public class StaticRabbitTest {
     @ValueSource(ints = {0, 1, 5, 10})
     public void given_newStaticRabbitAndNoFood_when_performEat_then_isNotAliveInStarvationThresholdTicksPlusOne(int starvationThreshold) {
         // Arrange (Given)
-        staticRabbit = new StaticRabbit(id, name, color, starvationThreshold, 1.0, position, random);
+        staticRabbit = new StaticRabbit(new Creature(id, name), starvationThreshold, 1.0, position, random);
         staticRabbit.setSimulationGrid(gridFake);
         gridFake.setFoodPositions(List.of());
 
@@ -128,7 +129,7 @@ public class StaticRabbitTest {
     @ValueSource(ints = {1, 5, 10})
     public void given_newStaticRabbitAndFood_when_performEat_then_isAliveInStarvationThresholdTicksAfterEating(int starvationThreshold) {
         // Arrange (Given)
-        staticRabbit = new StaticRabbit(id, name, color, starvationThreshold, 1.0, position, random);
+        staticRabbit = new StaticRabbit(new Creature(id, name), starvationThreshold, 1.0, position, random);
         staticRabbit.setSimulationGrid(gridFake);
         gridFake.setFoodPositions(List.of());
 
@@ -155,7 +156,7 @@ public class StaticRabbitTest {
     @ValueSource(ints = {1, 5, 10})
     public void given_newStaticRabbitAndFood_when_performEat_then_isNotAliveInStarvationThresholdTicksPlusOneAfterEating(int starvationThreshold) {
         // Arrange (Given)
-        staticRabbit = new StaticRabbit(id, name, color, starvationThreshold, 1.0, position, random);
+        staticRabbit = new StaticRabbit(new Creature(id, name), starvationThreshold, 1.0, position, random);
         staticRabbit.setSimulationGrid(gridFake);
         gridFake.setFoodPositions(List.of());
 
@@ -185,7 +186,7 @@ public class StaticRabbitTest {
     @DisplayName("performMove: sin casillas adyacentes vacías no se mueve")
     public void given_staticRabbitAndNoEmptyAdjacentCells_when_performMove_then_returnsNull() {
         // Arrange (Given)
-        staticRabbit = new StaticRabbit(id, name, color, starvationThreshold, 1.0, position, random);
+        staticRabbit = new StaticRabbit(new Creature(id, name), starvationThreshold, 1.0, position, random);
         staticRabbit.setSimulationGrid(gridFake);
         gridFake.setEmptyAdjacentCells(List.of());
 
@@ -200,7 +201,7 @@ public class StaticRabbitTest {
     @DisplayName("performMove: con casillas adyacentes vacías no se mueve")
     public void given_staticRabbitThatAlwaysMovesAndEmptyAdjacentCells_when_performMove_then_returnsNull() {
         // Arrange (Given)
-        staticRabbit = new StaticRabbit(id, name, color, starvationThreshold, 1.0, position, random);
+        staticRabbit = new StaticRabbit(new Creature(id, name), starvationThreshold, 1.0, position, random);
         staticRabbit.setSimulationGrid(gridFake);
         gridFake.setEmptyAdjacentCells(List.of(emptyAdjacentCell1, emptyAdjacentCell2));
 
@@ -217,7 +218,7 @@ public class StaticRabbitTest {
     @DisplayName("performMultiply: sin casillas adyacentes vacías no se reproduce")
     public void given_staticRabbitAndNoEmptyAdjacentCells_when_performMultiply_then_returnsNull() {
         // Arrange (Given)
-        staticRabbit = new StaticRabbit(id, name, color, starvationThreshold, 1.0, position, random);
+        staticRabbit = new StaticRabbit(new Creature(id, name), starvationThreshold, 1.0, position, random);
         staticRabbit.setSimulationGrid(gridFake);
         gridFake.setEmptyAdjacentCells(List.of());
 
@@ -251,12 +252,11 @@ public class StaticRabbitTest {
         Collection<String> ids = new HashSet<String>();
         boolean invalidChildId = false;
         boolean differentChildName = false;
-        boolean differentChildColor = false;
         boolean differentChildStarvationThreshold = false;
         boolean notEmptyAdjacentCell = false;
 
         // Arrange (Given)
-        staticRabbit = new StaticRabbit(id, name, color, starvationThreshold, 1.0, position, random);
+        staticRabbit = new StaticRabbit(new Creature(id, name), starvationThreshold, 1.0, position, random);
         staticRabbit.setSimulationGrid(gridFake);
         gridFake.setEmptyAdjacentCells(List.of(emptyAdjacentCell1, emptyAdjacentCell2));
         ids.add(staticRabbit.getId());
@@ -272,10 +272,9 @@ public class StaticRabbitTest {
             childPositionNull = child.getPosition() == null;
             invalidChildId = ids.contains(child.getId());
             differentChildName = !staticRabbit.getName().equals(child.getName());
-            differentChildColor = !staticRabbit.getColor().equals(child.getColor());
             differentChildStarvationThreshold = staticRabbit.getStarvationThreshold() != child.getStarvationThreshold();
             differentChildSimulationGrid = !staticRabbit.getSimulationGrid().equals(child.getSimulationGrid());
-            if (childPositionNull || invalidChildId || differentChildName || differentChildColor || differentChildStarvationThreshold || differentChildSimulationGrid) {
+            if (childPositionNull || invalidChildId || differentChildName || differentChildStarvationThreshold || differentChildSimulationGrid) {
                 break;
             }
 
@@ -297,7 +296,6 @@ public class StaticRabbitTest {
         assertFalse(childPositionNull, "La cría de la criatura que se reproduce no tiene posición.");
 
         assertFalse(differentChildName, "La cría de la criatura que se reproduce no tiene el mismo nombre.");
-        assertFalse(differentChildColor, "La cría de la criatura que se reproduce no tiene el mismo color.");
         assertFalse(differentChildStarvationThreshold, "La cría de la criatura que se reproduce no tiene el mismo " +
                 "starvationThreshold.");
         assertFalse(differentChildSimulationGrid, "La cría de la criatura que se reproduce no tiene el mismo tablero " +
@@ -331,7 +329,7 @@ public class StaticRabbitTest {
         double upperBound = mean + margin;
 
         // Arrange (Given)
-        staticRabbit = new StaticRabbit(id, name, color, starvationThreshold, p, position, random);
+        staticRabbit = new StaticRabbit(new Creature(id, name), starvationThreshold, p, position, random);
         staticRabbit.setSimulationGrid(gridFake);
         gridFake.setEmptyAdjacentCells(List.of(emptyAdjacentCell1, emptyAdjacentCell2));
 

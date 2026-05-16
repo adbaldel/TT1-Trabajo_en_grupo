@@ -351,7 +351,7 @@ public class DBManagerTest {
         SimulationData expectedData = new SimulationData(12);
         Position position = new Position(0, 0);
         Creature logicCreature =
-                new StaticCreature("sc", "static-test", "static_color-test", 5, position);
+                new StaticCreature(new Creature("sc", "static-test"), 5, position);
         Map<Position, Creature> stepMap = new HashMap<>();
         stepMap.put(position, logicCreature);
         expectedData.addStep(new SimulationStep(12, stepMap)); // Insertamos

@@ -31,7 +31,7 @@ public class LogicCreatureFake extends Creature implements LogicCreatureInterfac
      * Construye una criatura lógica falsa sin configurar.
      */
     public LogicCreatureFake(String id) {
-        super(id, "fake", "color-fake");
+        super(new Creature(id, "fake"));
         position = null;
         alive = false;
         positionToReturnOnMove = null;

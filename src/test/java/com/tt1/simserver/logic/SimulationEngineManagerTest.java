@@ -65,9 +65,9 @@ public class SimulationEngineManagerTest {
         bottomRight = new Position(gridSize - 1, gridSize - 1);
         moveProbability = 0.5;
         multiplyProbability = 0.2;
-        mobileCreature = new MobileCreature("mc", "mobile-test", "mobile_color-test", starvationThreshold,
+        mobileCreature = new MobileCreature(new Creature("mc", "mobile-test"), starvationThreshold,
                 moveProbability, topLeft, random);
-        staticRabbit = new StaticRabbit("sr", "rabbit-test", "rabbit_color-test", starvationThreshold,
+        staticRabbit = new StaticRabbit(new Creature("sr", "rabbit-test"), starvationThreshold,
                 multiplyProbability, bottomRight, random);
         stepMap = new HashMap<>();
         stepMap.put(topLeft, mobileCreature);

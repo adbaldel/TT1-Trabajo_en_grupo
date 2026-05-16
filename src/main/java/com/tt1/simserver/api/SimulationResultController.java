@@ -64,7 +64,7 @@ public class SimulationResultController implements SimulationResultApi {
         SimulationResultResponseJson simulationResultResponseJson = new SimulationResultResponseJson();
         simulationResultResponseJson.setDone(true);
         simulationResultResponseJson.setRequestToken(token);
-        simulationResultResponseJson.setData(simulationResult.toCsvStringUsingCreatureColor());
+        simulationResultResponseJson.setData(simulationResult.toCsvStringUsingCreatureName());
         simulationResultResponseJson.setErrorMessage(null);
 
         return Response.status(Response.Status.CREATED).entity(simulationResultResponseJson).build();

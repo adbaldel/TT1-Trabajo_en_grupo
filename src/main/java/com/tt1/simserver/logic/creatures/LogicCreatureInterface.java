@@ -24,13 +24,6 @@ public interface LogicCreatureInterface {
     String getName();
 
     /**
-     * Ver descripción {@link Creature#getColor()}.
-     *
-     * @return ver return {@link Creature#getColor()}.
-     */
-    String getColor();
-
-    /**
      * Obtiene la posición de esta criatura.
      *
      * @return la posición de esta criatura.
