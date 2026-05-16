@@ -12,7 +12,7 @@ services:
       # Montamos el script de inicialización para que se ejecute al crear el contenedor
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
       # Volumen para persistencia de datos reales entre reinicios del contenedor
-      - mysql_data:/var/lib/mysql
+      - mysql_simserver_data:/var/lib/mysql
     # A healthcheck ensures the DB is ready before the API tries to connect
     ports:
       - "3306:3306"
