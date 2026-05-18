@@ -134,9 +134,23 @@ docker-compose up
 
 #### Combinación con el trabajo individual
 
-Si además tienes la imágen de docker `simwebapp` (imagen que corre el `.jar` del trabajo individual del proyecto), 
-puedes levantar la `simwebapp` (trabajo individual) con el puerto 8080 publicado, conectada al `simwebserver` que a 
-su vez está conectado a un MySQL 8. Para ello solo haría falta usar el `docker-compose_with-simwebapp.yml` proporcionado:
+Si además tienes la imágen de docker `tt1/simwebapp` (imagen que corre el `.jar` del trabajo individual del proyecto), 
+puedes levantar la `simwebapp` (trabajo individual) con el puerto 8080 publicado, conectada al `simserver` que a 
+su vez está conectado a un MySQL 8. Para ello solo haría falta usar el `docker-compose_with_simwebapp.yml` 
+proporcionado:
 ```bash
-docker-compose -f docker-compose_with-simwebapp.yml up
+docker-compose -f docker-compose_with_simwebapp.yml up
 ```
+
+#### Automatización para desarrollo interno
+
+También tenemos ficheros `.sh` o `.bat` que automatizan el proceso descrito anteriormente compilando el proyecto 
+(sin pasar tests), creando la imagen de docker, lanzando el docker compose y cuando se cierra el docker compose 
+borran todo lo creado por los pasos anteriores.
+
+* `docker-compose.sh` o `docker-compose.bat`: para compilar el trabajo en grupo, crear su imagen de docker y luego 
+  lanzar el docker compose con la base de datos MySQL y el servidor conectada a esta. Cuando se hace detach en 
+  consola se cierran y eliminan los contenedores, y después se borra la imagen del servidor creada.
+* `docker-compose_with_simwebapp.sh` o `docker-compose_with_simwebapp.bat`: hace lo equivalente al anterior pero con 
+  añadiendo la web app. **IMPORTANTE**: Este fichero depende de las rutas relativas donde se tiene el código de los 
+  proyectos, debe ser adaptado para cada caso particular.
