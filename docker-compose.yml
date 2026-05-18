@@ -38,7 +38,7 @@ services:
       - simnetwork
 
 volumes:
-  mysql_data:
+  mysql_simserver_data:
 
 networks:
   simnetwork:
