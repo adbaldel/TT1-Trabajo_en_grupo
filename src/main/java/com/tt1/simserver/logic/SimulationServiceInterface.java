@@ -1,90 +1,73 @@
 package com.tt1.simserver.logic;
 
-import com.tt1.simserver.model.SimulationResult;
-import com.tt1.simserver.model.SimulationStatus;
-import com.tt1.simserver.model.User;
-import com.tt1.simserver.model.jsonrepresentations.Request;
+import com.tt1.simserver.model.*;
 
 import java.util.Collection;
 
 /**
- * Define las operaciones de negocio para administrar usuarios, coordinar tableros y gestionar solicitudes de simulación.
+ * Define el contrato de la capa de lógica de negocio (Fachada/DAO) para gestionar simulaciones.
  */
 public interface SimulationServiceInterface {
 
     /**
-     * Recupera un usuario en memoria o lo crea si no existe.
+     * Obtiene los nombres de todas las criaturas que el servicio sabe simular.
      *
-     * <p>Precondición: {@code user} no es nulo y tiene un nombre asignado.
-     *
-     * <p>Postcondición: Funciona como caché. Si el usuario ya está registrado, devuelve la misma referencia en memoria. Si no existe, lo instancia, lo guarda en la colección y lo devuelve conservando su nombre intacto.
-     *
-     * @param user el objeto usuario usado para buscar o registrar.
-     * @return la instancia persistente del usuario en el sistema.
+     * @return la colección los nombres de todas las criaturas que el servicio sabe simular.
      */
-    User getUser(User user);
+    Collection<String> getCreatures();
 
     /**
-     * Comprueba si una simulación pertenece a un usuario concreto.
+     * Comprueba si existe una simulación almacenada con la misma clave que la simulación de consulta {@code simulation}
+     * y asociada al usuario con la misma clave que el usuario de la simulación. Asume que la simulación de consulta y
+     * el usuario de consulta no son nulos.
      *
-     * <p>Precondición: {@code user} no es nulo.
-     *
-     * <p>Postcondición: Devuelve verdadero si el sistema certifica que el token consta en el registro de peticiones del usuario. Devuelve falso si el usuario no es propietario de dicho token.
-     *
-     * @param user  el usuario que hace la solicitud.
-     * @param token el identificador de la simulación a verificar.
-     * @return verdadero si el token pertenece al usuario, falso en caso contrario.
+     * @param simulation la simulación de consulta.
+     * @return cierto hay una simulación almacenada con la misma clave, falso en caso contrario.
      */
-    boolean existsSimulation(User user, int token);
+    boolean existsSimulation(Simulation simulation);
 
     /**
-     * Consulta el estado de una simulación vinculada a un usuario.
+     * Obtiene el estado de la simulación almacenada con la misma clave que la simulación de consulta {@code simulation}
+     * y asociada al usuario con la misma clave que el usuario de la simulación. Asume que la simulación de consulta y
+     * el usuario de consulta no son nulos; y que existe una simulación almacenada con la misma clave asociado al
+     * usuario con la misma clave.
      *
-     * <p>Precondición: {@code user} no es nulo y es el propietario real del token indicado.
-     *
-     * <p>Postcondición: Delega la consulta y retorna el estado exacto extraído directamente desde el gestor interno de esa simulación.
-     *
-     * @param user  el usuario propietario de la simulación.
-     * @param token el identificador de la simulación.
-     * @return el estado de ejecución actual de la simulación solicitada.
+     * @param simulation la simulación de consulta.
+     * @return el estado de la simulación almacenada.
      */
-    SimulationStatus getSimulationStatus(User user, int token);
+    SimulationStatus getSimulationStatus(Simulation simulation);
 
     /**
-     * Recupera el resultado histórico de una simulación específica de un usuario.
+     * Obtiene el resultado de la simulación almacenada con la misma clave que la simulación de consulta
+     * {@code simulaiton} y asociada al usuario con la misma clave que el usuario de la simulación. Asume que la
+     * simulación de consulta y el usuario de consulta no son nulos, que existe una simulación almacenada con la misma
+     * clave asoicada al usuario con la misma clave y que el estado de la simulación almacenada es acabada.
      *
-     * <p>Precondición: {@code user} no es nulo y es el propietario real del token indicado.
-     *
-     * <p>Postcondición: Extrae y devuelve el historial completo del tablero expuesto por el gestor subyacente de la simulación.
-     *
-     * @param user  el usuario propietario de la simulación.
-     * @param token el identificador de la simulación.
-     * @return el objeto con el historial de resultados devuelto por el gestor.
+     * @param simulation la simulación de consulta.
+     * @return el resultado de la simulación almacenado.
      */
-    SimulationResult getSimulationResult(User user, int token);
+    SimulationData getSimulationResult(Simulation simulation);
 
     /**
-     * Lista todos los identificadores de simulación registrados a nombre de un usuario.
+     * Obtiene los tokens de las simulaciones almacenadas asociadas al usuario de consulta {@code user}. Asume que el
+     * usuario es no nulo.
      *
-     * <p>Precondición: {@code user} no es nulo.
-     *
-     * <p>Postcondición: Devuelve una colección que agrupa todos los tokens solicitados históricamente por el usuario. La colección nunca es nula, aunque el usuario no tenga simulaciones.
-     *
-     * @param user el usuario a consultar.
-     * @return una colección con los tokens pertenecientes al usuario.
+     * @param user el usuario de consulta.
+     * @return la colección de tokens asociados a simulaciones almacenadas del usuario.
      */
     Collection<Integer> getUserTokens(User user);
 
     /**
-     * Orquesta la creación, configuración y arranque de una nueva simulación para un usuario.
+     * Solicita la creación y ejecución de una simulación con los datos contenidos en {@code simulaitonRequest}. Asume
+     * que la solicitud de simulación es no nula.
      *
-     * <p>Precondición: {@code user} y {@code request} no son nulos. Las cantidades iniciales en la solicitud son enteros no negativos.
-     *
-     * <p>Postcondición: Construye un tablero de tamaño dinámico, lo puebla aleatoriamente con las criaturas solicitadas, arranca asíncronamente los cálculos de turnos y amarra la petición a la cuenta del usuario. Devuelve un token válido superior o igual a cero.
-     *
-     * @param user    el usuario que solicita crear la simulación.
-     * @param request el objeto con la especificación de criaturas a incluir.
-     * @return el nuevo token numérico asignado a la simulación.
+     * @param simulationRequest la solicitud de simulación.
+     * @return la simulación creada que se está ejecutando asociada a la solicitud.
      */
-    int requestSimulation(User user, Request request);
+    Simulation requestSimulation(SimulationRequest simulationRequest);
+
+    /**
+     * Apaga de forma limpia el gestor de simulaciones y gestor de base de datos.
+     */
+    void shutdown();
 }

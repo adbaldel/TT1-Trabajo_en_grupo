@@ -1,65 +1,165 @@
 package com.tt1.simserver.model;
 
-import com.tt1.simserver.logic.GridInterface;
+import com.tt1.simserver.logic.SimulationGridInterface;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
-import static com.tt1.simserver.logic.utils.GridManipulation.copyGridToMap;
-
 /**
- * Almacena una captura o fotografía de todas las posiciones y criaturas del tablero en un único paso de la simulación.
+ * Representa un paso de simulación.
  */
 public class SimulationStep {
-    private final Map<Position, String> step;
+    private final Map<Position, Creature> step;
+    private final int gridSize;
 
     /**
-     * Construye una captura extrayendo los datos del tablero en este instante.
+     * Crea un paso de simulación vacío (sin criaturas) para una simulación con tamaño de tablero {@code gridSize}.
+     * Asume que el tamaño del tablero es mayor que cero.
      *
-     * <p>Precondición: {@code grid} no es nulo.
-     *
-     * <p>Postcondición: El estado actual del tablero es copiado en memoria, asociando de forma inmutable el color de cada criatura con la casilla exacta que ocupa.
-     *
-     * @param grid el tablero que se va a fotografiar.
+     * @param gridSize el tamaño del tablero.
      */
-    public SimulationStep(GridInterface grid) {
-        step = copyGridToMap(grid);
+    public SimulationStep(int gridSize) {
+        step = new HashMap<>();
+        this.gridSize = gridSize;
     }
 
     /**
-     * Consulta el color de la criatura que ocupaba una casilla específica durante este paso.
+     * Construye un paso de simulación con las criaturas en las posiciones dadas por el mapa {@code simulationStep} para
+     * una simulación con tamaño de tablero {@code gridSize}. Asume que el tamaño del tablero es mayor que cero; que el
+     * mapa es no nulo; y que el tablero es suficientemente grande como para alojar a todas las criaturas dadas en el
+     * mapa en las posiciones indicadas en el mapa. Cuidado, el paso de simulación pasa a estar representada por el mapa
+     * pasado, cualquier modificación del mapa pasado afectará al paso de simulación y viceversa.
      *
-     * <p>Precondición: {@code position} no es nula.
-     *
-     * <p>Postcondición: Devuelve la cadena de texto con el color de la criatura alojada en esa casilla. Devuelve nulo si la casilla estaba vacía en este turno.
-     *
-     * @param position las coordenadas de la casilla a consultar.
-     * @return el color de la criatura, o nulo si no había ninguna.
+     * @param gridSize       el tamaño del tablero.
+     * @param simulationStep el mapa que da las posiciones y sus criaturas.
      */
-    public String getColor(Position position) {
+    public SimulationStep(int gridSize, Map<Position, Creature> simulationStep) {
+        this.step = new HashMap<>(simulationStep);
+        this.gridSize = gridSize;
+    }
+
+    /**
+     * Crea un paso de simulación que representa el estado actual de un tablero de simulación. Asume que el tablero no
+     * es nulo y que las criaturas no se mueven, reproducen, ni mueren durante la ejecución de esta función.
+     *
+     * @param grid el tablero a copiar.
+     * @return el paso de simulación que representa el estado actual del tablero.
+     */
+    public static SimulationStep convertToSimulationStep(SimulationGridInterface grid) {
+        SimulationStep simulationStep = new SimulationStep(grid.getSize());
+
+        for (Position position : grid.getNonEmptyPositions()) {
+            simulationStep.step.put(position, new Creature(grid.getCreatureAt(position)));
+        }
+
+        return simulationStep;
+    }
+
+    /**
+     * Obtiene el tamaño del tablero de la simulación asociada a este paso.
+     *
+     * @return el tamaño del tablero.
+     */
+    public int getGridSize() {
+        return gridSize;
+    }
+
+    /**
+     * Obtiene la criatura en la posición {@code position} en este paso de simulación.
+     *
+     * @param position la posición de la criatura.
+     * @return la criatura en la posición indicada, o {@code null} si no hay una criatura en dicha posición.
+     */
+    public Creature getCreatureAt(Position position) {
         return step.get(position);
     }
 
     /**
-     * Compara este paso con otro para comprobar si el tablero tenía la misma disposición.
+     * Obtiene el número de criaturas en este paso de simulación.
      *
-     * <p>Precondición: Ninguna.
+     * @return el número de criaturas en este paso de simulación.
+     */
+    public int getNumberOfCreatures() {
+        return step.size();
+    }
+
+    /**
+     * Obtiene las posiciones no vacías (con criaturas) en este paso de simulación.
      *
-     * <p>Postcondición: Devuelve verdadero solo si ambas capturas tienen la misma cantidad de criaturas, y todas ocupan exactamente las mismas casillas con los mismos colores. Devuelve falso en caso contrario.
+     * @return las posiciones no vacías en este paso de simulación.
+     */
+    public Collection<Position> getNonEmptyPositions() {
+        return step.keySet();
+    }
+
+    /**
+     * Obtiene las criaturas en este paso de simulación.
      *
-     * @param o el objeto a comparar con esta captura.
-     * @return verdadero si tienen los mismos colores en las mismas posiciones, falso si difieren.
+     * @return las criaturas en este paso de simulación.
+     */
+    public Collection<Creature> getCreatures() {
+        return step.values();
+    }
+
+    /**
+     * Genera una representación de este paso de simulación como una cadena en formato csv siguiendo el siguiente
+     * patrón: por cada posición no vacía se añade una línea con los datos tick,x,y,id siendo tick {@code tick}, x e y
+     * las componentes x e y de la posición, e id el id de la criatura que se encuentra en dicha posición en este paso.
+     *
+     * @param tick el tick que representa este paso de simulación.
+     * @return la representación en formato csv de este paso de simulación.
+     */
+    public String toCsvStringUsingCreatureId(int tick) {
+        StringBuilder dataBuilder = new StringBuilder();
+
+        for (Position p : getNonEmptyPositions()) {
+            dataBuilder.append(tick).append(",")
+                    .append(p.y()).append(",")
+                    .append(p.x()).append(",")
+                    .append(getCreatureAt(p).getId()).append("\n");
+        }
+        return dataBuilder.toString().trim();
+    }
+
+    /**
+     * Genera una representación de este paso de simulación como una cadena en formato csv siguiendo el siguiente
+     * patrón: por cada posición no vacía se añade una línea con los datos tick,x,y,name siendo tick {@code tick}, x e y
+     * las componentes x e y de la posición, y name el nombre de la criatura que se encuentra en dicha posición en este
+     * paso.
+     *
+     * @param tick el tick que representa este paso de simulación.
+     * @return la representación en formato csv de este paso de simulación.
+     */
+    public String toCsvStringUsingCreatureName(int tick) {
+        StringBuilder dataBuilder = new StringBuilder();
+
+        for (Position p : getNonEmptyPositions()) {
+            dataBuilder.append(tick).append(",")
+                    .append(p.y()).append(",")
+                    .append(p.x()).append(",")
+                    .append(getCreatureAt(p).getName()).append("\n");
+        }
+        return dataBuilder.toString().trim();
+    }
+
+    /**
+     * Comprueba si este paso de simulación es igual al objeto {@code o}. Devuelve cierto si el objeto es un paso de
+     * simulación con criaturas iguales asociados a las mismas posiciones.
+     *
+     * @param o el objeto a comparar.
+     * @return cierto si este paso de simulación es igual al objeto, falso en caso contrario.
      */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         SimulationStep simulationStep = (SimulationStep) o;
 
         if (step.size() != simulationStep.step.size()) return false;
 
-        for (Map.Entry<Position, String> entry : step.entrySet()) {
-            if (!entry.getValue().equals(simulationStep.getColor(entry.getKey()))) return false;
+        for (Map.Entry<Position, Creature> entry : step.entrySet()) {
+            if (!getCreatureAt(entry.getKey()).equals(simulationStep.getCreatureAt(entry.getKey()))) return false;
         }
 
         return true;

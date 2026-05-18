@@ -1,194 +1,304 @@
 package com.tt1.simserver.logic;
 
-import com.tt1.simserver.mocks.SimulationManagerFake;
-import com.tt1.simserver.model.SimulationResult;
-import com.tt1.simserver.model.SimulationStatus;
-import com.tt1.simserver.model.User;
-import com.tt1.simserver.model.jsonrepresentations.Request;
+import com.tt1.simserver.logic.creatures.LogicCreature;
+import com.tt1.simserver.logic.creatures.MobileCreature;
+import com.tt1.simserver.logic.creatures.StaticRabbit;
+import com.tt1.simserver.mocks.database.DBManagerFake;
+import com.tt1.simserver.mocks.database.DBManagerMock;
+import com.tt1.simserver.mocks.logic.SimulationEngineManagerFake;
+import com.tt1.simserver.mocks.logic.SimulationRequestManagerFake;
+import com.tt1.simserver.model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SimulationServiceTest {
-
+    Map<String, Integer> creaturesNamesQuantities;
+    Map<Position, Creature> stepMap;
+    private User user;
+    private int totalNumberOfCreatures;
+    private int ticksToRun;
+    private double initialOccupancy;
+    private double foodProbability;
+    private Random random;
+    private SimulationRequest simulationRequest;
+    private int gridSize;
+    private int foodPerTick;
+    private int starvationThreshold;
+    private Position topLeft;
+    private Position bottomRight;
+    private double moveProbability;
+    private double multiplyProbability;
+    private LogicCreature mobileCreature;
+    private LogicCreature staticRabbit;
+    private SimulationStep initialStep;
+    private int token;
+    private SimulationGridInterface simulationGrid;
+    private LogicSimulation simulation;
+    private SimulationRequestManagerFake requestManagerFake;
+    private SimulationEngineManagerFake engineManagerFake;
+    private DBManagerFake dbFake;
     private SimulationService service;
-    private User defaultUser;
-    private SimulationManagerFake managerFake;
 
     // --- Arrange Before/After each test ------------------------------------------------------------------------------
 
     @BeforeEach
     public void setUp() {
-        service = new SimulationService();
-        defaultUser = new User("testUser");
-        managerFake = new SimulationManagerFake();
+        user = new User("testUser");
+        totalNumberOfCreatures = 2;
+        creaturesNamesQuantities = new HashMap<>();
+        creaturesNamesQuantities.put("mobile-test", 1);
+        creaturesNamesQuantities.put("rabbit-test", 1);
+        ticksToRun = 100000;
+        initialOccupancy = 0.35;
+        foodProbability = 0.2;
+        random = new Random();
+        simulationRequest = new SimulationRequest(user, creaturesNamesQuantities, totalNumberOfCreatures, ticksToRun,
+                initialOccupancy, foodProbability, random);
+        gridSize = SimulationGrid.calculateSize(2, initialOccupancy);
+        foodPerTick = SimulationGrid.calculateFoodPerTick(gridSize, foodProbability);
+        starvationThreshold = 5;
+        topLeft = new Position(0, 0);
+        bottomRight = new Position(gridSize - 1, gridSize - 1);
+        moveProbability = 0.5;
+        multiplyProbability = 0.2;
+        mobileCreature = new MobileCreature(new Creature("mc", "mobile-test"), starvationThreshold, moveProbability,
+                topLeft, random);
+        staticRabbit = new StaticRabbit(new Creature("sr", "rabbit-test"), starvationThreshold, multiplyProbability,
+                bottomRight, random);
+        stepMap = new HashMap<>();
+        stepMap.put(topLeft, mobileCreature);
+        stepMap.put(bottomRight, staticRabbit);
+        initialStep = new SimulationStep(gridSize, stepMap);
+        token = 1;
+        simulationGrid = new SimulationGrid(initialStep, foodPerTick, random);
+        simulation = new LogicSimulation(token, user, ticksToRun, simulationGrid);
+
+        dbFake = new DBManagerFake();
+        requestManagerFake = new SimulationRequestManagerFake();
+        engineManagerFake = new SimulationEngineManagerFake();
+        service = new SimulationService(requestManagerFake, engineManagerFake, dbFake);
     }
 
     @AfterEach
     public void tearDown() {
+        user = null;
+        totalNumberOfCreatures = 0;
+        creaturesNamesQuantities = null;
+        ticksToRun = 0;
+        initialOccupancy = 0;
+        foodProbability = 0;
+        random = null;
+        simulationRequest = null;
+        gridSize = 0;
+        foodPerTick = 0;
+        starvationThreshold = 0;
+        topLeft = null;
+        bottomRight = null;
+        moveProbability = 0;
+        multiplyProbability = 0;
+        mobileCreature = null;
+        staticRabbit = null;
+        stepMap = null;
+        initialStep = null;
+        token = 0;
+        simulationGrid = null;
+        simulation = null;
+
+        dbFake = null;
+        requestManagerFake = null;
+        engineManagerFake = null;
         service = null;
-        defaultUser = null;
-        managerFake = null;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     //     TESTS UNITARIOS
     // -----------------------------------------------------------------------------------------------------------------
 
-    // --- Test getUser ------------------------------------------------------------------------------------------------
+    // --- Test existsSimulation(Simulation simulation) ----------------------------------------------------------------
 
     @Test
-    @DisplayName("Obtener usuario: Crea en memoria y devuelve el usuario si no existía antes")
-    void given_newUser_when_getUser_then_userIsCreatedAndReturned() {
+    @DisplayName("existsSimulation: devuelve cierto si la simulación existe")
+    public void given_existingSimulation_when_existsSimulation_then_returnsTrue() {
         // Arrange (Given)
-        User newUser = new User("alice");
+        dbFake.setSimulationToReturn(simulation);
 
         // Act (When)
-        User storedUser = service.getUser(newUser);
+        boolean exists = service.existsSimulation(simulation);
 
         // Assert (Then)
-        assertNotNull(storedUser, "El servicio debe responsabilizarse de construir un usuario persistente válido");
-        assertEquals("alice", storedUser.getUsername(), "El nombre del usuario recién creado no debe modificarse");
+        assertTrue(exists, "Se esperaba que devolviera cierto porque la simulación sí existe en el " + "sistema.");
     }
 
     @Test
-    @DisplayName("Obtener usuario: Funciona como caché y retorna la misma instancia en memoria para repetidas llamadas")
-    void given_existingUser_when_getUser_then_returnsSameStoredInstance() {
+    @DisplayName("existsSimulation: devuelve falso si la simulación no existe")
+    public void given_nonExistingSimulation_when_existsSimulation_then_returnsFalse() {
         // Arrange (Given)
-        User firstCallUser = service.getUser(new User("bob"));
+        dbFake.setSimulationToReturn(null);
 
         // Act (When)
-        // Intentamos obtener el mismo usuario pasando una nueva instancia con el mismo nombre
-        User secondCallUser = service.getUser(new User("bob"));
+        boolean exists = service.existsSimulation(simulation);
 
         // Assert (Then)
-        assertSame(firstCallUser, secondCallUser, "Para optimizar la persistencia, el servicio debe recuperar la misma referencia en memoria del usuario ya guardado");
+        assertFalse(exists, "Se esperaba que devolviera falso porque la simulación no existe en el " + "sistema.");
     }
 
-    // --- Test existsSimulation ----------------------------------------------------------------------------------------
+    // --- Test getSimulationStatus(Simulation simulation) -------------------------------------------------------------
 
     @Test
-    @DisplayName("Comprobar simulación: Acredita como verdadera si el token pertenece a las peticiones del usuario")
-    void given_userWithSimulation_when_existsSimulation_then_returnsTrue() {
+    @DisplayName("getSimulationStatus: devuelve el estado correspondiente de la simulación")
+    public void given_simulationWithStatus_when_getSimulationStatus_then_returnsExpectedStatus() {
         // Arrange (Given)
-        User storedUser = service.getUser(defaultUser);
-        managerFake.setToken(100);
-        storedUser.addRequest(managerFake); // Inyectamos el fake en el usuario real
+        simulation.startSimulation(); // Estado: RUNNING
+        dbFake.setSimulationToReturn(simulation);
 
         // Act (When)
-        boolean exists = service.existsSimulation(defaultUser, 100);
+        SimulationStatus status = service.getSimulationStatus(simulation);
 
         // Assert (Then)
-        assertTrue(exists, "El servicio tiene que certificar positivamente el acceso de un usuario a un token de su propiedad");
+        assertEquals(SimulationStatus.RUNNING, status, String.format("El estado devuelto debía ser RUNNING, pero fue "
+                + "%s.", status));
+    }
+
+    // --- Test getSimulationResult(Simulation simulation) -------------------------------------------------------------
+
+    @Test
+    @DisplayName("getSimulationResult: devuelve el resultado de la simulación")
+    public void given_completedSimulation_when_getSimulationResult_then_returnsSimulationData() {
+        // Arrange (Given)
+        SimulationData dataToReturn = new SimulationData(10);
+        dbFake.setSimulationResultToReturn(dataToReturn);
+
+        // Act (When)
+        SimulationData result = service.getSimulationResult(simulation);
+
+        // Assert (Then)
+        assertEquals(dataToReturn, result, "El resultado devuelto no corresponde con los datos esperados de la " +
+                "simulación.");
+    }
+
+    // --- Test getUserTokens(User user) -------------------------------------------------------------------------------
+
+    @Test
+    @DisplayName("getUserTokens: usuario inexistente devuelve lista vacía")
+    public void given_nonExistingUser_when_getUserTokens_then_returnsEmptyList() {
+        // Arrange (Given)
+        dbFake.setUserTokensToReturn(List.of());
+
+        // Act (When)
+        Collection<Integer> tokens = service.getUserTokens(user);
+
+        // Assert (Then)
+        assertTrue(tokens.isEmpty(), "Un usuario inexistente debía devolver una colección vacía de " + "tokens.");
     }
 
     @Test
-    @DisplayName("Comprobar simulación: Rechaza el acceso devolviendo falso si el token no es suyo")
-    void given_userWithoutSimulation_when_existsSimulation_then_returnsFalse() {
+    @DisplayName("getUserTokens: usuario existente con tokens devuelve la lista de sus tokens")
+    public void given_existingUserWithTokens_when_getUserTokens_then_returnsUserTokens() {
         // Arrange (Given)
-        service.getUser(defaultUser); // Nos aseguramos de que el usuario existe en el sistema
+        List<Integer> expectedTokens = List.of(123, 456);
+        dbFake.setUserTokensToReturn(expectedTokens);
 
         // Act (When)
-        boolean exists = service.existsSimulation(defaultUser, 999);
+        Collection<Integer> tokens = service.getUserTokens(user);
 
         // Assert (Then)
-        assertFalse(exists, "El servicio debe denegar como inexistente cualquier simulación cuyo token no obre en poder del usuario solicitante");
+        assertEquals(2, tokens.size(), "El usuario debía tener 2 tokens registrados.");
+        assertTrue(tokens.containsAll(expectedTokens), "Los tokens devueltos no coinciden con los " + "esperados.");
     }
 
-    // --- Test getSimulationStatus ------------------------------------------------------------------------------------
+    // --- Test requestSimulation(SimulationRequest simulationRequest) -------------------------------------------------
 
     @Test
-    @DisplayName("Estado de simulación: Delega la pregunta y retorna el estado extraído desde el gestor")
-    void given_userWithRunningSimulation_when_getSimulationStatus_then_returnsRunning() {
+    @DisplayName("requestSimulation: si el usuario no existe, lo guarda, crea y arranca la simulación")
+    public void given_newRequestForNewUser_when_requestSimulation_then_savesUserAndStartsSimulation() {
         // Arrange (Given)
-        User storedUser = service.getUser(defaultUser);
-        managerFake.setToken(10);
-        managerFake.setSimulationStatus(SimulationStatus.RUNNING);
-        storedUser.addRequest(managerFake);
+        dbFake.setUserToReturn(null); // Usuario no almacenado
+        requestManagerFake.setSimulationToReturn(simulation);
+
+        Map<String, Integer> creatures = new HashMap<>();
+        creatures.put("mobile-test", 1);
+        SimulationRequest request = new SimulationRequest(user, creatures, totalNumberOfCreatures, ticksToRun,
+                initialOccupancy, foodProbability, new Random());
 
         // Act (When)
-        SimulationStatus status = service.getSimulationStatus(defaultUser, 10);
+        Simulation returnedSimulation = service.requestSimulation(request);
 
         // Assert (Then)
-        assertEquals(SimulationStatus.RUNNING, status, "El servicio actúa como intermediario y debe retransmitir fielmente el estado que marque el gestor subyacente");
+        assertTrue(dbFake.isSaveUserCalled(), "El usuario no existía en BD, por lo tanto debió llamarse a guardar el "
+                + "usuario.");
+        assertEquals(simulation, returnedSimulation, "La simulación devuelta no es la generada por el RequestManager.");
+        assertTrue(engineManagerFake.isRunningSimulation(simulation), "La simulación debía haber sido mandada a " +
+                "correr al EngineManager.");
     }
-
-    // --- Test getSimulationResult ------------------------------------------------------------------------------------
 
     @Test
-    @DisplayName("Resultado de simulación: Recupera el historial guardado por el gestor en nombre del usuario")
-    void given_userWithCompletedSimulation_when_getSimulationResult_then_returnsResult() {
+    @DisplayName("requestSimulation: si el usuario ya existe, lo carga, crea y arranca la simulación")
+    public void given_newRequestForExistingUser_when_requestSimulation_then_loadsUserAndStartsSimulation() {
         // Arrange (Given)
-        User storedUser = service.getUser(defaultUser);
-        managerFake.setToken(20);
-        SimulationResult expectedResult = new SimulationResult();
-        managerFake.setSimulationResult(expectedResult);
-        storedUser.addRequest(managerFake);
+        dbFake.setUserToReturn(user); // Usuario ya existe
+        requestManagerFake.setSimulationToReturn(simulation);
+
+        Map<String, Integer> creatures = new HashMap<>();
+        creatures.put("mobile-test", 1);
+        SimulationRequest request = new SimulationRequest(user, creatures, totalNumberOfCreatures, ticksToRun,
+                initialOccupancy, foodProbability, new Random());
 
         // Act (When)
-        SimulationResult actualResult = service.getSimulationResult(defaultUser, 20);
+        service.requestSimulation(request);
 
         // Assert (Then)
-        assertEquals(expectedResult, actualResult, "El servicio debe extraer y devolver a la vista de red el resultado intacto proporcionado por el gestor de la simulación");
+        assertFalse(dbFake.isSaveUserCalled(), "El usuario ya existía en BD, no debía llamarse al método para " +
+                "guardarlo.");
+        assertTrue(engineManagerFake.isRunningSimulation(simulation), "La simulación debía haber sido mandada a " +
+                "correr al EngineManager.");
     }
-
-    // --- Test getUserTokens ------------------------------------------------------------------------------------------
-
-    @Test
-    @DisplayName("Listar tokens: Recupera la colección completa de identificadores asociados a un usuario")
-    void given_userWithMultipleSimulations_when_getUserTokens_then_returnsAllTokens() {
-        // Arrange (Given)
-        User storedUser = service.getUser(defaultUser);
-
-        managerFake.setToken(1);
-        SimulationManagerFake managerFake2 = new SimulationManagerFake();
-        managerFake2.setToken(2);
-
-        storedUser.addRequest(managerFake);
-        storedUser.addRequest(managerFake2);
-
-        // Act (When)
-        Collection<Integer> tokens = service.getUserTokens(defaultUser);
-
-        // Assert (Then)
-        assertNotNull(tokens, "La colección consultada nunca puede venir nula, incluso si estuviera vacía");
-        assertEquals(2, tokens.size(), "El listado debe agrupar todas las peticiones registradas, sin omitir ninguna");
-        assertTrue(tokens.contains(1), "El conjunto resultante debe arrastrar el primer token que solicitó el usuario");
-        assertTrue(tokens.contains(2), "El conjunto resultante debe arrastrar el segundo token que solicitó el usuario");
-    }
-
 
     // -----------------------------------------------------------------------------------------------------------------
     //     TESTS DE INTEGRACIÓN
     // -----------------------------------------------------------------------------------------------------------------
 
-    // --- Test requestSimulation ---------------------------------------------------------------------------------------
+    // --- Test requestSimulation(SimulationRequest simulationRequest) -------------------------------------------------
 
     @Test
-    @DisplayName("Integración Solicitar: Orquesta la creación de tablero, vincula al usuario y arranca cálculos")
-    void integration_given_validRequest_when_requestSimulation_then_simulationStartsAndIsAddedToUser() {
+    @DisplayName("requestSimulation Integración: Flujo completo persistiendo, ejecutando y finalizando simulación mock")
+    public void given_validSimulationRequest_when_requestSimulation_then_executesFullFlowWithDbMock() throws InterruptedException {
         // Arrange (Given)
-        Request request = new Request();
-        request.setCreatureNames(List.of("gato", "perezoso", "conejo"));
-        request.setInitialCreatureQuantities(List.of(2, 3, 1));
+        DBManagerMock dbMock = new DBManagerMock();
+        SimulationRequestManager realRequestManager = new SimulationRequestManager(new Random(), dbMock);
+        SimulationEngineManager realEngineManager = new SimulationEngineManager(dbMock);
+        SimulationService realService = new SimulationService(realRequestManager, realEngineManager, dbMock);
+
+        Map<String, Integer> creatures = new HashMap<>();
+        creatures.put("static-test", 1);
+        SimulationRequest request = new SimulationRequest(user, creatures, totalNumberOfCreatures, ticksToRun,
+                initialOccupancy, foodProbability, new Random());
 
         // Act (When)
-        int assignedToken = service.requestSimulation(defaultUser, request);
+        Simulation runningSim = realService.requestSimulation(request);
+
+        // Esperamos ejecución asíncrona (es un Test de Integración con hilo subyacente)
+        while (runningSim.getStatus() == SimulationStatus.RUNNING || runningSim.getStatus() == SimulationStatus.PENDING) {
+            Thread.sleep(10);
+        }
 
         // Assert (Then)
-        assertTrue(assignedToken >= 0, "Al cursar una solicitud, el servidor emite siempre un token válido por encima del cero");
+        User storedUser = dbMock.getUser(user);
+        assertNotNull(storedUser, "El usuario debía guardarse y poder ser recuperado de la persistencia Mock.");
 
-        assertTrue(service.existsSimulation(defaultUser, assignedToken),
-                "El flujo de servicio amarra lógicamente la simulación recién creada al portafolio del usuario");
+        Simulation storedSim = dbMock.getSimulation(runningSim);
+        assertNotNull(storedSim, "La simulación debía almacenarse en la persistencia Mock.");
 
-        SimulationStatus status = service.getSimulationStatus(defaultUser, assignedToken);
-        assertTrue(status == SimulationStatus.RUNNING || status == SimulationStatus.COMPLETED,
-                "El servicio arranca asíncronamente el proceso, por lo que este ya estará calculando turnos o ya habrá terminado de forma veloz");
+        assertEquals(SimulationStatus.COMPLETED, storedSim.getStatus(), "El flujo debió finalizar la simulación, " +
+                "actualizando su estado en Mock a COMPLETED.");
+
+        SimulationData resultData = dbMock.getSimulationResult(runningSim);
+        assertNotNull(resultData,
+                "Al completarse, los resultados debían guardarse y ser recuperables desde la DB " + "Mock.");
     }
 }

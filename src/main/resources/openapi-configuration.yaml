@@ -1,0 +1,15 @@
+resourcePackages:
+  - com.tt1.simserver.api
+prettyPrint: true
+cacheTTL: 0
+openAPI:
+  info:
+    version: '1.0'
+    title: Simulation Server
+    description: 'Este proyecto es un servidor backend (una API REST) creado en Java para la asignatura Taller
+                  Transversal I. Su objetivo principal es procesar simulaciones de criaturas en un tablero en segundo 
+                  plano, gestionar el estado de estas simulaciones y permitir la consulta de resultados mediante un 
+                  sistema de tokens.'
+    license:
+      name: MIT
+      url: https://mit-license.org

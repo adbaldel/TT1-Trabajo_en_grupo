@@ -1,310 +1,93 @@
 package com.tt1.simserver.logic;
 
-import com.tt1.simserver.model.Position;
-import com.tt1.simserver.model.SimulationResult;
-import com.tt1.simserver.model.SimulationStatus;
-import com.tt1.simserver.model.User;
-import com.tt1.simserver.model.creatures.MobileCreature;
-import com.tt1.simserver.model.creatures.StaticCreature;
-import com.tt1.simserver.model.creatures.StaticRabbit;
-import com.tt1.simserver.model.jsonrepresentations.Request;
+import com.tt1.simserver.database.DBManagerInterface;
+import com.tt1.simserver.model.*;
 
-import java.util.*;
+import java.util.Collection;
 
 /**
- * Servicio centralizado del negocio que coordina los usuarios, procesa peticiones web,
- * configura los tableros iniciales y orquesta la creación y consulta de las simulaciones.
+ * Implementación de la lógica de simulaciones (Fachada/DAO). Centraliza y gestiona toda la funcionalidad relacionada
+ * con las simulaciones.
  */
 public class SimulationService implements SimulationServiceInterface {
-    private static final double INITIAL_OCCUPANCY = 0.35;
-    private static final int MAX_SECONDS = 100;
-
-    // Diccionarios con los metadatos de entidades registrados en el sistema
-    private static final Map<String, String> creatureNameToType;
-    private static final Map<String, String> creatureNameToColor;
-    private static final Map<String, Double> creatureNameToMoveProbability;
-    private static final Map<String, Double> creatureNameToMultiplyProbability;
-
-    static {
-        creatureNameToType = new HashMap<>();
-        creatureNameToType.put("perezoso", "static");
-        creatureNameToType.put("gato", "mobile");
-        creatureNameToType.put("conejo", "rabbit");
-
-        creatureNameToColor = new HashMap<>();
-        creatureNameToColor.put("perezoso", "green");
-        creatureNameToColor.put("gato", "red");
-        creatureNameToColor.put("conejo", "blue");
-
-        creatureNameToMoveProbability = new HashMap<>();
-        creatureNameToMoveProbability.put("gato", 0.5);
-
-        creatureNameToMultiplyProbability = new HashMap<>();
-        creatureNameToMultiplyProbability.put("conejo", 0.2);
-    }
-
-    private final Collection<User> users;
-    private final Random random;
+    private final DBManagerInterface dbManager;
+    private final SimulationRequestManagerInterface simulationRequestManager;
+    private final SimulationEngineManagerInterface simulationManager;
 
     /**
-     * Constructor para instanciar el servicio inyectando una semilla de números aleatorios custom.
+     * Construye un servicio de simulación asociado al gestor de solicitudes de simulaciones, al gestor de simulaciones
+     * y al gestor de base de datos pasados como parámetros. Asume que el gestor de solicitudes de simulaciones, el
+     * gestor de simulaciones y el gestor de base de datos son no nulos.
      *
-     * <p>Precondición: {@code random} no es nulo.
-     *
-     * <p>Postcondición: Crea el servicio con una colección de usuarios vacía y el generador de números aleatorios inyectado.
-     *
-     * @param random la instancia de generador aleatorio.
+     * @param simulationRequestManager el gestor de solicitudes de simulaciones.
+     * @param simulationManager        el gestor de simulaciones.
+     * @param dbManager                el gestor de base de datos.
      */
-    public SimulationService(Random random) {
-        users = new ArrayList<>();
-        this.random = random;
+    public SimulationService(SimulationRequestManagerInterface simulationRequestManager,
+                             SimulationEngineManagerInterface simulationManager,
+                             DBManagerInterface dbManager) {
+        this.simulationRequestManager = simulationRequestManager;
+        this.simulationManager = simulationManager;
+        this.dbManager = dbManager;
     }
 
-    /**
-     * Constructor por defecto del servicio.
-     *
-     * <p>Precondición: Ninguna.
-     *
-     * <p>Postcondición: Crea el servicio inicializándolo con un generador de números aleatorios por defecto y una colección de usuarios vacía.
-     */
-    public SimulationService() {
-        this(new Random());
-    }
-
-    /**
-     * Recupera un usuario en memoria o lo crea si no existe.
-     *
-     * <p>Precondición: {@code user} no es nulo y tiene un nombre asignado.
-     *
-     * <p>Postcondición: Funciona como caché. Si el usuario ya está registrado, devuelve la misma referencia en memoria. Si no existe, lo instancia, lo guarda en la colección y lo devuelve conservando su nombre intacto.
-     *
-     * @param user el objeto usuario usado para buscar o registrar.
-     * @return la instancia persistente del usuario en el sistema.
-     */
     @Override
-    public User getUser(User user) {
-        User storedUser = null;
-        boolean userLoaded;
-
-        userLoaded = false;
-
-        for (User existingUser : users) {
-            if (user.equals(existingUser)) {
-                storedUser = existingUser;
-                userLoaded = true;
-            }
-        }
-
-        // En un futuro se llamará a la capa de persistencia para ver si se tiene almacenado un usuario con la misma
-        // clave (username) y si existe se cargará en la lista.
-
-        if (!userLoaded) {
-            if (storedUser == null) {
-                storedUser = new User(user.getUsername());
-                // También se guardará el usuario en la capa de persistencia.
-                // NOTA: cuando implementemos esto cuidado con la concurrencia.
-            }
-
-            users.add(storedUser);
-        }
-
-        return storedUser;
+    public Collection<String> getCreatures() {
+        return CreatureFactory.getCreaturesNames();
     }
 
-    /**
-     * Comprueba si una simulación pertenece a un usuario concreto.
-     *
-     * <p>Precondición: {@code user} no es nulo.
-     *
-     * <p>Postcondición: Devuelve verdadero si el sistema certifica que el token consta en el registro de peticiones del usuario. Devuelve falso si el usuario no es propietario de dicho token.
-     *
-     * @param user  el usuario que hace la solicitud.
-     * @param token el identificador de la simulación a verificar.
-     * @return verdadero si el token pertenece al usuario, falso en caso contrario.
-     */
     @Override
-    public boolean existsSimulation(User user, int token) {
-        boolean simulationLoaded = false;
-        boolean simulationExists = false;
-        User storedUser = getUser(user);
-
-        simulationLoaded = storedUser.existsSimulation(token);
-
-        if (!simulationLoaded) {
-            // En un futuro se llamará a la capa de persistencia para ver si se tiene almacenado una simulación con la
-            // misma clave (token, ó username y token) y si existe se cargará en el usuario de la lista.
-        } else {
-            simulationExists = true;
-        }
-
-        return simulationExists;
+    public boolean existsSimulation(Simulation simulation) {
+        Simulation storedSimulation = dbManager.getSimulation(simulation);
+        return storedSimulation != null && storedSimulation.getUser().equals(simulation.getUser());
     }
 
-    /**
-     * Consulta el estado de una simulación vinculada a un usuario.
-     *
-     * <p>Precondición: {@code user} no es nulo y es el propietario real del token indicado.
-     *
-     * <p>Postcondición: Delega la consulta y retorna el estado exacto extraído directamente desde el gestor interno de esa simulación.
-     *
-     * @param user  el usuario propietario de la simulación.
-     * @param token el identificador de la simulación.
-     * @return el estado de ejecución actual de la simulación solicitada.
-     */
     @Override
-    public SimulationStatus getSimulationStatus(User user, int token) {
-        User storedUser = getUser(user);
-
-        return storedUser.getSimulationStatus(token);
+    public SimulationStatus getSimulationStatus(Simulation simulation) {
+        return dbManager.getSimulation(simulation).getStatus();
     }
 
-    /**
-     * Recupera el resultado histórico de una simulación específica de un usuario.
-     *
-     * <p>Precondición: {@code user} no es nulo y es el propietario real del token indicado.
-     *
-     * <p>Postcondición: Extrae y devuelve el historial completo del tablero expuesto por el gestor subyacente de la simulación.
-     *
-     * @param user  el usuario propietario de la simulación.
-     * @param token el identificador de la simulación.
-     * @return el objeto con el historial de resultados devuelto por el gestor.
-     */
     @Override
-    public SimulationResult getSimulationResult(User user, int token) {
-        User storedUser = getUser(user);
-
-        return storedUser.getSimulationResult(token);
+    public SimulationData getSimulationResult(Simulation simulation) {
+        return dbManager.getSimulationResult(simulation);
     }
 
-    /**
-     * Lista todos los identificadores de simulación registrados a nombre de un usuario.
-     *
-     * <p>Precondición: {@code user} no es nulo.
-     *
-     * <p>Postcondición: Devuelve una colección que agrupa todos los tokens solicitados históricamente por el usuario. La colección nunca es nula, aunque el usuario no tenga simulaciones.
-     *
-     * @param user el usuario a consultar.
-     * @return una colección con los tokens pertenecientes al usuario.
-     */
     @Override
     public Collection<Integer> getUserTokens(User user) {
-        User storedUser = getUser(user);
-        return storedUser.getTokens();
+        return dbManager.getUserTokens(user);
     }
 
     /**
-     * Orquesta la creación, configuración y arranque de una nueva simulación para un usuario.
+     * {@inheritDoc}
      *
-     * <p>Precondición: {@code user} y {@code request} no son nulos. Las cantidades iniciales en la solicitud son enteros no negativos.
-     *
-     * <p>Postcondición: Construye un tablero de tamaño dinámico, lo puebla aleatoriamente con las criaturas solicitadas, arranca asíncronamente los cálculos de turnos y amarra la petición a la cuenta del usuario. Devuelve un token válido superior o igual a cero.
-     *
-     * @param user    el usuario que solicita crear la simulación.
-     * @param request el objeto con la especificación de criaturas a incluir.
-     * @return el nuevo token numérico asignado a la simulación.
+     * <p>Notas sobre implementación: comprueba si el usuario de la solicitud de simulación está almacenado y si no
+     * lo está lo guarda. Después crea y almacena una simulación llamando a
+     * {@link SimulationRequestManager#createSimulation(SimulationRequest)} con la una solicitud de simulación igual a
+     * la pasada, pero con el usuario almacenado (si no estaba almacenado envía la solicitud de simulación pasada, ya
+     * que su usuario ha sido el almacenado). Finalmente, manda correr la simulación llamando a
+     * {@link SimulationEngineManager#startSimulation(LogicSimulation)}.</p>
      */
     @Override
-    public int requestSimulation(User user, Request request) {
-        List<String> creatureNames = request.getCreatureNames();
-        List<Integer> initialCreatureQuantities = request.getInitialCreatureQuantities();
-        int numberOfCreatures;
-        GridInterface grid;
-        SimulationEngineInterface simulationEngine;
-        SimulationManagerInterface simulationManager;
-        User storedUser;
-        int token;
+    public Simulation requestSimulation(SimulationRequest simulationRequest) {
+        // Si se añade un registrar usuario a la presentación esto iría en métodos a parte cómo existe usuario y guardar
+        // usuario que la presentación llamaría. Aquí va implicito porque la presentación no conoce que haya usuarios
+        // registrados.
+        User storedUser = dbManager.getUser(simulationRequest.getUser());
+        if (storedUser == null) {
+            dbManager.saveUser(simulationRequest.getUser());
+        } else {
+            new SimulationRequest(storedUser, simulationRequest);
+        }
 
-        numberOfCreatures = calculateInitialNumberOfCreatures(initialCreatureQuantities);
+        LogicSimulation simulation = simulationRequestManager.createSimulation(simulationRequest);
+        simulationManager.startSimulation(simulation);
 
-        grid = new Grid(numberOfCreatures, INITIAL_OCCUPANCY);
-        loadGrid(grid, creatureNames, initialCreatureQuantities);
-        simulationEngine = new SimulationEngine(grid, MAX_SECONDS);
-        simulationManager = new SimulationManager(simulationEngine);
-
-        storedUser = getUser(user);
-        token = simulationManager.startSimulation();
-        storedUser.addRequest(simulationManager);
-
-        return token;
+        return simulation;
     }
 
-    /**
-     * Calcula la suma total de criaturas que poblarán el tablero.
-     *
-     * <p>Precondición: {@code initialCreatureQuantities} no es nula. Todas las cantidades contenidas son números enteros.
-     *
-     * <p>Postcondición: Devuelve la suma entera de todas las cantidades proporcionadas.
-     *
-     * @param initialCreatureQuantities lista de cantidades a sumar.
-     * @return el número total de criaturas.
-     */
-    private int calculateInitialNumberOfCreatures(List<Integer> initialCreatureQuantities) {
-        int numberOfCreatures = 0;
-
-        for (Integer quantity : initialCreatureQuantities) {
-            numberOfCreatures += quantity;
-        }
-
-        return numberOfCreatures;
-    }
-
-    /**
-     * Distribuye las criaturas solicitadas aleatoriamente en casillas libres del tablero.
-     *
-     * <p>Precondición: {@code grid}, {@code creatureNames} y {@code initialCreatureQuantities} no son nulos. El tablero cuenta con suficientes casillas libres. Los tipos de criaturas indicados coinciden con los registrados internamente en el sistema.
-     *
-     * <p>Postcondición: Instancia y ubica aleatoriamente cada criatura en el tablero dentro de casillas libres, restando su disponibilidad de las opciones globales.
-     *
-     * @param grid                      el tablero físico que se va a poblar.
-     * @param creatureNames             los nombres identificadores de las especies de criaturas.
-     * @param initialCreatureQuantities las cantidades exactas requeridas para cada especie de criatura.
-     * @throws IllegalArgumentException si el tipo derivado del nombre de criatura solicitado no está registrado como válido.
-     */
-    private void loadGrid(GridInterface grid, List<String> creatureNames, List<Integer> initialCreatureQuantities) {
-        String creatureName;
-        String creatureType;
-        String creatureColor;
-        double creatureMoveProbability;
-        double creatureMultiplyProbability;
-        Position creaturePosition;
-        int creatureQuantity;
-        List<Position> emptyPositions;
-
-        emptyPositions = new ArrayList<>();
-        for (int y = 0; y < grid.getSize(); y++) {
-            for (int x = 0; x < grid.getSize(); x++) {
-                emptyPositions.add(new Position(x, y));
-            }
-        }
-
-        for (int i = 0; i < creatureNames.size(); i++) {
-            creatureName = creatureNames.get(i).toLowerCase();
-            creatureQuantity = initialCreatureQuantities.get(i);
-            creatureType = creatureNameToType.get(creatureName);
-            creatureColor = creatureNameToColor.get(creatureName);
-            creaturePosition = emptyPositions.get(random.nextInt(emptyPositions.size()));
-
-            if (creatureType.equals("static")) {
-                for (int j = 0; j < creatureQuantity; j++) {
-                    grid.addCreature(new StaticCreature(creatureName, creatureColor, creaturePosition));
-                }
-            } else if (creatureType.equals("mobile")) {
-                creatureMoveProbability = creatureNameToMoveProbability.get(creatureName);
-
-                for (int j = 0; j < creatureQuantity; j++) {
-                    grid.addCreature(new MobileCreature(creatureName, creatureColor, creatureMoveProbability, creaturePosition));
-                }
-            } else if (creatureType.equals("rabbit")) {
-                creatureMultiplyProbability = creatureNameToMultiplyProbability.get(creatureName);
-
-                for (int j = 0; j < creatureQuantity; j++) {
-                    grid.addCreature(new StaticRabbit(creatureName, creatureColor, creatureMultiplyProbability, creaturePosition));
-                }
-            } else {
-                throw new IllegalArgumentException("Invalid creature type");
-            }
-
-            emptyPositions.remove(creaturePosition);
-        }
+    @Override
+    public void shutdown() {
+        simulationManager.shutdown();
+        dbManager.close();
     }
 }

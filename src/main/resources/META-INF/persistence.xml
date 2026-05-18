@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0"
+             xmlns="https://jakarta.ee/xml/ns/persistence"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+
+    <persistence-unit name="SimServerPU" transaction-type="RESOURCE_LOCAL">
+        <!-- Implementación de JPA (Hibernate) -->
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <class>com.tt1.simserver.database.entities.UserEntity</class>
+        <class>com.tt1.simserver.database.entities.SimulationEntity</class>
+        <class>com.tt1.simserver.database.entities.SimulationResultEntity</class>
+
+        <properties>
+            <!-- Configuración de la conexión a MySQL (Ajusta la IP si Docker no está en localhost) -->
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+<!--            DOCKER-->
+<!--            <property name="jakarta.persistence.jdbc.url" value="${DB_URL}"/>-->
+<!--            <property name="jakarta.persistence.jdbc.user" value="${DB_USER}"/>-->
+<!--            <property name="jakarta.persistence.jdbc.password" value="${DB_PASSWORD}"/>-->
+<!--            FIN DOCKER-->
+            <!-- Opciones de Hibernate -->
+            <!-- Usamos el dialecto de Hibernate para MySQL -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+            <!-- validate: verifica que el script SQL que lanzamos cuadre con las entidades -->
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+            <!-- Muestra el SQL generado en la consola para facilitar el debug -->
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>

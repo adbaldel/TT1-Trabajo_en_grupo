@@ -1,21 +1,26 @@
 package com.tt1.simserver.model;
 
 /**
- * Identifica los estados por los que transita una simulación en el servidor.
+ * Representa los posibles estados de una simulación.
  */
 public enum SimulationStatus {
     /**
-     * La solicitud ha sido registrada, pero el motor todavía no ha empezado a procesar sus turnos.
+     * Aún no ha empezado a correr la simulación.
      */
     PENDING,
 
     /**
-     * El motor está actualmente ejecutando cálculos y avanzando los turnos de la simulación.
+     * La simulación está corriendo.
      */
     RUNNING,
 
     /**
-     * El motor ha terminado todos los pasos y el resultado final está listo para ser consultado.
+     * La simulación a acabado.
      */
-    COMPLETED
+    COMPLETED,
+
+    /**
+     * La simulación ha sido interrumpida mientras estaba corriendo.
+     */
+    INTERRUPTED
 }

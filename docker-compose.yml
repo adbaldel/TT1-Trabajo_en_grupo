@@ -1,0 +1,41 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: simserver_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: MWda2fh1JmmwOthc
+      MYSQL_DATABASE: simserver_db
+      MYSQL_USER: sim_user
+      MYSQL_PASSWORD: eSOJJ09xVJqtyjxv
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_simserver_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+    networks:
+      - simnetwork
+
+  simserver:
+    image: tt1/simserver
+    restart: on-failure
+    ports:
+      - "8081:8081"
+    environment:
+      - DB_URL=jdbc:mysql://db:3306/simserver_db?useSSL=false&allowPublicKeyRetrieval=true
+      - DB_USER=sim_user
+      - DB_PASSWORD=eSOJJ09xVJqtyjxv
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - simnetwork
+
+volumes:
+  mysql_simserver_data:
+
+networks:
+  simnetwork:
+    driver: bridge

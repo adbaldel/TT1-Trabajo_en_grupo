@@ -1,157 +1,75 @@
 package com.tt1.simserver.model;
 
-import java.util.Objects;
-
 /**
- * Modela las coordenadas bidimensionales de una casilla dentro del tablero de simulación.
+ * Representa una posición bidimensional (inmutable).
+ *
+ * @param x la coordenada x u horizontal.
+ * @param y la coordenada y o vertical.
  */
-public class Position {
-    private int x;
-    private int y;
+public record Position(int x, int y) {
 
     /**
-     * Crea una nueva posición apuntando a las coordenadas indicadas.
+     * Construye una posición con las coordenadas x e y pasadas como parámetro.
      *
-     * <p>Precondición: Ninguna.
-     *
-     * <p>Postcondición: La posición se inicializa con los valores exactos de x e y proporcionados.
-     *
-     * @param x la columna en el tablero (eje horizontal).
-     * @param y la fila en el tablero (eje vertical).
+     * @param x la coordenada x.
+     * @param y la coordenada y.
      */
-    public Position(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public Position {
     }
 
     /**
-     * Obtiene el valor horizontal del tablero.
+     * Obtiene la coordenada x.
      *
-     * <p>Precondición: Ninguna.
-     *
-     * <p>Postcondición: Devuelve la coordenada X asignada a esta posición.
-     *
-     * @return la coordenada x actual.
+     * @return la coordenada x.
      */
-    public int getX() {
+    @Override
+    public int x() {
         return x;
     }
 
     /**
-     * Modifica el valor horizontal del tablero.
+     * Obtiene la coordenada y.
      *
-     * <p>Precondición: Ninguna.
-     *
-     * <p>Postcondición: La coordenada X se sobreescribe con el nuevo valor.
-     *
-     * @param x la nueva coordenada x.
+     * @return la coordenada y.
      */
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    /**
-     * Obtiene el valor vertical del tablero.
-     *
-     * <p>Precondición: Ninguna.
-     *
-     * <p>Postcondición: Devuelve la coordenada Y asignada a esta posición.
-     *
-     * @return la coordenada y actual.
-     */
-    public int getY() {
+    @Override
+    public int y() {
         return y;
     }
 
     /**
-     * Modifica el valor vertical del tablero.
+     * Obtiene la posición a la derecha de esta posición.
      *
-     * <p>Precondición: Ninguna.
-     *
-     * <p>Postcondición: La coordenada Y se sobreescribe con el nuevo valor.
-     *
-     * @param y la nueva coordenada y.
+     * @return la posición a la derecha de esta posición.
      */
-    public void setY(int y) {
-        this.y = y;
+    public Position getRight() {
+        return new Position(x() + 1, y());
     }
 
     /**
-     * Mueve la posición una casilla hacia la derecha en el eje horizontal.
+     * Obtiene la posición a la izquierda de esta posición.
      *
-     * <p>Precondición: Ninguna.
-     *
-     * <p>Postcondición: El valor de la coordenada X aumenta en uno. La coordenada Y no cambia.
+     * @return la posición a la izquierda de esta posición.
      */
-    public void moveRight() {
-        x += 1;
+    public Position getLeft() {
+        return new Position(x() - 1, y());
     }
 
     /**
-     * Mueve la posición una casilla hacia la izquierda en el eje horizontal.
+     * Obtiene la posición encima de esta posición.
      *
-     * <p>Precondición: Ninguna.
-     *
-     * <p>Postcondición: El valor de la coordenada X disminuye en uno. La coordenada Y no cambia.
+     * @return la posición encima de esta posición.
      */
-    public void moveLeft() {
-        x -= 1;
+    public Position getUp() {
+        return new Position(x(), y() + 1);
     }
 
     /**
-     * Mueve la posición una casilla hacia arriba en el eje vertical.
+     * Obtiene la posición debajo de esta posición.
      *
-     * <p>Precondición: Ninguna.
-     *
-     * <p>Postcondición: El valor de la coordenada Y aumenta en uno. La coordenada X no cambia.
+     * @return la posición debajo de esta posición.
      */
-    public void moveUp() {
-        y += 1;
-    }
-
-    /**
-     * Mueve la posición una casilla hacia abajo en el eje vertical.
-     *
-     * <p>Precondición: Ninguna.
-     *
-     * <p>Postcondición: El valor de la coordenada Y disminuye en uno. La coordenada X no cambia.
-     */
-    public void moveDown() {
-        y -= 1;
-    }
-
-    /**
-     * Compara esta posición con otro objeto para verificar si representan la misma casilla.
-     *
-     * <p>Precondición: Ninguna.
-     *
-     * <p>Postcondición: Devuelve verdadero solo si el objeto proporcionado es otra posición con las mismas coordenadas X e Y. Devuelve falso en cualquier otro caso.
-     *
-     * @param o el objeto a comparar con esta posición.
-     * @return verdadero si apuntan a la misma casilla, falso en caso contrario.
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Position position = (Position) o;
-
-        return x == position.x &&
-                y == position.y;
-    }
-
-    /**
-     * Calcula el código numérico para usar la posición en colecciones basadas en hash.
-     *
-     * <p>Precondición: Ninguna.
-     *
-     * <p>Postcondición: Devuelve un entero generado a partir de las coordenadas X e Y. Posiciones en la misma casilla devuelven el mismo hash.
-     *
-     * @return el valor hash de la posición.
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y);
+    public Position getDown() {
+        return new Position(x(), y() - 1);
     }
 }
