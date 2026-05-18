@@ -1,0 +1,41 @@
+name: Compile and Upload on Release
+
+# 1. Trigger the workflow only when a new release is created
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    
+    # 2. Grant permission to upload files to the release
+    permissions:
+      contents: write 
+
+    steps:
+      # 3. Check out your repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 4. Set up the Java environment
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21' # Change this to your project's Java version
+          distribution: 'temurin'
+          cache: maven # Speeds up future builds by caching dependencies
+
+      # 5. Compile the project using Maven
+      - name: Build with Maven
+        run: mvn -B clean package --file pom.xml
+
+      # 6. Upload the compiled JAR to the GitHub Release
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          # Adjust this path if you want to upload a specific file (e.g., target/my-app-1.0.jar)
+          files: target/*.jar 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
